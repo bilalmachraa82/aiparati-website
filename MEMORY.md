@@ -151,3 +151,14 @@ NUNCA assumir, NUNCA inventar planos
 ### Projectos
 - `projects/ai-sales-agent/` - Sistema vendas automatizado
 - `projects/ivazen/` - Clone do repo IVA
+
+---
+
+## 🔴 LIÇÕES APRENDIDAS (Erros que não vou repetir)
+
+### 2026-01-29: Verificar Antes de Entregar
+**Erro:** Criei apresentação FNAC com sub-agentes durante a noite e enviei sem verificar. Estava horrível - faltava foto, metade do conteúdo. Bilal ficou furioso (com razão).
+
+**Lição:** NUNCA entregar trabalho sem verificar pessoalmente o resultado final. Não confiar cegamente nos sub-agentes. Prometi, não verifiquei, entreguei lixo.
+
+**Regra:** Antes de entregar qualquer trabalho → abrir e verificar EU MESMO.
