@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AiParaTi Dream Team v2.1</title>
+    <meta name="description" content="Equipa virtual de 16 agentes AI especializados - Software House Premium">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Saltar para conteúdo principal</a>
+    
+    <div class="bg-gradient" aria-hidden="true"></div>
+    
+    <div class="app">
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon" aria-hidden="true">🤖</div>
+                    <div class="logo-text">
+                        <h1>AiParaTi Dream Team</h1>
+                        <span>Software House AI Premium</span>
+                    </div>
+                </div>
+                <div class="header-stats" role="group" aria-label="Estatísticas da equipa">
+                    <div class="stat">
+                        <div class="stat-value" id="stat-agents">16</div>
+                        <div class="stat-label">Agentes</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value" id="stat-squads">4</div>
+                        <div class="stat-label">Squads</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value" id="stat-efficiency">95%</div>
+                        <div class="stat-label">Eficiência</div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="main" id="main-content">
+            <aside class="sidebar" aria-label="Lista de agentes">
+                <div class="search-box">
+                    <input type="search" id="search" placeholder="Pesquisar agentes..." 
+                           aria-label="Pesquisar agentes">
+                </div>
+                <nav class="squads-nav" aria-label="Navegação por squads">
+                    <div id="squads-list"></div>
+                </nav>
+            </aside>
+
+            <section class="content" aria-label="Detalhes do agente">
+                <div id="agent-detail" class="agent-detail">
+                    <div class="loading">A carregar...</div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
