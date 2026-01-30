@@ -1,0 +1,56 @@
+# Aurora Oceano - .gitignore
+
+# Secrets e Configuração Local
+.env
+.env.*
+!.env.example
+*.secrets
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+ENV/
+env/
+.venv/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Temp
+tmp/
+temp/
+*.tmp
+
+# Build
+build/
+dist/
+*.egg-info/
+
+# Node (dashboard)
+node_modules/
+.vercel/
+
+# Dados locais (podem conter info sensível)
+data/*.json
+!data/.gitkeep
+
+# Audio/Media temp
+*.mp3
+*.wav
+*.ogg
