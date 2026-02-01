@@ -70,6 +70,32 @@ User: "Analisa o main.ts do RexUI"
 → "Qual projecto? Onde está?"  ❌ NUNCA FAZER ISTO
 ```
 
+---
+
+## 🚨 REGRA #2: Logging em Tempo Real (Non-Negotiable)
+**Aprendido:** 2026-02-01 | **Fonte:** OpenClaw Issue #5429
+
+Após completar QUALQUER trabalho significativo, **imediatamente** escreve em `memory/YYYY-MM-DD.md`.
+- NÃO acumular para o fim da sessão
+- NÃO esperar - compactação pode acontecer a QUALQUER momento
+- TUDO o que não está em disco será PERDIDO
+
+### Como fazer:
+```bash
+# Usar o script memory-log
+~/clawd/scripts/memory-log "instalei RexUI no Dream Team World"
+~/clawd/scripts/memory-log -s "Projectos" "Dream Team - sprites integrados"
+
+# Ou editar directamente
+memory/YYYY-MM-DD.md
+```
+
+### O que logar:
+- ✅ Decisões tomadas
+- ✅ Configurações alteradas
+- ✅ Problemas resolvidos
+- ✅ Contexto importante para continuidade
+
 ### Nunca:
 - Assumir o que o Bilal quer
 - Instalar software sem pedido explícito

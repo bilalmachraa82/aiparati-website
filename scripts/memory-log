@@ -1,0 +1,32 @@
+#!/bin/bash
+# memory-log - Frictionless memory logging for Clawdbot
+# Source: OpenClaw community issue #5429
+
+MEMORY_DIR="${CLAWD_WORKSPACE:-$HOME/clawd}/memory"
+TODAY=$(date +%Y-%m-%d)
+FILE="$MEMORY_DIR/$TODAY.md"
+TIME=$(date +%H:%M)
+
+mkdir -p "$MEMORY_DIR"
+
+# Health check mode
+if [[ "$1" == "--check" ]]; then
+  [[ ! -f "$FILE" ]] && echo "⚠️ MISSING" && exit 1
+  SIZE=$(wc -c < "$FILE" | tr -d ' ')
+  [[ $SIZE -lt 100 ]] && echo "⚠️ SPARSE ($SIZE bytes)" && exit 1
+  echo "✅ OK ($SIZE bytes)"
+  exit 0
+fi
+
+# Section mode: memory-log -s "Section Name" "entry text"
+if [[ "$1" == "-s" ]]; then
+  [[ ! -f "$FILE" ]] && echo "# $TODAY" > "$FILE"
+  grep -q "^## $2" "$FILE" || echo -e "\n## $2" >> "$FILE"
+  echo "- [$TIME] $3" >> "$FILE"
+  exit 0
+fi
+
+# Default: append timestamped entry
+[[ ! -f "$FILE" ]] && echo "# $TODAY" > "$FILE"
+echo "- [$TIME] $1" >> "$FILE"
+echo "✅ Logged to $FILE"
