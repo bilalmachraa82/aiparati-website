@@ -4,6 +4,136 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🎮 Dream Team World - AiParaTi</title>
+    
+    <!-- Secret of Mana Style Music Player -->
+    <script>
+        // Web Audio API - 8-bit RPG Music Generator
+        class RetroMusicPlayer {
+            constructor() {
+                this.audioContext = null;
+                this.isPlaying = false;
+                this.melodyIndex = 0;
+                this.bassIndex = 0;
+                this.tempo = 140;
+                
+                // Secret of Mana inspired melody (Fear of the Heavens / Angel's Fear vibes)
+                this.melody = [
+                    // Theme A - Mystical
+                    { note: 'E4', duration: 0.5 }, { note: 'G4', duration: 0.5 },
+                    { note: 'A4', duration: 0.75 }, { note: 'B4', duration: 0.25 },
+                    { note: 'C5', duration: 1 }, { note: 'B4', duration: 0.5 },
+                    { note: 'A4', duration: 0.5 }, { note: 'G4', duration: 1 },
+                    { note: 'E4', duration: 0.5 }, { note: 'D4', duration: 0.5 },
+                    { note: 'E4', duration: 1.5 }, { note: null, duration: 0.5 },
+                    // Theme B - Adventure
+                    { note: 'A4', duration: 0.5 }, { note: 'C5', duration: 0.5 },
+                    { note: 'D5', duration: 0.75 }, { note: 'E5', duration: 0.25 },
+                    { note: 'D5', duration: 0.5 }, { note: 'C5', duration: 0.5 },
+                    { note: 'A4', duration: 1 }, { note: 'G4', duration: 0.5 },
+                    { note: 'A4', duration: 0.5 }, { note: 'E4', duration: 1 },
+                    { note: null, duration: 0.5 },
+                    // Theme C - Wonder
+                    { note: 'G4', duration: 0.5 }, { note: 'B4', duration: 0.5 },
+                    { note: 'D5', duration: 1 }, { note: 'C5', duration: 0.5 },
+                    { note: 'B4', duration: 0.5 }, { note: 'A4', duration: 0.5 },
+                    { note: 'G4', duration: 0.5 }, { note: 'E4', duration: 1.5 },
+                ];
+                
+                this.bass = [
+                    { note: 'A2', duration: 2 }, { note: 'E2', duration: 2 },
+                    { note: 'G2', duration: 2 }, { note: 'D2', duration: 2 },
+                    { note: 'A2', duration: 2 }, { note: 'C3', duration: 2 },
+                    { note: 'G2', duration: 2 }, { note: 'E2', duration: 2 },
+                ];
+                
+                this.noteFreq = {
+                    'C2': 65.41, 'D2': 73.42, 'E2': 82.41, 'G2': 98.00, 'A2': 110.00,
+                    'C3': 130.81, 'D3': 146.83, 'E3': 164.81, 'G3': 196.00, 'A3': 220.00,
+                    'C4': 261.63, 'D4': 293.66, 'E4': 329.63, 'F4': 349.23, 'G4': 392.00,
+                    'A4': 440.00, 'B4': 493.88, 'C5': 523.25, 'D5': 587.33, 'E5': 659.25,
+                };
+            }
+            
+            init() {
+                this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            
+            playNote(freq, duration, type = 'triangle', volume = 0.15) {
+                if (!this.audioContext || !freq) return;
+                
+                const osc = this.audioContext.createOscillator();
+                const gain = this.audioContext.createGain();
+                
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, this.audioContext.currentTime);
+                
+                gain.gain.setValueAtTime(volume, this.audioContext.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + duration * 0.9);
+                
+                osc.connect(gain);
+                gain.connect(this.audioContext.destination);
+                
+                osc.start();
+                osc.stop(this.audioContext.currentTime + duration);
+            }
+            
+            playMelody() {
+                if (!this.isPlaying) return;
+                
+                const note = this.melody[this.melodyIndex];
+                const beatDuration = 60 / this.tempo;
+                
+                if (note.note) {
+                    this.playNote(this.noteFreq[note.note], note.duration * beatDuration, 'triangle', 0.12);
+                }
+                
+                this.melodyIndex = (this.melodyIndex + 1) % this.melody.length;
+                
+                setTimeout(() => this.playMelody(), note.duration * beatDuration * 1000);
+            }
+            
+            playBass() {
+                if (!this.isPlaying) return;
+                
+                const note = this.bass[this.bassIndex];
+                const beatDuration = 60 / this.tempo;
+                
+                if (note.note) {
+                    this.playNote(this.noteFreq[note.note], note.duration * beatDuration, 'sine', 0.08);
+                }
+                
+                this.bassIndex = (this.bassIndex + 1) % this.bass.length;
+                
+                setTimeout(() => this.playBass(), note.duration * beatDuration * 1000);
+            }
+            
+            start() {
+                if (!this.audioContext) this.init();
+                if (this.audioContext.state === 'suspended') {
+                    this.audioContext.resume();
+                }
+                this.isPlaying = true;
+                this.playMelody();
+                this.playBass();
+            }
+            
+            stop() {
+                this.isPlaying = false;
+            }
+            
+            toggle() {
+                if (this.isPlaying) {
+                    this.stop();
+                } else {
+                    this.start();
+                }
+                return this.isPlaying;
+            }
+        }
+        
+        const musicPlayer = new RetroMusicPlayer();
+    </script>
+    
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
         
@@ -292,6 +422,36 @@
             text-shadow: 2px 2px 0 #000;
         }
         
+        .music-btn {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 8px;
+            background: linear-gradient(180deg, #6366f1, #4f46e5);
+            color: white;
+            border: 3px solid #818cf8;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-bottom: 8px;
+            transition: all 0.2s;
+            text-shadow: 1px 1px 0 #000;
+        }
+        
+        .music-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.5);
+        }
+        
+        .music-btn.playing {
+            background: linear-gradient(180deg, #22c55e, #16a34a);
+            border-color: #4ade80;
+            animation: musicPulse 1s infinite;
+        }
+        
+        @keyframes musicPulse {
+            0%, 100% { box-shadow: 0 0 10px rgba(34, 197, 94, 0.5); }
+            50% { box-shadow: 0 0 25px rgba(34, 197, 94, 0.8); }
+        }
+        
         .hud-stats {
             background: rgba(0,0,0,0.8);
             padding: 12px;
@@ -472,6 +632,9 @@
     <!-- HUD -->
     <div class="hud">
         <h1>🎮 DREAM TEAM WORLD</h1>
+        <button id="music-toggle" class="music-btn" onclick="toggleMusic()">
+            🎵 Play Music
+        </button>
         <div class="hud-stats">
             <div class="hud-stat">
                 <span>👥 Agentes:</span>
@@ -664,6 +827,27 @@
             const randomAgent = agentEls[Math.floor(Math.random() * agentEls.length)];
             randomAgent.classList.toggle('working');
         }, 3000);
+        
+        // Music toggle function
+        function toggleMusic() {
+            const btn = document.getElementById('music-toggle');
+            const isPlaying = musicPlayer.toggle();
+            
+            if (isPlaying) {
+                btn.textContent = '🎵 Stop Music';
+                btn.classList.add('playing');
+                addLogEntry('JARVIS', 'activated Secret of Mana music! 🎵', '#fbbf24');
+            } else {
+                btn.textContent = '🎵 Play Music';
+                btn.classList.remove('playing');
+                addLogEntry('JARVIS', 'music paused', '#fbbf24');
+            }
+        }
+        
+        // Auto-play hint
+        setTimeout(() => {
+            addLogEntry('SYSTEM', 'Click "Play Music" for Secret of Mana vibes! 🎵', '#a78bfa');
+        }, 2000);
     </script>
 </body>
 </html>
