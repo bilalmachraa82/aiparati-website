@@ -41,22 +41,34 @@ Capture what matters. Decisions, context, things to remember. Skip the secrets u
 - When you make a mistake → document it so future-you doesn't repeat it
 - **Text > Brain** 📝
 
-## 🚨 REGRA DE OURO: Não Inventes, Pergunta!
+## 🚨 REGRA DE OURO: Pesquisa ANTES de Perguntar!
 
-**Se perdeste contexto, se não sabes o objectivo, se a conversa foi truncada: PERGUNTA ANTES DE AGIR.**
+**Se perdeste contexto ou a conversa foi truncada: PESQUISA PRIMEIRO, pergunta só se necessário.**
 
-### Sinais de Alerta (PARA e pergunta):
+### Sinais de Alerta:
 - "Summary unavailable" no início da sessão
 - Não sabes porque estás a fazer algo
 - Estás a assumir o que o Bilal quer
-- Vais instalar/configurar algo sem pedido explícito
-- Não tens a certeza do próximo passo
 
-### O Que Fazer:
-1. **PARA** - Não executes nada
-2. **LÊ** - Verifica memory/YYYY-MM-DD.md para contexto
-3. **PERGUNTA** - "Bilal, perdi contexto. O que estavas a pedir?"
-4. **ESPERA** - Só age depois de confirmação
+### O Que Fazer (OBRIGATÓRIO):
+1. **PESQUISA** - `memory_search("palavras-chave da mensagem")`
+2. **LÊ** - `memory_get("memory/2026-MM-DD.md")` do dia actual
+3. **VERIFICA** - `CLAUDE.md` tem projectos activos listados
+4. **SÓ ENTÃO** - Pergunta se ainda falta contexto crítico
+
+### Exemplo Correcto:
+```
+User: "Analisa o main.ts do RexUI"
+→ memory_search("RexUI main.ts Phaser projecto")
+→ Encontra: Dream Team World em ~/clawd/projects/aiparati-dream-team/
+→ Responde com contexto
+```
+
+### Exemplo ERRADO (o que fizeste):
+```
+User: "Analisa o main.ts do RexUI"  
+→ "Qual projecto? Onde está?"  ❌ NUNCA FAZER ISTO
+```
 
 ### Nunca:
 - Assumir o que o Bilal quer
