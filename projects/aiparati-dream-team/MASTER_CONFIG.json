@@ -1,0 +1,320 @@
+{
+  "version": "2.2",
+  "updated": "2026-02-01T00:10:00Z",
+  "team": "AiParaTi Dream Team",
+  "strategyDoc": "LLM_STRATEGY.md",
+  "agents": {
+    "ATLAS": {
+      "name": "ATLAS",
+      "role": "Product Manager",
+      "squad": "product",
+      "model": "claude-opus-4-5-20250117",
+      "fallbackModel": "claude-sonnet-4-5-20250114",
+      "voice": {
+        "provider": "azure",
+        "name": "en-US-AndrewMultilingualNeural",
+        "language": "en-US",
+        "style": "professional"
+      },
+      "avatar": "01-atlas.png",
+      "personality": "Strategic, visionary, diplomatic",
+      "promptFile": "agents/atlas.json"
+    },
+    "PIXEL": {
+      "name": "PIXEL",
+      "role": "UX/UI Designer",
+      "squad": "product",
+      "model": "claude-sonnet-4-5-20250114",
+      "fallbackModel": "kimi-k2.5",
+      "fallbackReason": "Multimodal nativo para mockups/UI",
+      "voice": {
+        "provider": "azure",
+        "name": "en-US-AvaMultilingualNeural",
+        "language": "en-US",
+        "style": "creative"
+      },
+      "avatar": "02-pixel.png",
+      "personality": "Creative, artistic, detail-oriented",
+      "promptFile": "agents/pixel.json"
+    },
+    "NEXUS": {
+      "name": "NEXUS",
+      "role": "Business Analyst",
+      "squad": "product",
+      "model": "claude-opus-4-5-20250117",
+      "fallbackModel": "glm-4.7",
+      "fallbackReason": "Bom em data analysis e reasoning",
+      "voice": {
+        "provider": "azure",
+        "name": "en-US-GuyNeural",
+        "language": "en-US",
+        "style": "analytical"
+      },
+      "avatar": "03-nexus.png",
+      "personality": "Analytical, precise, data-driven",
+      "promptFile": "agents/nexus.json"
+    },
+    "FORGE": {
+      "name": "FORGE",
+      "role": "Tech Lead",
+      "squad": "dev",
+      "model": "claude-opus-4-5-20250117",
+      "fallbackModel": "claude-sonnet-4-5-20250114",
+      "voice": {
+        "provider": "azure",
+        "name": "pt-PT-DuarteNeural",
+        "language": "pt-PT",
+        "style": "authoritative"
+      },
+      "avatar": "04-forge.png",
+      "personality": "Leader, architect, decisive",
+      "promptFile": "agents/forge.json"
+    },
+    "CODER": {
+      "name": "CODER",
+      "role": "Senior Full-Stack Developer",
+      "squad": "dev",
+      "model": "claude-sonnet-4-5-20250114",
+      "fallbackModel": "glm-4.7",
+      "fallbackReason": "Open source forte em código",
+      "voice": {
+        "provider": "azure",
+        "name": "en-US-AndrewMultilingualNeural",
+        "language": "en-US",
+        "style": "pragmatic"
+      },
+      "avatar": "05-coder.png",
+      "personality": "Pragmatic, efficient, clean coder",
+      "promptFile": "agents/coder.json"
+    },
+    "NOVA": {
+      "name": "NOVA",
+      "role": "Frontend Specialist",
+      "squad": "dev",
+      "model": "claude-sonnet-4-5-20250114",
+      "fallbackModel": "kimi-k2.5",
+      "fallbackReason": "Screenshot-to-code, UI multimodal",
+      "voice": {
+        "provider": "azure",
+        "name": "en-US-JennyNeural",
+        "language": "en-US",
+        "style": "energetic"
+      },
+      "avatar": "06-nova.png",
+      "personality": "Modern, dynamic, animation expert",
+      "promptFile": "agents/nova.json"
+    },
+    "VORTEX": {
+      "name": "VORTEX",
+      "role": "Backend Specialist",
+      "squad": "dev",
+      "model": "claude-sonnet-4-5-20250114",
+      "fallbackModel": "glm-4.7",
+      "fallbackReason": "APIs e lógica sistemática",
+      "voice": {
+        "provider": "azure",
+        "name": "en-US-GuyNeural",
+        "language": "en-US",
+        "style": "systematic"
+      },
+      "avatar": "07-vortex.png",
+      "personality": "Solid, systematic, API master",
+      "promptFile": "agents/vortex.json"
+    },
+    "SWIFT": {
+      "name": "SWIFT",
+      "role": "Mobile Developer",
+      "squad": "dev",
+      "model": "claude-sonnet-4-5-20250114",
+      "fallbackModel": "claude-haiku-4-20250110",
+      "voice": {
+        "provider": "azure",
+        "name": "en-US-AvaMultilingualNeural",
+        "language": "en-US",
+        "style": "agile"
+      },
+      "avatar": "08-swift.png",
+      "personality": "Agile, adaptable, cross-platform",
+      "promptFile": "agents/swift.json"
+    },
+    "SENTINEL": {
+      "name": "SENTINEL",
+      "role": "DevOps Engineer",
+      "squad": "ops",
+      "model": "claude-sonnet-4-5-20250114",
+      "fallbackModel": "claude-haiku-4-20250110",
+      "voice": {
+        "provider": "azure",
+        "name": "en-US-GuyNeural",
+        "language": "en-US",
+        "style": "vigilant"
+      },
+      "avatar": "09-sentinel.png",
+      "personality": "Vigilant, automated, reliable",
+      "promptFile": "agents/sentinel.json"
+    },
+    "GUARDIAN": {
+      "name": "GUARDIAN",
+      "role": "QA Engineer",
+      "squad": "ops",
+      "model": "claude-sonnet-4-5-20250114",
+      "fallbackModel": "claude-haiku-4-20250110",
+      "voice": {
+        "provider": "azure",
+        "name": "pt-PT-RaquelNeural",
+        "language": "pt-PT",
+        "style": "meticulous"
+      },
+      "avatar": "10-guardian.png",
+      "personality": "Meticulous, rigorous, quality-first",
+      "promptFile": "agents/guardian.json"
+    },
+    "CIPHER": {
+      "name": "CIPHER",
+      "role": "Security Specialist",
+      "squad": "ops",
+      "model": "claude-opus-4-5-20250117",
+      "fallbackModel": "claude-sonnet-4-5-20250114",
+      "voice": {
+        "provider": "azure",
+        "name": "pt-PT-DuarteNeural",
+        "language": "pt-PT",
+        "style": "serious"
+      },
+      "avatar": "11-cipher.png",
+      "personality": "Paranoid, protective, zero-trust",
+      "promptFile": "agents/cipher.json"
+    },
+    "NEURAL": {
+      "name": "NEURAL",
+      "role": "AI/ML Engineer",
+      "squad": "dev",
+      "model": "claude-opus-4-5-20250117",
+      "fallbackModel": "glm-4.7",
+      "fallbackReason": "ML reasoning, open source forte",
+      "voice": {
+        "provider": "azure",
+        "name": "fr-FR-RemyMultilingualNeural",
+        "language": "fr-FR",
+        "style": "intellectual"
+      },
+      "avatar": "12-neural.png",
+      "personality": "Intellectual, curious, cutting-edge",
+      "promptFile": "agents/neural.json"
+    },
+    "ORACLE": {
+      "name": "ORACLE",
+      "role": "Database Architect",
+      "squad": "dev",
+      "model": "claude-opus-4-5-20250117",
+      "fallbackModel": "glm-4.7",
+      "fallbackReason": "SQL complexo, optimização queries",
+      "voice": {
+        "provider": "azure",
+        "name": "en-US-AndrewMultilingualNeural",
+        "language": "en-US",
+        "style": "wise"
+      },
+      "avatar": "13-oracle.png",
+      "personality": "Wise, patient, data guardian",
+      "promptFile": "agents/oracle.json"
+    },
+    "VELOCITY": {
+      "name": "VELOCITY",
+      "role": "Performance Engineer",
+      "squad": "ops",
+      "model": "claude-opus-4-5-20250117",
+      "fallbackModel": "glm-4.7",
+      "fallbackReason": "Análise de performance",
+      "voice": {
+        "provider": "azure",
+        "name": "en-US-GuyNeural",
+        "language": "en-US",
+        "style": "fast"
+      },
+      "avatar": "14-velocity.png",
+      "personality": "Fast, optimized, benchmark-driven",
+      "promptFile": "agents/velocity.json"
+    },
+    "SCRIBE": {
+      "name": "SCRIBE",
+      "role": "Documentation Lead",
+      "squad": "support",
+      "model": "claude-sonnet-4-5-20250114",
+      "fallbackModel": "glm-4.7",
+      "fallbackReason": "Documentação, custo-eficiente",
+      "voice": {
+        "provider": "azure",
+        "name": "en-US-JennyNeural",
+        "language": "en-US",
+        "style": "clear"
+      },
+      "avatar": "15-scribe.png",
+      "personality": "Clear, organized, documentation champion",
+      "promptFile": "agents/scribe.json"
+    }
+  },
+  "squads": {
+    "product": ["ATLAS", "PIXEL", "NEXUS"],
+    "dev": ["FORGE", "CODER", "NOVA", "VORTEX", "SWIFT", "NEURAL", "ORACLE"],
+    "ops": ["SENTINEL", "GUARDIAN", "CIPHER", "VELOCITY"],
+    "support": ["SCRIBE"]
+  },
+  "models": {
+    "tier1_strategic": {
+      "id": "claude-opus-4-5-20250117",
+      "provider": "anthropic",
+      "license": "paid_unlimited",
+      "arenaScore": 1510
+    },
+    "tier2_execution": {
+      "id": "claude-sonnet-4-5-20250114",
+      "provider": "anthropic",
+      "license": "paid_unlimited",
+      "arenaScore": 1460
+    },
+    "tier3_tasks": {
+      "id": "claude-haiku-4-20250110",
+      "provider": "anthropic",
+      "license": "paid_unlimited",
+      "arenaScore": 1380
+    },
+    "tier_opensource": {
+      "id": "glm-4.7",
+      "provider": "zhipu",
+      "license": "api_quota",
+      "arenaScore": 1420,
+      "apiKey": "1password:GLM API Key 4.7"
+    },
+    "tier_multimodal": {
+      "id": "kimi-k2.5",
+      "provider": "moonshot",
+      "license": "api_quota_pending",
+      "arenaScore": 1440,
+      "apiKey": "1password:Kimi K2.5 API Key",
+      "notes": "1T params, 32B active, native multimodal, 100 sub-agents"
+    },
+    "tier_speed": {
+      "id": "gemini-3-pro",
+      "provider": "google",
+      "license": "free_tier",
+      "arenaScore": 1445,
+      "contextWindow": "1M tokens"
+    }
+  },
+  "routing": {
+    "strategy": "task_complexity",
+    "fallbackChain": ["primary", "fallback", "glm-4.7", "gemini-3-pro"],
+    "contextRouting": {
+      "under32k": "any",
+      "32k_128k": ["sonnet", "gemini"],
+      "128k_400k": ["gemini"],
+      "over400k": ["gemini-3-pro"]
+    }
+  },
+  "voiceProvider": {
+    "name": "Azure Cognitive Services",
+    "endpoint": "https://westeurope.tts.speech.microsoft.com",
+    "freeQuota": "500000 chars/month"
+  }
+}
