@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎮 Dream Team World - AiParaTi</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: #1a1a2e;
+            font-family: 'Press Start 2P', cursive;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+        
+        .game-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Pixel art world background */
+        .world {
+            width: 1600px;
+            height: 1200px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(180deg, 
+                #2d1b4e 0%, 
+                #1a1a2e 30%,
+                #0f3460 100%);
+            image-rendering: pixelated;
+            border: 8px solid #4a3f6b;
+            border-radius: 8px;
+            box-shadow: 0 0 60px rgba(138, 43, 226, 0.3);
+        }
+        
+        /* Floor tiles */
+        .floor {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 48px,
+                    rgba(255,255,255,0.03) 48px,
+                    rgba(255,255,255,0.03) 50px
+                ),
+                repeating-linear-gradient(
+                    90deg,
+                    transparent,
+                    transparent 48px,
+                    rgba(255,255,255,0.03) 48px,
+                    rgba(255,255,255,0.03) 50px
+                );
+        }
+        
+        /* Magic particles */
+        .particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #fff;
+            border-radius: 50%;
+            animation: float 8s infinite ease-in-out;
+            opacity: 0.6;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0) scale(1); opacity: 0.6; }
+            50% { transform: translateY(-100px) scale(0.5); opacity: 0; }
+        }
+        
+        /* Agent sprites */
+        .agent {
+            position: absolute;
+            width: 64px;
+            height: 64px;
+            cursor: pointer;
+            transition: transform 0.1s;
+            image-rendering: pixelated;
+        }
+        
+        .agent:hover {
+            transform: scale(1.2);
+            z-index: 100;
+        }
+        
+        .agent:hover .agent-name {
+            opacity: 1;
+        }
+        
+        .agent-sprite {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            animation: bounce 0.6s infinite ease-in-out;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-4px); }
+        }
+        
+        /* Working animation */
+        .agent.working .agent-sprite {
+            animation: work 0.3s infinite ease-in-out;
+        }
+        
+        @keyframes work {
+            0%, 100% { transform: translateY(0) rotate(-5deg); }
+            50% { transform: translateY(-2px) rotate(5deg); }
+        }
+        
+        /* Agent name tooltip */
+        .agent-name {
+            position: absolute;
+            bottom: -24px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.9);
+            color: #fff;
+            padding: 4px 8px;
+            font-size: 6px;
+            white-space: nowrap;
+            border-radius: 4px;
+            opacity: 0;
+            transition: opacity 0.2s;
+            border: 2px solid;
+        }
+        
+        .agent-status {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 12px;
+            animation: statusPulse 1s infinite;
+        }
+        
+        @keyframes statusPulse {
+            0%, 100% { transform: translateX(-50%) scale(1); }
+            50% { transform: translateX(-50%) scale(1.2); }
+        }
+        
+        /* Squad areas */
+        .squad-area {
+            position: absolute;
+            border-radius: 16px;
+            padding: 16px;
+        }
+        
+        .squad-label {
+            position: absolute;
+            top: -20px;
+            left: 16px;
+            font-size: 8px;
+            color: rgba(255,255,255,0.7);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        /* Product Squad */
+        .squad-product {
+            left: 100px;
+            top: 100px;
+            width: 400px;
+            height: 300px;
+            background: rgba(147, 51, 234, 0.1);
+            border: 3px dashed rgba(147, 51, 234, 0.3);
+        }
+        
+        /* Dev Squad */
+        .squad-dev {
+            right: 100px;
+            top: 100px;
+            width: 500px;
+            height: 400px;
+            background: rgba(59, 130, 246, 0.1);
+            border: 3px dashed rgba(59, 130, 246, 0.3);
+        }
+        
+        /* Ops Squad */
+        .squad-ops {
+            left: 100px;
+            bottom: 200px;
+            width: 400px;
+            height: 300px;
+            background: rgba(16, 185, 129, 0.1);
+            border: 3px dashed rgba(16, 185, 129, 0.3);
+        }
+        
+        /* Leadership */
+        .squad-leadership {
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px;
+            height: 200px;
+            background: rgba(251, 191, 36, 0.1);
+            border: 3px dashed rgba(251, 191, 36, 0.3);
+        }
+        
+        /* Support */
+        .squad-support {
+            right: 100px;
+            bottom: 200px;
+            width: 250px;
+            height: 200px;
+            background: rgba(236, 72, 153, 0.1);
+            border: 3px dashed rgba(236, 72, 153, 0.3);
+        }
+        
+        /* Furniture - pixel art desks */
+        .desk {
+            position: absolute;
+            width: 80px;
+            height: 48px;
+            background: linear-gradient(180deg, #8B4513 0%, #654321 100%);
+            border: 4px solid #3d2817;
+            border-radius: 4px;
+            box-shadow: 0 8px 0 #3d2817;
+        }
+        
+        .desk::before {
+            content: '';
+            position: absolute;
+            top: 4px;
+            left: 8px;
+            width: 24px;
+            height: 16px;
+            background: #333;
+            border-radius: 2px;
+            box-shadow: 36px 0 0 #333;
+        }
+        
+        /* Magic portal */
+        .portal {
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: radial-gradient(circle, 
+                rgba(138, 43, 226, 0.8) 0%, 
+                rgba(75, 0, 130, 0.4) 50%,
+                transparent 70%);
+            animation: portalPulse 2s infinite ease-in-out;
+            box-shadow: 0 0 40px rgba(138, 43, 226, 0.5);
+        }
+        
+        @keyframes portalPulse {
+            0%, 100% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.1); opacity: 1; }
+        }
+        
+        /* HUD */
+        .hud {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            color: #fff;
+        }
+        
+        .hud h1 {
+            font-size: 12px;
+            color: #a78bfa;
+            margin-bottom: 8px;
+            text-shadow: 2px 2px 0 #000;
+        }
+        
+        .hud-stats {
+            background: rgba(0,0,0,0.8);
+            padding: 12px;
+            border-radius: 8px;
+            border: 3px solid #4a3f6b;
+        }
+        
+        .hud-stat {
+            font-size: 8px;
+            margin: 4px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .hud-stat-bar {
+            width: 100px;
+            height: 8px;
+            background: #333;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .hud-stat-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981, #34d399);
+            animation: fillPulse 2s infinite;
+        }
+        
+        @keyframes fillPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        /* Activity log */
+        .activity-log {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: 400px;
+            max-height: 200px;
+            background: rgba(0,0,0,0.9);
+            border: 3px solid #4a3f6b;
+            border-radius: 8px;
+            padding: 12px;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+        
+        .activity-log h3 {
+            font-size: 8px;
+            color: #a78bfa;
+            margin-bottom: 8px;
+        }
+        
+        .log-entry {
+            font-size: 6px;
+            color: #9ca3af;
+            margin: 4px 0;
+            padding: 4px;
+            border-left: 2px solid;
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        /* Task bubbles */
+        .task-bubble {
+            position: absolute;
+            background: rgba(0,0,0,0.9);
+            color: #fff;
+            font-size: 6px;
+            padding: 6px 10px;
+            border-radius: 8px;
+            border: 2px solid;
+            max-width: 120px;
+            animation: bubbleFloat 3s ease-in-out infinite;
+            pointer-events: none;
+        }
+        
+        .task-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 8px solid;
+        }
+        
+        @keyframes bubbleFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+        
+        /* Mini trees (decorative) */
+        .tree {
+            position: absolute;
+            width: 32px;
+            height: 48px;
+        }
+        
+        .tree::before {
+            content: '🌳';
+            font-size: 32px;
+            filter: hue-rotate(200deg) brightness(0.8);
+        }
+        
+        /* Crystals */
+        .crystal {
+            position: absolute;
+            font-size: 24px;
+            animation: crystalGlow 2s infinite alternate;
+        }
+        
+        @keyframes crystalGlow {
+            from { filter: brightness(0.8) drop-shadow(0 0 8px rgba(138, 43, 226, 0.5)); }
+            to { filter: brightness(1.2) drop-shadow(0 0 16px rgba(138, 43, 226, 0.8)); }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="world" id="world">
+            <div class="floor"></div>
+            
+            <!-- Magic particles -->
+            <div class="particles" id="particles"></div>
+            
+            <!-- Squad areas -->
+            <div class="squad-area squad-product">
+                <span class="squad-label">📦 Product Squad</span>
+            </div>
+            <div class="squad-area squad-dev">
+                <span class="squad-label">💻 Dev Squad</span>
+            </div>
+            <div class="squad-area squad-ops">
+                <span class="squad-label">⚙️ Ops Squad</span>
+            </div>
+            <div class="squad-area squad-leadership">
+                <span class="squad-label">👑 Leadership</span>
+            </div>
+            <div class="squad-area squad-support">
+                <span class="squad-label">📚 Support</span>
+            </div>
+            
+            <!-- Magic portal -->
+            <div class="portal" style="left: 740px; top: 540px;"></div>
+            
+            <!-- Decorative elements -->
+            <div class="tree" style="left: 50px; top: 50px;"></div>
+            <div class="tree" style="right: 50px; top: 50px;"></div>
+            <div class="tree" style="left: 50px; bottom: 50px;"></div>
+            <div class="tree" style="right: 50px; bottom: 50px;"></div>
+            <div class="crystal" style="left: 600px; top: 80px;">💎</div>
+            <div class="crystal" style="right: 200px; bottom: 100px;">💎</div>
+            
+            <!-- Desks -->
+            <div class="desk" style="left: 150px; top: 180px;"></div>
+            <div class="desk" style="left: 280px; top: 180px;"></div>
+            <div class="desk" style="left: 350px; top: 280px;"></div>
+            <div class="desk" style="right: 200px; top: 180px;"></div>
+            <div class="desk" style="right: 350px; top: 180px;"></div>
+            <div class="desk" style="right: 200px; top: 320px;"></div>
+            <div class="desk" style="right: 350px; top: 320px;"></div>
+            <div class="desk" style="left: 150px; bottom: 280px;"></div>
+            <div class="desk" style="left: 280px; bottom: 280px;"></div>
+            
+            <!-- Agents will be added by JS -->
+            <div id="agents"></div>
+        </div>
+    </div>
+    
+    <!-- HUD -->
+    <div class="hud">
+        <h1>🎮 DREAM TEAM WORLD</h1>
+        <div class="hud-stats">
+            <div class="hud-stat">
+                <span>👥 Agentes:</span>
+                <span id="agent-count">16/16</span>
+            </div>
+            <div class="hud-stat">
+                <span>⚡ Actividade:</span>
+                <div class="hud-stat-bar">
+                    <div class="hud-stat-fill" id="activity-bar" style="width: 75%;"></div>
+                </div>
+            </div>
+            <div class="hud-stat">
+                <span>📋 Tasks:</span>
+                <span id="task-count">12 activas</span>
+            </div>
+            <div class="hud-stat">
+                <span>🕐 Uptime:</span>
+                <span id="uptime">00:00:00</span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Activity Log -->
+    <div class="activity-log">
+        <h3>📜 Activity Log</h3>
+        <div id="log-entries"></div>
+    </div>
+    
+    <script>
+        // Agent data
+        const agents = [
+            // Leadership
+            { id: 'jarvis', name: 'JARVIS', emoji: '🤖', role: 'Coordinator', squad: 'leadership', color: '#fbbf24', x: 750, y: 550 },
+            
+            // Product Squad
+            { id: 'atlas', name: 'ATLAS', emoji: '🗺️', role: 'Product Manager', squad: 'product', color: '#9333ea', x: 180, y: 160 },
+            { id: 'pixel', name: 'PIXEL', emoji: '🎨', role: 'UX/UI Designer', squad: 'product', color: '#ec4899', x: 300, y: 160 },
+            { id: 'nexus', name: 'NEXUS', emoji: '📊', role: 'Business Analyst', squad: 'product', color: '#8b5cf6', x: 380, y: 260 },
+            
+            // Dev Squad
+            { id: 'forge', name: 'FORGE', emoji: '🔨', role: 'Tech Lead', squad: 'dev', color: '#3b82f6', x: 1050, y: 160 },
+            { id: 'coder', name: 'CODER', emoji: '👨‍💻', role: 'Senior Dev', squad: 'dev', color: '#06b6d4', x: 1180, y: 160 },
+            { id: 'nova', name: 'NOVA', emoji: '✨', role: 'Frontend', squad: 'dev', color: '#f59e0b', x: 1050, y: 300 },
+            { id: 'vortex', name: 'VORTEX', emoji: '🌀', role: 'Backend', squad: 'dev', color: '#10b981', x: 1180, y: 300 },
+            { id: 'swift', name: 'SWIFT', emoji: '📱', role: 'Mobile', squad: 'dev', color: '#14b8a6', x: 1300, y: 230 },
+            { id: 'neural', name: 'NEURAL', emoji: '🧠', role: 'AI/ML', squad: 'dev', color: '#a855f7', x: 1050, y: 420 },
+            { id: 'oracle', name: 'ORACLE', emoji: '🔮', role: 'Database', squad: 'dev', color: '#6366f1', x: 1180, y: 420 },
+            
+            // Ops Squad
+            { id: 'sentinel', name: 'SENTINEL', emoji: '🛡️', role: 'DevOps', squad: 'ops', color: '#22c55e', x: 180, y: 750 },
+            { id: 'guardian', name: 'GUARDIAN', emoji: '🏛️', role: 'QA', squad: 'ops', color: '#84cc16', x: 300, y: 750 },
+            { id: 'cipher', name: 'CIPHER', emoji: '🔐', role: 'Security', squad: 'ops', color: '#ef4444', x: 180, y: 870 },
+            { id: 'velocity', name: 'VELOCITY', emoji: '⚡', role: 'Performance', squad: 'ops', color: '#f97316', x: 300, y: 870 },
+            
+            // Support Squad
+            { id: 'scribe', name: 'SCRIBE', emoji: '📝', role: 'Documentation', squad: 'support', color: '#64748b', x: 1180, y: 850 }
+        ];
+        
+        // Tasks for agents
+        const tasks = [
+            'Reviewing PR #42',
+            'Writing tests',
+            'Fixing bug',
+            'Optimizing query',
+            'Designing UI',
+            'Updating docs',
+            'Security audit',
+            'Load testing',
+            'Code review',
+            'Sprint planning',
+            'API design',
+            'DB migration'
+        ];
+        
+        // Activity messages
+        const activities = [
+            { agent: 'FORGE', action: 'merged PR #42 to main', color: '#3b82f6' },
+            { agent: 'CODER', action: 'completed feature implementation', color: '#06b6d4' },
+            { agent: 'GUARDIAN', action: 'all tests passing ✓', color: '#22c55e' },
+            { agent: 'NEURAL', action: 'optimized AI response time by 30%', color: '#a855f7' },
+            { agent: 'JARVIS', action: 'coordinating sprint tasks...', color: '#fbbf24' },
+            { agent: 'PIXEL', action: 'uploaded new design mockups', color: '#ec4899' },
+            { agent: 'VORTEX', action: 'deployed API v2.1', color: '#10b981' },
+            { agent: 'ORACLE', action: 'database backup complete', color: '#6366f1' },
+            { agent: 'CIPHER', action: 'security scan: no vulnerabilities', color: '#ef4444' },
+            { agent: 'ATLAS', action: 'updated product roadmap', color: '#9333ea' }
+        ];
+        
+        // Initialize
+        const agentsContainer = document.getElementById('agents');
+        const logEntries = document.getElementById('log-entries');
+        const particlesContainer = document.getElementById('particles');
+        
+        // Create agents
+        agents.forEach((agent, index) => {
+            const el = document.createElement('div');
+            el.className = 'agent' + (Math.random() > 0.3 ? ' working' : '');
+            el.style.left = agent.x + 'px';
+            el.style.top = agent.y + 'px';
+            el.style.animationDelay = (index * 0.1) + 's';
+            
+            el.innerHTML = `
+                <div class="agent-sprite">${agent.emoji}</div>
+                <div class="agent-name" style="border-color: ${agent.color}">${agent.name}<br><small style="color: ${agent.color}">${agent.role}</small></div>
+                <div class="agent-status">${Math.random() > 0.5 ? '💭' : '⚡'}</div>
+            `;
+            
+            // Random task bubble
+            if (Math.random() > 0.6) {
+                const task = tasks[Math.floor(Math.random() * tasks.length)];
+                const bubble = document.createElement('div');
+                bubble.className = 'task-bubble';
+                bubble.style.borderColor = agent.color;
+                bubble.style.left = (agent.x - 30) + 'px';
+                bubble.style.top = (agent.y - 50) + 'px';
+                bubble.innerHTML = task;
+                bubble.querySelector('::after')?.style.borderTopColor = agent.color;
+                agentsContainer.appendChild(bubble);
+            }
+            
+            // Click handler
+            el.onclick = () => {
+                addLogEntry(agent.name, `says: "At your service!"`, agent.color);
+            };
+            
+            agentsContainer.appendChild(el);
+        });
+        
+        // Create particles
+        for (let i = 0; i < 30; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.top = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 8 + 's';
+            particle.style.background = ['#a78bfa', '#f472b6', '#34d399', '#fbbf24'][Math.floor(Math.random() * 4)];
+            particlesContainer.appendChild(particle);
+        }
+        
+        // Add log entry
+        function addLogEntry(agent, action, color) {
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            entry.style.borderColor = color;
+            entry.innerHTML = `<span style="color: ${color}">${agent}</span> ${action}`;
+            logEntries.insertBefore(entry, logEntries.firstChild);
+            
+            // Keep only last 10
+            while (logEntries.children.length > 10) {
+                logEntries.removeChild(logEntries.lastChild);
+            }
+        }
+        
+        // Initial log entries
+        activities.forEach((act, i) => {
+            setTimeout(() => addLogEntry(act.agent, act.action, act.color), i * 500);
+        });
+        
+        // Random activities
+        setInterval(() => {
+            const act = activities[Math.floor(Math.random() * activities.length)];
+            addLogEntry(act.agent, act.action, act.color);
+        }, 5000);
+        
+        // Update uptime
+        let seconds = 0;
+        setInterval(() => {
+            seconds++;
+            const h = Math.floor(seconds / 3600).toString().padStart(2, '0');
+            const m = Math.floor((seconds % 3600) / 60).toString().padStart(2, '0');
+            const s = (seconds % 60).toString().padStart(2, '0');
+            document.getElementById('uptime').textContent = `${h}:${m}:${s}`;
+        }, 1000);
+        
+        // Random agent movement
+        setInterval(() => {
+            const agentEls = document.querySelectorAll('.agent');
+            const randomAgent = agentEls[Math.floor(Math.random() * agentEls.length)];
+            const dx = (Math.random() - 0.5) * 20;
+            const dy = (Math.random() - 0.5) * 20;
+            const currentX = parseInt(randomAgent.style.left);
+            const currentY = parseInt(randomAgent.style.top);
+            randomAgent.style.left = (currentX + dx) + 'px';
+            randomAgent.style.top = (currentY + dy) + 'px';
+        }, 2000);
+        
+        // Toggle working state
+        setInterval(() => {
+            const agentEls = document.querySelectorAll('.agent');
+            const randomAgent = agentEls[Math.floor(Math.random() * agentEls.length)];
+            randomAgent.classList.toggle('working');
+        }, 3000);
+    </script>
+</body>
+</html>
