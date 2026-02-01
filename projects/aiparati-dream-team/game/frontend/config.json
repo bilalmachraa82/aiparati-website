@@ -1,0 +1,35 @@
+{
+  "game": {
+    "title": "AI Para Ti - Dream Team",
+    "version": "0.1.0",
+    "description": "Autonomous AI agents in a fantasy world"
+  },
+  "display": {
+    "width": 800,
+    "height": 600,
+    "tileSize": 32,
+    "pixelRatio": 1,
+    "backgroundColor": "#1a1a2e"
+  },
+  "world": {
+    "mapWidth": 50,
+    "mapHeight": 50,
+    "chunkSize": 16
+  },
+  "agents": {
+    "maxAgents": 10,
+    "tickRate": 100,
+    "llmCallInterval": 5
+  },
+  "audio": {
+    "masterVolume": 0.8,
+    "musicVolume": 0.5,
+    "sfxVolume": 0.7
+  },
+  "debug": {
+    "showGrid": false,
+    "showAgentThoughts": true,
+    "showMemoryPanel": true,
+    "logDecisions": true
+  }
+}
