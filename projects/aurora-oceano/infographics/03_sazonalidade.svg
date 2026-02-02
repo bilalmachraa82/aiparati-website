@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">
+  <defs>
+    <linearGradient id="goldLine" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#c9a962"/>
+      <stop offset="100%" style="stop-color:#e8d5a3"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="800" height="500" fill="#0a0a0a"/>
+  
+  <!-- Title -->
+  <text x="400" y="40" text-anchor="middle" font-family="Inter, Arial" font-size="24" font-weight="700" fill="#ffffff">PADRÃO SAZONAL 2025</text>
+  <text x="400" y="65" text-anchor="middle" font-family="Inter, Arial" font-size="14" fill="#6b7280">Faturação mensal (€ milhares)</text>
+  
+  <!-- Chart Area -->
+  <g transform="translate(80, 100)">
+    <!-- Grid lines -->
+    <line x1="0" y1="0" x2="640" y2="0" stroke="#1a1a1a" stroke-width="1"/>
+    <line x1="0" y1="60" x2="640" y2="60" stroke="#1a1a1a" stroke-width="1"/>
+    <line x1="0" y1="120" x2="640" y2="120" stroke="#1a1a1a" stroke-width="1"/>
+    <line x1="0" y1="180" x2="640" y2="180" stroke="#1a1a1a" stroke-width="1"/>
+    <line x1="0" y1="240" x2="640" y2="240" stroke="#1a1a1a" stroke-width="1"/>
+    
+    <!-- Y-axis labels -->
+    <text x="-10" y="5" text-anchor="end" font-family="Inter, Arial" font-size="10" fill="#6b7280">€700k</text>
+    <text x="-10" y="65" text-anchor="end" font-family="Inter, Arial" font-size="10" fill="#6b7280">€525k</text>
+    <text x="-10" y="125" text-anchor="end" font-family="Inter, Arial" font-size="10" fill="#6b7280">€350k</text>
+    <text x="-10" y="185" text-anchor="end" font-family="Inter, Arial" font-size="10" fill="#6b7280">€175k</text>
+    <text x="-10" y="245" text-anchor="end" font-family="Inter, Arial" font-size="10" fill="#6b7280">€0</text>
+    
+    <!-- Bars 2025 -->
+    <!-- Jan 224k = 77 height -->
+    <rect x="10" y="163" width="40" height="77" rx="4" fill="#c9a962"/>
+    <text x="30" y="270" text-anchor="middle" font-family="Inter, Arial" font-size="9" fill="#6b7280">Jan</text>
+    
+    <!-- Feb 172k = 59 -->
+    <rect x="63" y="181" width="40" height="59" rx="4" fill="#c9a962"/>
+    <text x="83" y="270" text-anchor="middle" font-family="Inter, Arial" font-size="9" fill="#6b7280">Fev</text>
+    
+    <!-- Mar 291k = 100 -->
+    <rect x="116" y="140" width="40" height="100" rx="4" fill="#c9a962"/>
+    <text x="136" y="270" text-anchor="middle" font-family="Inter, Arial" font-size="9" fill="#6b7280">Mar</text>
+    
+    <!-- Apr 287k = 98 -->
+    <rect x="169" y="142" width="40" height="98" rx="4" fill="#c9a962"/>
+    <text x="189" y="270" text-anchor="middle" font-family="Inter, Arial" font-size="9" fill="#6b7280">Abr</text>
+    
+    <!-- Mai 225k = 77 -->
+    <rect x="222" y="163" width="40" height="77" rx="4" fill="#c9a962"/>
+    <text x="242" y="270" text-anchor="middle" font-family="Inter, Arial" font-size="9" fill="#6b7280">Mai</text>
+    
+    <!-- Jun 185k = 64 -->
+    <rect x="275" y="176" width="40" height="64" rx="4" fill="#c9a962"/>
+    <text x="295" y="270" text-anchor="middle" font-family="Inter, Arial" font-size="9" fill="#6b7280">Jun</text>
+    
+    <!-- Jul 560k = 192 -->
+    <rect x="328" y="48" width="40" height="192" rx="4" fill="#16a34a"/>
+    <text x="348" y="270" text-anchor="middle" font-family="Inter, Arial" font-size="9" fill="#16a34a" font-weight="600">Jul</text>
+    <text x="348" y="40" text-anchor="middle" font-family="Inter, Arial" font-size="10" fill="#16a34a" font-weight="600">€560k</text>
+    
+    <!-- Ago 500k = 171 -->
+    <rect x="381" y="69" width="40" height="171" rx="4" fill="#16a34a"/>
+    <text x="401" y="270" text-anchor="middle" font-family="Inter, Arial" font-size="9" fill="#16a34a" font-weight="600">Ago</text>
+    
+    <!-- Set 465k = 159 -->
+    <rect x="434" y="81" width="40" height="159" rx="4" fill="#16a34a"/>
+    <text x="454" y="270" text-anchor="middle" font-family="Inter, Arial" font-size="9" fill="#16a34a" font-weight="600">Set</text>
+    
+    <!-- Out 701k = 240 (max) -->
+    <rect x="487" y="0" width="40" height="240" rx="4" fill="#c9a962"/>
+    <text x="507" y="270" text-anchor="middle" font-family="Inter, Arial" font-size="9" fill="#c9a962" font-weight="600">Out</text>
+    <text x="507" y="-8" text-anchor="middle" font-family="Inter, Arial" font-size="10" fill="#c9a962" font-weight="600">€701k 🔥</text>
+    
+    <!-- Nov 489k = 168 -->
+    <rect x="540" y="72" width="40" height="168" rx="4" fill="#16a34a"/>
+    <text x="560" y="270" text-anchor="middle" font-family="Inter, Arial" font-size="9" fill="#16a34a" font-weight="600">Nov</text>
+    
+    <!-- Dez 313k = 107 -->
+    <rect x="593" y="133" width="40" height="107" rx="4" fill="#c9a962"/>
+    <text x="613" y="270" text-anchor="middle" font-family="Inter, Arial" font-size="9" fill="#6b7280">Dez</text>
+  </g>
+  
+  <!-- Legend -->
+  <g transform="translate(100, 400)">
+    <rect x="0" y="0" width="250" height="70" rx="8" fill="#1a1a1a"/>
+    <rect x="20" y="20" width="20" height="12" rx="2" fill="#16a34a"/>
+    <text x="50" y="30" font-family="Inter, Arial" font-size="12" fill="#ffffff">Época Alta (Jul-Nov)</text>
+    <text x="50" y="50" font-family="Inter, Arial" font-size="18" font-weight="700" fill="#16a34a">61%</text>
+    <text x="100" y="50" font-family="Inter, Arial" font-size="11" fill="#6b7280">da faturação anual</text>
+  </g>
+  
+  <g transform="translate(450, 400)">
+    <rect x="0" y="0" width="250" height="70" rx="8" fill="#1a1a1a"/>
+    <text x="20" y="25" font-family="Inter, Arial" font-size="12" fill="#ffffff">Pico Máximo</text>
+    <text x="20" y="50" font-family="Inter, Arial" font-size="22" font-weight="700" fill="#c9a962">Outubro</text>
+    <text x="130" y="50" font-family="Inter, Arial" font-size="14" fill="#6b7280">€701k</text>
+  </g>
+  
+  <!-- Footer -->
+  <text x="400" y="495" text-anchor="middle" font-family="Inter, Arial" font-size="10" fill="#4a4a4a">AiParaTi | Análise de 16.332 facturas</text>
+</svg>

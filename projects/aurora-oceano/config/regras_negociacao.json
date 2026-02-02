@@ -1,0 +1,100 @@
+{
+  "empresa": {
+    "nome": "Auroroceano, Lda",
+    "morada": "Rua Fernando Moser nº 9, Foros de Amora, 2845-281 Seixal",
+    "email": "auroroceanolda@gmail.com"
+  },
+  "regras_desconto": {
+    "descricao": "Regras automáticas de desconto para negociação",
+    "por_quantidade": [
+      {"min_unidades": 1, "max_unidades": 10, "desconto_max": 0},
+      {"min_unidades": 11, "max_unidades": 50, "desconto_max": 5},
+      {"min_unidades": 51, "max_unidades": 100, "desconto_max": 8},
+      {"min_unidades": 101, "max_unidades": 500, "desconto_max": 10},
+      {"min_unidades": 501, "max_unidades": null, "desconto_max": 12}
+    ],
+    "por_valor_total": [
+      {"min_euros": 0, "max_euros": 100, "desconto_max": 0},
+      {"min_euros": 100, "max_euros": 500, "desconto_max": 3},
+      {"min_euros": 500, "max_euros": 1000, "desconto_max": 5},
+      {"min_euros": 1000, "max_euros": 2500, "desconto_max": 7},
+      {"min_euros": 2500, "max_euros": null, "desconto_max": 10}
+    ],
+    "por_cliente": {
+      "novo": {"desconto_max": 0, "nota": "Clientes novos sem desconto no 1º pedido"},
+      "regular": {"desconto_max": 5, "nota": "3-10 pedidos anteriores"},
+      "fiel": {"desconto_max": 8, "nota": "11-50 pedidos anteriores"},
+      "vip": {"desconto_max": 12, "nota": "50+ pedidos anteriores"}
+    },
+    "categorias_margem_baixa": [
+      "BACALHAU",
+      "PRODUTOS | BACALHAU",
+      "MARISCOS",
+      "PRODUTOS | MARISCOS"
+    ],
+    "categorias_margem_alta": [
+      "PRODUTOS | SALGADOS",
+      "LEGUMES",
+      "PRODUTOS | LEGUMES"
+    ]
+  },
+  "regras_negociacao": {
+    "automatico_sim": [
+      "Quantidade > 50 unidades",
+      "Valor total > 500€",
+      "Cliente fiel ou VIP",
+      "Produto em stock alto"
+    ],
+    "consultar_paula": [
+      "Desconto > 10%",
+      "Produto margem baixa + desconto > 5%",
+      "Cliente novo a pedir desconto",
+      "Pedido urgente fora de rota"
+    ],
+    "automatico_nao": [
+      "Desconto > 15%",
+      "Produto sem stock",
+      "Preço abaixo do custo",
+      "Cliente com dívidas pendentes"
+    ]
+  },
+  "frases_negociacao": {
+    "aceitar_desconto": [
+      "Compreendo. Para essa quantidade, posso aplicar {desconto}% de desconto. O total fica {valor_final}€.",
+      "Considerando o volume do pedido, consigo fazer {desconto}% de desconto especial. Confirma?",
+      "Para um cliente como vocês, posso autorizar {desconto}%. Fica {valor_final}€."
+    ],
+    "recusar_desconto": [
+      "Infelizmente para essa quantidade não consigo baixar mais. O melhor preço é {preco}€.",
+      "Os nossos preços já são muito competitivos. Não tenho margem para mais desconto neste produto.",
+      "Para conseguir melhor preço, precisaria de encomendar pelo menos {quantidade_minima} unidades."
+    ],
+    "consultar": [
+      "Vou verificar com a Paula se consigo essa condição especial. Dou resposta em breve.",
+      "Esse desconto precisa de aprovação. Já contacto a Paula e volto com resposta.",
+      "Deixe-me confirmar internamente. Respondo em 5 minutos."
+    ],
+    "sugerir_alternativa": [
+      "Não consigo esse desconto no {produto}, mas tenho o {alternativa} com melhor preço.",
+      "Se aumentar a quantidade para {quantidade}, consigo chegar a esse preço.",
+      "Para esse preço, posso oferecer o {alternativa} que tem qualidade similar."
+    ]
+  },
+  "alertas_paula": {
+    "prioridade_alta": [
+      "Pedido > 1000€",
+      "Cliente VIP insatisfeito",
+      "Reclamação de qualidade",
+      "Atraso de entrega"
+    ],
+    "prioridade_media": [
+      "Pedido desconto > 10%",
+      "Novo cliente grande",
+      "Stock baixo em pedido"
+    ],
+    "prioridade_baixa": [
+      "Pedido normal processado",
+      "Cliente pergunta disponibilidade"
+    ]
+  }
+}

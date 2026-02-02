@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">
+  <!-- Background -->
+  <rect width="800" height="500" fill="#0a0a0a"/>
+  
+  <!-- Title -->
+  <text x="400" y="40" text-anchor="middle" font-family="Inter, Arial" font-size="24" font-weight="700" fill="#ffffff">CLIENTES PARA RECUPERAR</text>
+  <text x="400" y="65" text-anchor="middle" font-family="Inter, Arial" font-size="14" fill="#dc2626">€358k em faturação perdida</text>
+  
+  <!-- Big callout -->
+  <g transform="translate(50, 90)">
+    <rect x="0" y="0" width="700" height="70" rx="10" fill="#dc2626" opacity="0.15"/>
+    <text x="30" y="30" font-family="Inter, Arial" font-size="14" fill="#dc2626">⚠️ ALERTA</text>
+    <text x="30" y="52" font-family="Inter, Arial" font-size="12" fill="#ffffff">4 clientes que valiam €400k em 2024 quase desapareceram em 2025. Ainda compram algo — a relação existe!</text>
+  </g>
+  
+  <!-- Client cards -->
+  <g transform="translate(50, 180)">
+    <!-- DOCA REAL -->
+    <rect x="0" y="0" width="330" height="90" rx="10" fill="#1a1a1a"/>
+    <rect x="0" y="0" width="6" height="90" rx="3" fill="#dc2626"/>
+    <text x="25" y="25" font-family="Inter, Arial" font-size="14" font-weight="600" fill="#ffffff">DOCA REAL</text>
+    <text x="25" y="48" font-family="Inter, Arial" font-size="11" fill="#6b7280">2024: €143.582 → 2025: €9.685</text>
+    <text x="25" y="72" font-family="Inter, Arial" font-size="18" font-weight="700" fill="#dc2626">-€134k</text>
+    <text x="100" y="72" font-family="Inter, Arial" font-size="11" fill="#6b7280">(-93%)</text>
+    
+    <!-- RAPOSIN -->
+    <rect x="360" y="0" width="330" height="90" rx="10" fill="#1a1a1a"/>
+    <rect x="360" y="0" width="6" height="90" rx="3" fill="#dc2626"/>
+    <text x="385" y="25" font-family="Inter, Arial" font-size="14" font-weight="600" fill="#ffffff">RAPOSIN 🇪🇸</text>
+    <text x="385" y="48" font-family="Inter, Arial" font-size="11" fill="#6b7280">2024: €107.838 → 2025: €6.464</text>
+    <text x="385" y="72" font-family="Inter, Arial" font-size="18" font-weight="700" fill="#dc2626">-€101k</text>
+    <text x="460" y="72" font-family="Inter, Arial" font-size="11" fill="#6b7280">(-94%)</text>
+    
+    <!-- REST. ORIENTAL PALACE -->
+    <rect x="0" y="110" width="330" height="90" rx="10" fill="#1a1a1a"/>
+    <rect x="0" y="110" width="6" height="90" rx="3" fill="#dc2626"/>
+    <text x="25" y="135" font-family="Inter, Arial" font-size="14" font-weight="600" fill="#ffffff">REST. ORIENTAL PALACE</text>
+    <text x="25" y="158" font-family="Inter, Arial" font-size="11" fill="#6b7280">2024: €95.598 → 2025: €3.517</text>
+    <text x="25" y="182" font-family="Inter, Arial" font-size="18" font-weight="700" fill="#dc2626">-€92k</text>
+    <text x="90" y="182" font-family="Inter, Arial" font-size="11" fill="#6b7280">(-96%)</text>
+    
+    <!-- ITALIAN REPUBLIC -->
+    <rect x="360" y="110" width="330" height="90" rx="10" fill="#1a1a1a"/>
+    <rect x="360" y="110" width="6" height="90" rx="3" fill="#c9a962"/>
+    <text x="385" y="135" font-family="Inter, Arial" font-size="14" font-weight="600" fill="#ffffff">ITALIAN REPUBLIC</text>
+    <text x="385" y="158" font-family="Inter, Arial" font-size="11" fill="#6b7280">2024: €54.179 → 2025: €23.085</text>
+    <text x="385" y="182" font-family="Inter, Arial" font-size="18" font-weight="700" fill="#c9a962">-€31k</text>
+    <text x="450" y="182" font-family="Inter, Arial" font-size="11" fill="#6b7280">(-57%)</text>
+  </g>
+  
+  <!-- Total -->
+  <g transform="translate(250, 400)">
+    <rect x="0" y="0" width="300" height="60" rx="10" fill="#dc2626"/>
+    <text x="150" y="25" text-anchor="middle" font-family="Inter, Arial" font-size="14" fill="#ffffff">TOTAL RECUPERÁVEL</text>
+    <text x="150" y="48" text-anchor="middle" font-family="Inter, Arial" font-size="24" font-weight="700" fill="#ffffff">€358.446/ano</text>
+  </g>
+  
+  <!-- Action -->
+  <g transform="translate(50, 470)">
+    <text x="350" y="0" text-anchor="middle" font-family="Inter, Arial" font-size="12" font-weight="600" fill="#16a34a">📞 ACÇÃO: Ligar AMANHÃ e perguntar "O que aconteceu? Como podemos ajudar?"</text>
+  </g>
+  
+  <!-- Footer -->
+  <text x="400" y="495" text-anchor="middle" font-family="Inter, Arial" font-size="10" fill="#4a4a4a">AiParaTi | Análise de retenção 2024→2025</text>
+</svg>

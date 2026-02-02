@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <defs>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#d4af37"/>
+      <stop offset="100%" style="stop-color:#c9a962"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="800" height="600" fill="#0a0a0a"/>
+  
+  <!-- Header -->
+  <text x="400" y="50" font-family="Arial, sans-serif" font-size="14" fill="#c9a962" text-anchor="middle" letter-spacing="3">AURORA OCEANO</text>
+  <text x="400" y="85" font-family="Arial, sans-serif" font-size="24" fill="white" text-anchor="middle" font-weight="bold">CRESCIMENTO ANUAL</text>
+  <line x1="300" y1="100" x2="500" y2="100" stroke="#c9a962" stroke-width="2"/>
+  
+  <!-- Big Number -->
+  <text x="400" y="280" font-family="Arial, sans-serif" font-size="140" fill="url(#goldGrad)" text-anchor="middle" font-weight="bold">+60.6%</text>
+  <text x="400" y="320" font-family="Arial, sans-serif" font-size="18" fill="#888" text-anchor="middle">YoY GROWTH</text>
+  
+  <!-- Comparison boxes -->
+  <rect x="120" y="380" width="240" height="120" fill="#1a1a1a" rx="8"/>
+  <text x="240" y="420" font-family="Arial, sans-serif" font-size="12" fill="#888" text-anchor="middle">2024</text>
+  <text x="240" y="465" font-family="Arial, sans-serif" font-size="36" fill="white" text-anchor="middle" font-weight="bold">€2.75M</text>
+  <text x="240" y="490" font-family="Arial, sans-serif" font-size="12" fill="#666" text-anchor="middle">8.767 facturas</text>
+  
+  <rect x="440" y="380" width="240" height="120" fill="#1a1a1a" rx="8" stroke="#c9a962" stroke-width="2"/>
+  <text x="560" y="420" font-family="Arial, sans-serif" font-size="12" fill="#c9a962" text-anchor="middle">2025</text>
+  <text x="560" y="465" font-family="Arial, sans-serif" font-size="36" fill="#c9a962" text-anchor="middle" font-weight="bold">€4.41M</text>
+  <text x="560" y="490" font-family="Arial, sans-serif" font-size="12" fill="#888" text-anchor="middle">7.565 facturas</text>
+  
+  <!-- Arrow -->
+  <path d="M375 440 L425 440" stroke="#c9a962" stroke-width="3" fill="none"/>
+  <polygon points="420,433 435,440 420,447" fill="#c9a962"/>
+  
+  <!-- Footer -->
+  <text x="400" y="560" font-family="Arial, sans-serif" font-size="11" fill="#555" text-anchor="middle">Análise de Performance Comercial | Dados até Dezembro 2025</text>
+</svg>

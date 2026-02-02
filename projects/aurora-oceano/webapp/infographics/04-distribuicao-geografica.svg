@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <defs>
+    <linearGradient id="goldGrad4" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#d4af37"/>
+      <stop offset="100%" style="stop-color:#c9a962"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="800" height="600" fill="#0a0a0a"/>
+  
+  <!-- Header -->
+  <text x="400" y="40" font-family="Arial, sans-serif" font-size="14" fill="#c9a962" text-anchor="middle" letter-spacing="3">AURORA OCEANO</text>
+  <text x="400" y="70" font-family="Arial, sans-serif" font-size="22" fill="white" text-anchor="middle" font-weight="bold">DISTRIBUIÇÃO GEOGRÁFICA</text>
+  <line x1="270" y1="85" x2="530" y2="85" stroke="#c9a962" stroke-width="1"/>
+  
+  <!-- Iberian Peninsula simplified map -->
+  <g transform="translate(150, 120)">
+    <!-- Portugal outline -->
+    <path d="M80,50 L95,45 L105,60 L115,80 L120,120 L125,160 L130,200 L125,240 L115,280 L100,310 L80,330 L60,320 L50,290 L45,250 L50,200 L55,150 L60,100 L70,60 Z" 
+          fill="#c9a962" stroke="#d4af37" stroke-width="2"/>
+    
+    <!-- Spain outline -->
+    <path d="M115,80 L150,60 L200,50 L260,55 L320,70 L360,90 L380,130 L370,180 L350,220 L320,250 L280,270 L240,280 L200,275 L160,260 L130,240 L125,200 L120,160 L115,120 Z" 
+          fill="#444" stroke="#555" stroke-width="2"/>
+    
+    <!-- Labels on map -->
+    <text x="85" y="190" font-family="Arial, sans-serif" font-size="14" fill="#0a0a0a" font-weight="bold">PT</text>
+    <text x="240" y="160" font-family="Arial, sans-serif" font-size="14" fill="#888" font-weight="bold">ES</text>
+    
+    <!-- Porto marker (0% penetration) -->
+    <circle cx="75" cy="100" r="8" fill="#ff4444" stroke="white" stroke-width="2"/>
+    <text x="95" y="95" font-family="Arial, sans-serif" font-size="10" fill="#ff4444">Porto 0%</text>
+    
+    <!-- Lisboa marker -->
+    <circle cx="70" cy="220" r="10" fill="#c9a962" stroke="white" stroke-width="2"/>
+  </g>
+  
+  <!-- Data panels -->
+  <g transform="translate(500, 140)">
+    <!-- Portugal Panel -->
+    <rect x="0" y="0" width="250" height="140" fill="#1a1a1a" rx="8" stroke="#c9a962" stroke-width="2"/>
+    <text x="20" y="30" font-family="Arial, sans-serif" font-size="14" fill="#c9a962" font-weight="bold">🇵🇹 PORTUGAL</text>
+    <text x="20" y="60" font-family="Arial, sans-serif" font-size="36" fill="white" font-weight="bold">85%</text>
+    <text x="90" y="60" font-family="Arial, sans-serif" font-size="14" fill="#888">do volume</text>
+    <line x1="20" y1="75" x2="230" y2="75" stroke="#333" stroke-width="1"/>
+    <text x="20" y="95" font-family="Arial, sans-serif" font-size="12" fill="#aaa">Faturação:</text>
+    <text x="230" y="95" font-family="Arial, sans-serif" font-size="14" fill="#c9a962" text-anchor="end" font-weight="bold">€3.75M</text>
+    <text x="20" y="120" font-family="Arial, sans-serif" font-size="12" fill="#aaa">Concentração:</text>
+    <text x="230" y="120" font-family="Arial, sans-serif" font-size="14" fill="#c9a962" text-anchor="end">Centro-Sul</text>
+    
+    <!-- Spain Panel -->
+    <rect x="0" y="160" width="250" height="140" fill="#1a1a1a" rx="8"/>
+    <text x="20" y="190" font-family="Arial, sans-serif" font-size="14" fill="#888" font-weight="bold">🇪🇸 ESPANHA</text>
+    <text x="20" y="220" font-family="Arial, sans-serif" font-size="36" fill="#888" font-weight="bold">15%</text>
+    <text x="90" y="220" font-family="Arial, sans-serif" font-size="14" fill="#666">do volume</text>
+    <line x1="20" y1="235" x2="230" y2="235" stroke="#333" stroke-width="1"/>
+    <text x="20" y="255" font-family="Arial, sans-serif" font-size="12" fill="#888">Faturação:</text>
+    <text x="230" y="255" font-family="Arial, sans-serif" font-size="14" fill="#888" text-anchor="end" font-weight="bold">€668k</text>
+    <text x="20" y="280" font-family="Arial, sans-serif" font-size="12" fill="#888">Tendência:</text>
+    <text x="230" y="280" font-family="Arial, sans-serif" font-size="14" fill="#4CAF50" text-anchor="end">↑ Crescimento</text>
+  </g>
+  
+  <!-- Opportunity callout -->
+  <rect x="80" y="470" width="640" height="80" fill="#1a1a1a" rx="8" stroke="#ff4444" stroke-width="1"/>
+  <text x="110" y="500" font-family="Arial, sans-serif" font-size="14" fill="#ff4444" font-weight="bold">🎯 OPORTUNIDADE CRÍTICA: PORTO</text>
+  <text x="110" y="525" font-family="Arial, sans-serif" font-size="12" fill="#aaa">Penetração actual: 0% | Segunda maior cidade de Portugal</text>
+  <text x="110" y="545" font-family="Arial, sans-serif" font-size="11" fill="#888">Potencial estimado: €400k-600k/ano com expansão da rede comercial Norte</text>
+  
+  <!-- Footer -->
+  <text x="400" y="580" font-family="Arial, sans-serif" font-size="10" fill="#444" text-anchor="middle">Análise Geográfica de Mercado | Identificação de Zonas de Expansão</text>
+</svg>

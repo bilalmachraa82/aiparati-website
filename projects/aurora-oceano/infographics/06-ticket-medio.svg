@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <defs>
+    <linearGradient id="goldGrad6" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#d4af37"/>
+      <stop offset="100%" style="stop-color:#c9a962"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="800" height="600" fill="#0a0a0a"/>
+  
+  <!-- Header -->
+  <text x="400" y="40" font-family="Arial, sans-serif" font-size="14" fill="#c9a962" text-anchor="middle" letter-spacing="3">AURORA OCEANO</text>
+  <text x="400" y="70" font-family="Arial, sans-serif" font-size="22" fill="white" text-anchor="middle" font-weight="bold">EVOLUÇÃO DO TICKET MÉDIO</text>
+  <line x1="270" y1="85" x2="530" y2="85" stroke="#c9a962" stroke-width="1"/>
+  
+  <!-- Big growth percentage -->
+  <text x="400" y="160" font-family="Arial, sans-serif" font-size="72" fill="url(#goldGrad6)" text-anchor="middle" font-weight="bold">+86%</text>
+  <text x="400" y="185" font-family="Arial, sans-serif" font-size="14" fill="#888" text-anchor="middle">CRESCIMENTO DO VALOR POR TRANSAÇÃO</text>
+  
+  <!-- Visual comparison -->
+  <g transform="translate(0, 50)">
+    <!-- 2024 Bar -->
+    <rect x="180" y="230" width="140" height="200" fill="#333" rx="8"/>
+    <rect x="180" y="330" width="140" height="100" fill="#444" rx="0 0 8 8"/>
+    <text x="250" y="290" font-family="Arial, sans-serif" font-size="14" fill="#888" text-anchor="middle">2024</text>
+    <text x="250" y="370" font-family="Arial, sans-serif" font-size="32" fill="white" text-anchor="middle" font-weight="bold">€313</text>
+    <text x="250" y="395" font-family="Arial, sans-serif" font-size="11" fill="#666" text-anchor="middle">por factura</text>
+    <text x="250" y="420" font-family="Arial, sans-serif" font-size="10" fill="#555" text-anchor="middle">8.767 transações</text>
+    
+    <!-- Arrow -->
+    <path d="M340 330 L420 330" stroke="#c9a962" stroke-width="3" fill="none"/>
+    <polygon points="415,320 435,330 415,340" fill="#c9a962"/>
+    <text x="380" y="310" font-family="Arial, sans-serif" font-size="18" fill="#c9a962" text-anchor="middle" font-weight="bold">+86%</text>
+    
+    <!-- 2025 Bar -->
+    <rect x="480" y="230" width="140" height="200" fill="#1a1a1a" rx="8" stroke="#c9a962" stroke-width="2"/>
+    <rect x="480" y="260" width="140" height="170" fill="url(#goldGrad6)" rx="0 0 8 8"/>
+    <text x="550" y="250" font-family="Arial, sans-serif" font-size="14" fill="#c9a962" text-anchor="middle" font-weight="bold">2025</text>
+    <text x="550" y="330" font-family="Arial, sans-serif" font-size="40" fill="#0a0a0a" text-anchor="middle" font-weight="bold">€583</text>
+    <text x="550" y="360" font-family="Arial, sans-serif" font-size="12" fill="#0a0a0a" text-anchor="middle">por factura</text>
+    <text x="550" y="390" font-family="Arial, sans-serif" font-size="11" fill="#1a1a1a" text-anchor="middle">7.565 transações</text>
+  </g>
+  
+  <!-- Insight boxes -->
+  <g transform="translate(80, 500)">
+    <rect x="0" y="0" width="200" height="55" fill="#1a1a1a" rx="6"/>
+    <text x="15" y="22" font-family="Arial, sans-serif" font-size="10" fill="#888">Volume de facturas</text>
+    <text x="15" y="42" font-family="Arial, sans-serif" font-size="16" fill="#ff6b6b" font-weight="bold">-14%</text>
+    <text x="60" y="42" font-family="Arial, sans-serif" font-size="11" fill="#888">menos transações</text>
+    
+    <rect x="220" y="0" width="200" height="55" fill="#1a1a1a" rx="6"/>
+    <text x="235" y="22" font-family="Arial, sans-serif" font-size="10" fill="#888">Valor por transação</text>
+    <text x="235" y="42" font-family="Arial, sans-serif" font-size="16" fill="#4CAF50" font-weight="bold">+86%</text>
+    <text x="285" y="42" font-family="Arial, sans-serif" font-size="11" fill="#888">maior valor</text>
+    
+    <rect x="440" y="0" width="200" height="55" fill="#1a1a1a" rx="6" stroke="#c9a962" stroke-width="1"/>
+    <text x="455" y="22" font-family="Arial, sans-serif" font-size="10" fill="#c9a962">💡 Estratégia validada</text>
+    <text x="455" y="42" font-family="Arial, sans-serif" font-size="10" fill="#aaa">Foco em clientes premium</text>
+    <text x="455" y="52" font-family="Arial, sans-serif" font-size="10" fill="#aaa">compensa volume menor</text>
+  </g>
+  
+  <!-- Footer -->
+  <text x="400" y="585" font-family="Arial, sans-serif" font-size="10" fill="#444" text-anchor="middle">Análise de Valor por Transação | Validação de Estratégia Premium</text>
+</svg>

@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proposta Aurora Oceano | AiParaTi</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap');
+        
+        :root {
+            --primary: #1e40af;
+            --secondary: #0ea5e9;
+            --accent: #f59e0b;
+            --dark: #0f172a;
+            --light: #f1f5f9;
+            --aurora-blue: #0369a1;
+            --aurora-teal: #0891b2;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--dark);
+            color: white;
+            line-height: 1.6;
+        }
+        
+        .slide {
+            min-height: 100vh;
+            padding: 60px 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .slide::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(ellipse at top right, rgba(14, 165, 233, 0.1) 0%, transparent 50%),
+                        radial-gradient(ellipse at bottom left, rgba(245, 158, 11, 0.05) 0%, transparent 50%);
+            z-index: 0;
+        }
+        
+        .slide > * {
+            position: relative;
+            z-index: 1;
+        }
+        
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--secondary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        h2 {
+            font-size: 2.5rem;
+            color: var(--secondary);
+            margin-bottom: 2rem;
+        }
+        
+        h3 {
+            font-size: 1.5rem;
+            color: var(--accent);
+            margin: 1.5rem 0 1rem;
+        }
+        
+        .subtitle {
+            font-size: 1.5rem;
+            color: #94a3b8;
+            margin-bottom: 2rem;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .logo {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, var(--aurora-blue), var(--aurora-teal));
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+        }
+        
+        .company-name {
+            font-size: 3rem;
+            font-weight: 700;
+            color: white;
+        }
+        
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+        }
+        
+        .card:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-5px);
+            border-color: var(--secondary);
+        }
+        
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .card h4 {
+            font-size: 1.2rem;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+        
+        .card p {
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+        
+        .stat-box {
+            text-align: center;
+            padding: 2rem;
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.1), rgba(245, 158, 11, 0.05));
+            border-radius: 16px;
+            border: 1px solid rgba(14, 165, 233, 0.2);
+        }
+        
+        .stat-value {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+        
+        .stat-label {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+        
+        .price-box {
+            background: linear-gradient(135deg, var(--primary), var(--aurora-blue));
+            border-radius: 20px;
+            padding: 3rem;
+            text-align: center;
+        }
+        
+        .price {
+            font-size: 4rem;
+            font-weight: 700;
+            color: white;
+        }
+        
+        .price-label {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.2rem;
+        }
+        
+        .price-details {
+            margin-top: 2rem;
+            text-align: left;
+        }
+        
+        .price-details li {
+            color: rgba(255, 255, 255, 0.9);
+            padding: 0.5rem 0;
+            list-style: none;
+        }
+        
+        .price-details li::before {
+            content: '✓';
+            color: var(--accent);
+            margin-right: 0.5rem;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 2rem;
+        }
+        
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        th {
+            color: var(--secondary);
+            font-weight: 500;
+        }
+        
+        tr:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
+        
+        .tag {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .tag-blue { background: rgba(14, 165, 233, 0.2); color: var(--secondary); }
+        .tag-gold { background: rgba(245, 158, 11, 0.2); color: var(--accent); }
+        .tag-green { background: rgba(34, 197, 94, 0.2); color: #22c55e; }
+        
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+        }
+        
+        .team-member {
+            text-align: center;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+        }
+        
+        .team-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--secondary), var(--accent));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 1.5rem;
+        }
+        
+        .team-name {
+            font-weight: 600;
+            color: white;
+        }
+        
+        .team-role {
+            font-size: 0.8rem;
+            color: #94a3b8;
+        }
+        
+        .timeline {
+            position: relative;
+            margin-left: 20px;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--secondary), var(--accent));
+        }
+        
+        .timeline-item {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 2rem;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -5px;
+            top: 5px;
+            width: 12px;
+            height: 12px;
+            background: var(--accent);
+            border-radius: 50%;
+        }
+        
+        .cta {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            background: linear-gradient(135deg, var(--accent), #f97316);
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            margin-top: 2rem;
+        }
+        
+        .cta:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 40px rgba(245, 158, 11, 0.3);
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .slide {
+                padding: 40px 20px;
+            }
+            
+            h1 { font-size: 2rem; }
+            h2 { font-size: 1.5rem; }
+            
+            .grid-2, .grid-3 {
+                grid-template-columns: 1fr;
+            }
+            
+            .team-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Slide 1: Capa -->
+    <section class="slide">
+        <div class="logo-container">
+            <div class="logo">🌊</div>
+            <div>
+                <div class="company-name">Aurora Oceano</div>
+                <p style="color: #94a3b8;">Distribuição Alimentar</p>
+            </div>
+        </div>
+        <h1>Transformação Digital com IA</h1>
+        <p class="subtitle">Proposta de Sistema Inteligente de Gestão Operacional</p>
+        <div style="margin-top: 3rem; display: flex; align-items: center; gap: 1rem;">
+            <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='80'>🤖</text></svg>" width="40" height="40" alt="">
+            <span style="color: #94a3b8;">Powered by</span>
+            <span style="font-weight: 600; color: var(--accent);">AiParaTi</span>
+        </div>
+        <p style="color: #64748b; margin-top: 3rem;">Fevereiro 2026 | Confidencial</p>
+    </section>
+
+    <!-- Slide 2: Desafios -->
+    <section class="slide">
+        <h2>Os Desafios de Hoje</h2>
+        <div class="grid-3">
+            <div class="card">
+                <div class="card-icon">⏰</div>
+                <h4>Tempo Perdido</h4>
+                <p>Horas gastas em tarefas administrativas repetitivas: verificar encomendas, procurar preços, gerar documentos.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">📊</div>
+                <h4>Visibilidade Limitada</h4>
+                <p>Falta de dashboard em tempo real. Decisões baseadas em intuição em vez de dados.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">🚚</div>
+                <h4>Rotas Ineficientes</h4>
+                <p>Planeamento manual de entregas sem optimização. Custos de combustível desnecessários.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">📞</div>
+                <h4>Comunicação Fragmentada</h4>
+                <p>Clientes a ligar para saber preços e disponibilidade. Vendedores sem acesso a informação rápida.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">⚠️</div>
+                <h4>Stock e Validades</h4>
+                <p>Produtos a expirar sem aviso. Rupturas de stock que afectam vendas.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">💳</div>
+                <h4>Cobranças em Atraso</h4>
+                <p>Falta de alertas para pagamentos vencidos. Cash flow comprometido.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 3: Solução -->
+    <section class="slide">
+        <h2>A Solução: Sistema Inteligente Aurora</h2>
+        <p class="subtitle">Automação + Visibilidade + Inteligência Artificial</p>
+        <div class="grid-2">
+            <div class="card">
+                <div class="card-icon">🤖</div>
+                <h4>Bot Telegram 24/7</h4>
+                <p>Assistente virtual para encomendas, consultas de preço, fichas técnicas. Disponível a qualquer hora.</p>
+                <div style="margin-top: 1rem;">
+                    <span class="tag tag-blue">Automatizado</span>
+                    <span class="tag tag-gold">IA</span>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-icon">📊</div>
+                <h4>Dashboard Operacional</h4>
+                <p>Painel em tempo real com faturação, alertas, KPIs. Acesso via browser em qualquer dispositivo.</p>
+                <div style="margin-top: 1rem;">
+                    <span class="tag tag-blue">Real-time</span>
+                    <span class="tag tag-green">Moloni</span>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-icon">🚚</div>
+                <h4>Optimização de Rotas</h4>
+                <p>Algoritmo IA que calcula rotas óptimas. Redução de 15% nos custos de transporte.</p>
+                <div style="margin-top: 1rem;">
+                    <span class="tag tag-gold">IA</span>
+                    <span class="tag tag-green">Poupança</span>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-icon">🔔</div>
+                <h4>Sistema de Alertas</h4>
+                <p>Notificações automáticas: stock baixo, validades, pagamentos em atraso, novos pedidos.</p>
+                <div style="margin-top: 1rem;">
+                    <span class="tag tag-blue">Proactivo</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 4: Números Actuais -->
+    <section class="slide">
+        <h2>Análise do Negócio</h2>
+        <p class="subtitle">Dados de Janeiro 2026</p>
+        <div class="grid-3">
+            <div class="stat-box">
+                <div class="stat-value">€14.7k</div>
+                <div class="stat-label">Faturação Mensal</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value">€295</div>
+                <div class="stat-label">Ticket Médio</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value">50+</div>
+                <div class="stat-label">Transacções/Mês</div>
+            </div>
+        </div>
+        <h3>Top Clientes</h3>
+        <table>
+            <tr>
+                <th>Cliente</th>
+                <th>Zona</th>
+                <th>Faturação</th>
+                <th>% Total</th>
+            </tr>
+            <tr>
+                <td>REST. O FONDUE</td>
+                <td>Barreiro</td>
+                <td>€3.831</td>
+                <td><span class="tag tag-gold">26%</span></td>
+            </tr>
+            <tr>
+                <td>Produtos Alimentares Carina</td>
+                <td>Chaves</td>
+                <td>€2.878</td>
+                <td><span class="tag tag-blue">20%</span></td>
+            </tr>
+            <tr>
+                <td>REST. DRAGÃO DOURADO</td>
+                <td>Setúbal</td>
+                <td>€609</td>
+                <td><span class="tag tag-green">4%</span></td>
+            </tr>
+        </table>
+    </section>
+
+    <!-- Slide 5: ROI -->
+    <section class="slide">
+        <h2>Retorno do Investimento</h2>
+        <div class="grid-2">
+            <div>
+                <h3>Poupanças Mensais Estimadas</h3>
+                <table>
+                    <tr>
+                        <th>Área</th>
+                        <th>Poupança</th>
+                    </tr>
+                    <tr>
+                        <td>Tempo administrativo</td>
+                        <td><strong>€600</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Redução de erros</td>
+                        <td><strong>€200</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Optimização de rotas</td>
+                        <td><strong>€150</strong></td>
+                    </tr>
+                    <tr style="background: rgba(245, 158, 11, 0.1);">
+                        <td><strong>TOTAL MENSAL</strong></td>
+                        <td><strong style="color: var(--accent);">€950</strong></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="stat-box" style="display: flex; flex-direction: column; justify-content: center;">
+                <div class="stat-value">380%</div>
+                <div class="stat-label" style="font-size: 1.2rem;">ROI no 1º Ano</div>
+                <div style="margin-top: 1rem; color: #94a3b8;">
+                    Break-even em <strong style="color: var(--accent);">3 meses</strong>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 6: Preços -->
+    <section class="slide">
+        <h2>Investimento</h2>
+        <div class="grid-2">
+            <div class="price-box">
+                <div class="price-label">Setup Inicial</div>
+                <div class="price">€2.500</div>
+                <ul class="price-details">
+                    <li>Bot Telegram completo</li>
+                    <li>Dashboard operacional</li>
+                    <li>Integração Moloni</li>
+                    <li>Treino de equipa (2h)</li>
+                    <li>Suporte durante setup</li>
+                </ul>
+            </div>
+            <div class="price-box" style="background: linear-gradient(135deg, var(--aurora-teal), var(--secondary));">
+                <div class="price-label">Manutenção Mensal</div>
+                <div class="price">€150</div>
+                <ul class="price-details">
+                    <li>Hosting & infraestrutura</li>
+                    <li>Suporte técnico</li>
+                    <li>Updates e melhorias</li>
+                    <li>Monitorização 24/7</li>
+                    <li>Backups diários</li>
+                </ul>
+            </div>
+        </div>
+        <h3 style="margin-top: 3rem;">Pacote Grupo Empresarial</h3>
+        <div class="grid-2" style="margin-top: 1rem;">
+            <div class="card">
+                <h4>Setup por Parceiro</h4>
+                <div class="stat-value" style="font-size: 2rem;">€750</div>
+                <p>Configuração adicional para cada empresa do grupo</p>
+            </div>
+            <div class="card">
+                <h4>Manutenção por Parceiro</h4>
+                <div class="stat-value" style="font-size: 2rem;">€50/mês</div>
+                <p>Dashboard unificado e dados consolidados</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 7: Timeline -->
+    <section class="slide">
+        <h2>Plano de Implementação</h2>
+        <div class="timeline">
+            <div class="timeline-item">
+                <h4 style="color: var(--secondary);">Semanas 1-2: Setup</h4>
+                <p>Configuração do ambiente, integração Moloni, desenvolvimento do Bot básico</p>
+            </div>
+            <div class="timeline-item">
+                <h4 style="color: var(--secondary);">Semanas 3-4: Testes</h4>
+                <p>Testes com dados reais, ajustes de IA, formação da equipa</p>
+            </div>
+            <div class="timeline-item">
+                <h4 style="color: var(--secondary);">Semanas 5-6: Soft Launch</h4>
+                <p>Lançamento controlado, recolha de feedback, melhorias</p>
+            </div>
+            <div class="timeline-item">
+                <h4 style="color: var(--accent);">Semanas 7-8: Go Live</h4>
+                <p>Sistema em produção completa, optimização de rotas, relatórios automáticos</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 8: Equipa -->
+    <section class="slide">
+        <h2>A Nossa Equipa</h2>
+        <p class="subtitle">Dream Team AiParaTi</p>
+        <div class="team-grid">
+            <div class="team-member">
+                <div class="team-avatar">👨‍💼</div>
+                <div class="team-name">Bilal</div>
+                <div class="team-role">Gestor de Projecto</div>
+            </div>
+            <div class="team-member">
+                <div class="team-avatar">🤖</div>
+                <div class="team-name">JARVIS</div>
+                <div class="team-role">AI Coordinator</div>
+            </div>
+            <div class="team-member">
+                <div class="team-avatar">⚙️</div>
+                <div class="team-name">FORGE</div>
+                <div class="team-role">Tech Lead</div>
+            </div>
+            <div class="team-member">
+                <div class="team-avatar">🛡️</div>
+                <div class="team-name">CIPHER</div>
+                <div class="team-role">Security</div>
+            </div>
+            <div class="team-member">
+                <div class="team-avatar">💻</div>
+                <div class="team-name">CODER</div>
+                <div class="team-role">Development</div>
+            </div>
+            <div class="team-member">
+                <div class="team-avatar">🎨</div>
+                <div class="team-name">NOVA</div>
+                <div class="team-role">Frontend</div>
+            </div>
+            <div class="team-member">
+                <div class="team-avatar">🔧</div>
+                <div class="team-name">VORTEX</div>
+                <div class="team-role">Backend</div>
+            </div>
+            <div class="team-member">
+                <div class="team-avatar">✅</div>
+                <div class="team-name">GUARDIAN</div>
+                <div class="team-role">QA</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 9: CTA -->
+    <section class="slide" style="text-align: center;">
+        <h1>Pronto para Transformar o Seu Negócio?</h1>
+        <p class="subtitle">Junte-se às empresas que já estão a usar IA para crescer</p>
+        <div style="margin-top: 3rem;">
+            <div class="grid-3" style="max-width: 800px; margin: 0 auto;">
+                <div class="stat-box">
+                    <div class="stat-value">10x</div>
+                    <div class="stat-label">Potencial de Crescimento</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value">380%</div>
+                    <div class="stat-label">ROI Esperado</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value">4 sem</div>
+                    <div class="stat-label">Time to Value</div>
+                </div>
+            </div>
+        </div>
+        <a href="mailto:bilal@aiparati.pt" class="cta">Agendar Reunião</a>
+        <p style="color: #64748b; margin-top: 2rem;">bilal@aiparati.pt | aiparati.pt</p>
+    </section>
+
+    <div class="footer">
+        <p>© 2026 AiParaTi | Consultoria de Inteligência Artificial</p>
+        <p>"Simplificar o trabalho digital, libertando tempo para o que importa."</p>
+    </div>
+</body>
+</html>

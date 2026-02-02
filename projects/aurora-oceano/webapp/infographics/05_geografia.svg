@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">
+  <!-- Background -->
+  <rect width="800" height="500" fill="#0a0a0a"/>
+  
+  <!-- Title -->
+  <text x="400" y="40" text-anchor="middle" font-family="Inter, Arial" font-size="24" font-weight="700" fill="#ffffff">DISTRIBUIÇÃO GEOGRÁFICA 2025</text>
+  <text x="400" y="65" text-anchor="middle" font-family="Inter, Arial" font-size="14" fill="#6b7280">Portugal vs Espanha</text>
+  
+  <!-- Donut Chart -->
+  <g transform="translate(200, 250)">
+    <!-- Outer ring - Portugal -->
+    <circle cx="0" cy="0" r="100" fill="none" stroke="#c9a962" stroke-width="40" stroke-dasharray="519 100" transform="rotate(-90)"/>
+    
+    <!-- Inner ring - Spain -->
+    <circle cx="0" cy="0" r="100" fill="none" stroke="#16a34a" stroke-width="40" stroke-dasharray="94 525" stroke-dashoffset="-519" transform="rotate(-90)"/>
+    
+    <!-- Center -->
+    <circle cx="0" cy="0" r="60" fill="#0a0a0a"/>
+    <text x="0" y="-5" text-anchor="middle" font-family="Inter, Arial" font-size="24" font-weight="700" fill="#ffffff">€4.41M</text>
+    <text x="0" y="18" text-anchor="middle" font-family="Inter, Arial" font-size="11" fill="#6b7280">Total 2025</text>
+  </g>
+  
+  <!-- Legend -->
+  <g transform="translate(380, 150)">
+    <!-- Portugal -->
+    <rect x="0" y="0" width="350" height="80" rx="8" fill="#1a1a1a"/>
+    <rect x="20" y="25" width="30" height="30" rx="4" fill="#c9a962"/>
+    <text x="65" y="35" font-family="Inter, Arial" font-size="14" fill="#ffffff">🇵🇹 Portugal</text>
+    <text x="65" y="55" font-family="Inter, Arial" font-size="24" font-weight="700" fill="#c9a962">€3.65M</text>
+    <text x="180" y="55" font-family="Inter, Arial" font-size="16" fill="#6b7280">(82.6%)</text>
+    
+    <!-- Spain -->
+    <rect x="0" y="100" width="350" height="80" rx="8" fill="#1a1a1a"/>
+    <rect x="20" y="125" width="30" height="30" rx="4" fill="#16a34a"/>
+    <text x="65" y="135" font-family="Inter, Arial" font-size="14" fill="#ffffff">🇪🇸 Espanha</text>
+    <text x="65" y="155" font-family="Inter, Arial" font-size="24" font-weight="700" fill="#16a34a">€668k</text>
+    <text x="170" y="155" font-family="Inter, Arial" font-size="16" fill="#6b7280">(15.1%)</text>
+    <text x="250" y="155" font-family="Inter, Arial" font-size="12" fill="#16a34a">+117% YoY</text>
+  </g>
+  
+  <!-- Top Zones -->
+  <g transform="translate(50, 380)">
+    <text x="0" y="0" font-family="Inter, Arial" font-size="12" font-weight="600" fill="#6b7280">TOP ZONAS</text>
+    
+    <rect x="0" y="15" width="130" height="50" rx="6" fill="#1a1a1a"/>
+    <text x="65" y="35" text-anchor="middle" font-family="Inter, Arial" font-size="10" fill="#6b7280">Braga</text>
+    <text x="65" y="52" text-anchor="middle" font-family="Inter, Arial" font-size="14" font-weight="700" fill="#c9a962">€585k</text>
+    
+    <rect x="145" y="15" width="130" height="50" rx="6" fill="#1a1a1a"/>
+    <text x="210" y="35" text-anchor="middle" font-family="Inter, Arial" font-size="10" fill="#6b7280">Lisboa</text>
+    <text x="210" y="52" text-anchor="middle" font-family="Inter, Arial" font-size="14" font-weight="700" fill="#c9a962">€338k</text>
+    
+    <rect x="290" y="15" width="130" height="50" rx="6" fill="#1a1a1a"/>
+    <text x="355" y="35" text-anchor="middle" font-family="Inter, Arial" font-size="10" fill="#6b7280">Ayamonte 🇪🇸</text>
+    <text x="355" y="52" text-anchor="middle" font-family="Inter, Arial" font-size="14" font-weight="700" fill="#16a34a">€297k</text>
+    
+    <rect x="435" y="15" width="130" height="50" rx="6" fill="#1a1a1a"/>
+    <text x="500" y="35" text-anchor="middle" font-family="Inter, Arial" font-size="10" fill="#6b7280">Madrid 🇪🇸</text>
+    <text x="500" y="52" text-anchor="middle" font-family="Inter, Arial" font-size="14" font-weight="700" fill="#16a34a">€209k</text>
+    
+    <rect x="580" y="15" width="130" height="50" rx="6" fill="#1a1a1a"/>
+    <text x="645" y="35" text-anchor="middle" font-family="Inter, Arial" font-size="10" fill="#6b7280">Frielas</text>
+    <text x="645" y="52" text-anchor="middle" font-family="Inter, Arial" font-size="14" font-weight="700" fill="#c9a962">€206k</text>
+  </g>
+  
+  <!-- Opportunity callout -->
+  <g transform="translate(50, 460)">
+    <rect x="0" y="0" width="700" height="30" rx="6" fill="#dc2626" opacity="0.15"/>
+    <text x="350" y="20" text-anchor="middle" font-family="Inter, Arial" font-size="12" fill="#dc2626">🎯 OPORTUNIDADE: Porto tem 0% penetração — maior mercado do Norte inexplorado</text>
+  </g>
+  
+  <!-- Footer -->
+  <text x="400" y="495" text-anchor="middle" font-family="Inter, Arial" font-size="10" fill="#4a4a4a">AiParaTi | Análise de 16.332 facturas</text>
+</svg>

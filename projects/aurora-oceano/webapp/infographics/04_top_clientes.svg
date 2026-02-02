@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">
+  <!-- Background -->
+  <rect width="800" height="500" fill="#0a0a0a"/>
+  
+  <!-- Title -->
+  <text x="400" y="40" text-anchor="middle" font-family="Inter, Arial" font-size="24" font-weight="700" fill="#ffffff">TOP 10 CLIENTES 2025</text>
+  <text x="400" y="65" text-anchor="middle" font-family="Inter, Arial" font-size="14" fill="#6b7280">Concentração de faturação</text>
+  
+  <!-- Horizontal Bar Chart -->
+  <g transform="translate(50, 90)">
+    <!-- Client 1: Consumintenso 13.1% -->
+    <text x="180" y="18" text-anchor="end" font-family="Inter, Arial" font-size="11" fill="#ffffff">Consumintenso</text>
+    <rect x="190" y="5" width="440" height="22" rx="4" fill="#c9a962"/>
+    <text x="640" y="20" text-anchor="start" font-family="Inter, Arial" font-size="11" font-weight="600" fill="#c9a962">€580k (13.1%)</text>
+    
+    <!-- Client 2: MARBOTRADE 6.7% -->
+    <text x="180" y="53" text-anchor="end" font-family="Inter, Arial" font-size="11" fill="#ffffff">MARBOTRADE 🇪🇸</text>
+    <rect x="190" y="40" width="224" height="22" rx="4" fill="#c9a962" opacity="0.85"/>
+    <text x="420" y="55" text-anchor="start" font-family="Inter, Arial" font-size="11" fill="#c9a962">€297k (6.7%)</text>
+    
+    <!-- Client 3: PESCADOS CAMOROS 5.9% -->
+    <text x="180" y="88" text-anchor="end" font-family="Inter, Arial" font-size="11" fill="#ffffff">PESCADOS CAMOROS 🇪🇸</text>
+    <rect x="190" y="75" width="198" height="22" rx="4" fill="#c9a962" opacity="0.75"/>
+    <text x="394" y="90" text-anchor="start" font-family="Inter, Arial" font-size="11" fill="#c9a962">€261k (5.9%)</text>
+    
+    <!-- Client 4: BELIZAZEL 4.7% -->
+    <text x="180" y="123" text-anchor="end" font-family="Inter, Arial" font-size="11" fill="#ffffff">BELIZAZEL</text>
+    <rect x="190" y="110" width="157" height="22" rx="4" fill="#c9a962" opacity="0.65"/>
+    <text x="353" y="125" text-anchor="start" font-family="Inter, Arial" font-size="11" fill="#c9a962">€206k (4.7%)</text>
+    
+    <!-- Client 5: ONIMOD 4.6% -->
+    <text x="180" y="158" text-anchor="end" font-family="Inter, Arial" font-size="11" fill="#ffffff">ONIMOD 🇪🇸</text>
+    <rect x="190" y="145" width="154" height="22" rx="4" fill="#c9a962" opacity="0.55"/>
+    <text x="350" y="160" text-anchor="start" font-family="Inter, Arial" font-size="11" fill="#c9a962">€203k (4.6%)</text>
+    
+    <!-- Client 6-10 smaller -->
+    <text x="180" y="193" text-anchor="end" font-family="Inter, Arial" font-size="10" fill="#6b7280">ICEMIX</text>
+    <rect x="190" y="180" width="103" height="18" rx="4" fill="#4a4a4a"/>
+    <text x="300" y="193" text-anchor="start" font-family="Inter, Arial" font-size="10" fill="#6b7280">€137k</text>
+    
+    <text x="180" y="218" text-anchor="end" font-family="Inter, Arial" font-size="10" fill="#6b7280">TITO CARVALHO</text>
+    <rect x="190" y="205" width="83" height="18" rx="4" fill="#4a4a4a"/>
+    <text x="280" y="218" text-anchor="start" font-family="Inter, Arial" font-size="10" fill="#6b7280">€111k</text>
+    
+    <text x="180" y="243" text-anchor="end" font-family="Inter, Arial" font-size="10" fill="#6b7280">Gelvalados</text>
+    <rect x="190" y="230" width="67" height="18" rx="4" fill="#4a4a4a"/>
+    <text x="263" y="243" text-anchor="start" font-family="Inter, Arial" font-size="10" fill="#6b7280">€90k</text>
+    
+    <text x="180" y="268" text-anchor="end" font-family="Inter, Arial" font-size="10" fill="#6b7280">NANA PETISCOS</text>
+    <rect x="190" y="255" width="67" height="18" rx="4" fill="#4a4a4a"/>
+    <text x="263" y="268" text-anchor="start" font-family="Inter, Arial" font-size="10" fill="#6b7280">€89k</text>
+    
+    <text x="180" y="293" text-anchor="end" font-family="Inter, Arial" font-size="10" fill="#6b7280">VIAGEM NA GRELHA</text>
+    <rect x="190" y="280" width="66" height="18" rx="4" fill="#4a4a4a"/>
+    <text x="262" y="293" text-anchor="start" font-family="Inter, Arial" font-size="10" fill="#6b7280">€89k</text>
+  </g>
+  
+  <!-- Key Insights -->
+  <g transform="translate(50, 410)">
+    <rect x="0" y="0" width="220" height="60" rx="8" fill="#dc2626" opacity="0.2"/>
+    <rect x="0" y="0" width="4" height="60" fill="#dc2626"/>
+    <text x="20" y="25" font-family="Inter, Arial" font-size="12" font-weight="600" fill="#dc2626">⚠️ RISCO</text>
+    <text x="20" y="45" font-family="Inter, Arial" font-size="11" fill="#ffffff">Top 3 = 25.7% faturação</text>
+  </g>
+  
+  <g transform="translate(290, 410)">
+    <rect x="0" y="0" width="220" height="60" rx="8" fill="#16a34a" opacity="0.2"/>
+    <rect x="0" y="0" width="4" height="60" fill="#16a34a"/>
+    <text x="20" y="25" font-family="Inter, Arial" font-size="12" font-weight="600" fill="#16a34a">✅ POSITIVO</text>
+    <text x="20" y="45" font-family="Inter, Arial" font-size="11" fill="#ffffff">Espanha = 15%+ (€668k)</text>
+  </g>
+  
+  <g transform="translate(530, 410)">
+    <rect x="0" y="0" width="220" height="60" rx="8" fill="#c9a962" opacity="0.2"/>
+    <rect x="0" y="0" width="4" height="60" fill="#c9a962"/>
+    <text x="20" y="25" font-family="Inter, Arial" font-size="12" font-weight="600" fill="#c9a962">🆕 DESTAQUE</text>
+    <text x="20" y="45" font-family="Inter, Arial" font-size="11" fill="#ffffff">Consumintenso novo líder</text>
+  </g>
+  
+  <!-- Footer -->
+  <text x="400" y="495" text-anchor="middle" font-family="Inter, Arial" font-size="10" fill="#4a4a4a">AiParaTi | Dados 2025</text>
+</svg>

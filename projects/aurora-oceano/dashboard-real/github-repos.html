@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bilal Machraa - GitHub Repos Dashboard</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0d1117 0%, #161b22 50%, #0d1117 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #c9d1d9;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 30px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .header h1 {
+            font-size: 2.2em;
+            background: linear-gradient(90deg, #58a6ff, #a371f7, #f778ba);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+        .header p { color: #8b949e; }
+        .date { color: #6e7681; font-size: 0.9em; margin-top: 10px; }
+        
+        /* Stats Cards */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        .stat-card {
+            background: rgba(255,255,255,0.03);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .stat-card .number {
+            font-size: 2em;
+            font-weight: 700;
+            color: #58a6ff;
+        }
+        .stat-card .label { color: #8b949e; font-size: 0.85em; margin-top: 5px; }
+        .stat-card.highlight .number { color: #3fb950; }
+        .stat-card.warning .number { color: #d29922; }
+        .stat-card.danger .number { color: #f85149; }
+        
+        /* Filters */
+        .filters {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .filter-group { display: flex; gap: 5px; flex-wrap: wrap; }
+        .filter-btn {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #c9d1d9;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85em;
+            transition: all 0.2s;
+        }
+        .filter-btn:hover, .filter-btn.active {
+            background: rgba(88, 166, 255, 0.2);
+            border-color: #58a6ff;
+            color: #58a6ff;
+        }
+        .search-input {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #c9d1d9;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            width: 200px;
+        }
+        .search-input::placeholder { color: #6e7681; }
+        
+        /* Kanban Board */
+        .kanban {
+            display: flex;
+            gap: 15px;
+            overflow-x: auto;
+            padding-bottom: 20px;
+        }
+        .column {
+            min-width: 320px;
+            max-width: 320px;
+            background: rgba(255,255,255,0.02);
+            border-radius: 12px;
+            padding: 15px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .column-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid rgba(255,255,255,0.1);
+        }
+        .column-header .emoji { font-size: 1.2em; }
+        .column-header h2 { font-size: 0.95em; font-weight: 600; color: #c9d1d9; }
+        .column-header .count {
+            background: rgba(255,255,255,0.1);
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 0.75em;
+            margin-left: auto;
+            color: #8b949e;
+        }
+        
+        /* Repo Cards */
+        .repo-card {
+            background: rgba(255,255,255,0.03);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-left: 3px solid;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        .repo-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            background: rgba(255,255,255,0.05);
+        }
+        .repo-card.active { border-left-color: #3fb950; }
+        .repo-card.recent { border-left-color: #58a6ff; }
+        .repo-card.stale { border-left-color: #d29922; }
+        .repo-card.abandoned { border-left-color: #f85149; }
+        
+        .repo-name {
+            font-weight: 600;
+            font-size: 0.9em;
+            color: #58a6ff;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .repo-name a { color: inherit; text-decoration: none; }
+        .repo-name a:hover { text-decoration: underline; }
+        .repo-desc {
+            color: #8b949e;
+            font-size: 0.8em;
+            margin-bottom: 8px;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .repo-meta {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: rgba(255,255,255,0.05);
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.7em;
+            color: #8b949e;
+        }
+        .tag.lang-ts { background: rgba(49, 120, 198, 0.3); color: #58a6ff; }
+        .tag.lang-py { background: rgba(53, 114, 165, 0.3); color: #3572A5; }
+        .tag.lang-js { background: rgba(241, 224, 90, 0.3); color: #f1e05a; }
+        .tag.lang-html { background: rgba(227, 76, 38, 0.3); color: #e34c26; }
+        .tag.category { background: rgba(163, 113, 247, 0.2); color: #a371f7; }
+        
+        /* Legend */
+        .legend {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(255,255,255,0.02);
+            border-radius: 8px;
+            flex-wrap: wrap;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85em;
+            color: #8b949e;
+        }
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
+        }
+        .legend-color.active { background: #3fb950; }
+        .legend-color.recent { background: #58a6ff; }
+        .legend-color.stale { background: #d29922; }
+        .legend-color.abandoned { background: #f85149; }
+        
+        /* Recommendations */
+        .recommendations {
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(255,255,255,0.02);
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .recommendations h3 {
+            color: #58a6ff;
+            margin-bottom: 15px;
+        }
+        .rec-list { list-style: none; }
+        .rec-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        .rec-list li:last-child { border-bottom: none; }
+        .rec-icon { font-size: 1.2em; }
+        .rec-text { color: #8b949e; font-size: 0.9em; }
+        .rec-text strong { color: #c9d1d9; }
+        
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #6e7681;
+            font-size: 0.85em;
+        }
+        .footer a { color: #58a6ff; }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .kanban { flex-direction: column; }
+            .column { min-width: 100%; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📦 GitHub Repos Dashboard</h1>
+        <p>bilalmachraa82 • 63 Repositórios</p>
+        <p class="date">Actualizado: 30 Janeiro 2026 • 11:15 UTC</p>
+    </div>
+
+    <div class="stats">
+        <div class="stat-card highlight">
+            <div class="number">8</div>
+            <div class="label">🟢 Activos (7 dias)</div>
+        </div>
+        <div class="stat-card">
+            <div class="number">12</div>
+            <div class="label">🔵 Recentes (30 dias)</div>
+        </div>
+        <div class="stat-card warning">
+            <div class="number">18</div>
+            <div class="label">🟡 Parados (1-6 meses)</div>
+        </div>
+        <div class="stat-card danger">
+            <div class="number">25</div>
+            <div class="label">🔴 Abandonados (>6 meses)</div>
+        </div>
+        <div class="stat-card">
+            <div class="number">41</div>
+            <div class="label">TypeScript</div>
+        </div>
+        <div class="stat-card">
+            <div class="number">6</div>
+            <div class="label">Python</div>
+        </div>
+    </div>
+
+    <div class="filters">
+        <div class="filter-group">
+            <button class="filter-btn active" onclick="filterByStatus('all')">Todos</button>
+            <button class="filter-btn" onclick="filterByStatus('active')">🟢 Activos</button>
+            <button class="filter-btn" onclick="filterByStatus('recent')">🔵 Recentes</button>
+            <button class="filter-btn" onclick="filterByStatus('stale')">🟡 Parados</button>
+            <button class="filter-btn" onclick="filterByStatus('abandoned')">🔴 Abandonados</button>
+        </div>
+        <input type="text" class="search-input" placeholder="🔍 Pesquisar repo..." onkeyup="searchRepos(this.value)">
+    </div>
+
+    <div class="legend">
+        <div class="legend-item"><div class="legend-color active"></div> Activo (últimos 7 dias)</div>
+        <div class="legend-item"><div class="legend-color recent"></div> Recente (8-30 dias)</div>
+        <div class="legend-item"><div class="legend-color stale"></div> Parado (1-6 meses)</div>
+        <div class="legend-item"><div class="legend-color abandoned"></div> Abandonado (>6 meses)</div>
+    </div>
+
+    <div class="kanban" id="kanban">
+        <!-- 🎯 CLIENTES -->
+        <div class="column">
+            <div class="column-header">
+                <span class="emoji">💼</span>
+                <h2>Clientes</h2>
+                <span class="count">12</span>
+            </div>
+            
+            <div class="repo-card active" data-status="active">
+                <div class="repo-name"><a href="https://github.com/bilalmachraa82/fnac_workshop_gamification" target="_blank">fnac_workshop_gamification</a></div>
+                <div class="repo-desc">Plataforma gamificação workshop Copilot Studio FNAC</div>
+                <div class="repo-meta">
+                    <span class="tag lang-ts">TypeScript</span>
+                    <span class="tag category">FNAC</span>
+                    <span class="tag">📅 Hoje</span>
+                </div>
+            </div>
+            
+            <div class="repo-card active" data-status="active">
+                <div class="repo-name"><a href="https://github.com/bilalmachraa82/iva-inteligente-mvp" target="_blank">iva-inteligente-mvp</a></div>
+                <div class="repo-desc">IVAzen - Webapp IVA para contabilistas</div>
+                <div class="repo-meta">
+                    <span class="tag lang-ts">TypeScript</span>
+                    <span class="tag category">Acc. Advantage</span>
+                    <span class="tag">📅 Ontem</span>
+                </div>
+            </div>
+            
+            <div class="repo-card recent" data-status="recent">
+                <div class="repo-name"><a href="https://github.com/bilalmachraa82/TA-Consulting-Platform" target="_blank">TA-Consulting-Platform</a></div>
+                <div class="repo-desc">Plataforma consultoria Fernando</div>
+                <div class="repo-meta">
+                    <span class="tag lang-ts">TypeScript</span>
+                    <span class="tag category">Fernando</span>
+                    <span class="tag">📅 14 Jan</span>
+                </div>
+            </div>
+            
+            <div class="repo-card recent" data-status="recent">
+                <div class="repo-name"><a href="https://github.com/bilalmachraa82/core-stakeholder-portal" target="_blank">core-stakeholder-portal</a></div>
+                <div class="repo-desc">Portal Arifa</div>
+                <div class="repo-meta">
+                    <span class="tag lang-ts">TypeScript</span>
+                    <span class="tag category">Arifa</span>
+                    <span class="tag">📅 9 Jan</span>
+                </div>
+            </div>
+            
+            <div class="repo-card stale" data-status="stale">
+                <div class="repo-name"><a href="https://github.com/bilalmachraa82/Raquel---Assitante-IVA" target="_blank">Raquel---Assitante-IVA</a></div>
+                <div class="repo-desc">Projecto Claudia - bug a corrigir</div>
+                <div class="repo-meta">
+                    <span class="tag lang-ts">TypeScript</span>
+                    <span class="tag category">Claudia</span>
+                    <span class="tag">📅 5 Dez</span>
+                </div>
+            </div>
+            
+            <div class="repo-card stale" data-status="stale">
+                <div class="repo-name"><a href="https://github.com/bilalmachraa82/helene-academy-mvp" target="_blank">helene-academy-mvp</a></div>
+                <div class="repo-desc">Academia Hélène</div>
+                <div class="repo-meta">
+                    <span class="tag lang-ts">TypeScript</span>
+                    <span class="tag category">Hélène</span>
+                    <span class="tag">📅 28 Dez</span>
+                </div>
+            </div>
+            
+            <div class="repo-card abandoned" data-status="abandoned">
+                <div class="repo-name"><a href="https://github.com/bilalmachraa82/bookngo" target="_blank">bookngo</a></div>
+                <div class="repo-desc">Sistema reservas</div>
+                <div class="repo-meta">
+                    <span class="tag lang-ts">TypeScript</span>
+                    <span class="tag">📅 25 Jan</span>
+                </div>
+            </div>
+            
+            <div class="repo-card abandoned" data-status="abandoned">
+                <div class="repo-name"><a href="https://github.com/bilalmachraa82/condo-assist" target="_blank">condo-assist</a></div>
+                <div class="repo-desc">Assistente condomínios</div>
+                <div class="repo-meta">
+                    <span class="tag lang-ts">TypeScript</span>
+                    <span class="tag">📅 21 Jan</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 🎯 AIPARATI CORE -->
+        <div class="column">
+            <div class="column-header">
+                <span class="emoji">🎯</span>
+                <h2>AiParaTi Core</h2>
+                <span class="count">8</span>
+            </div>
+            
+            <div class="repo-card active" data-status="active">
+                <div class="repo-name"><a href="https://github.com/bilalmachraa82/ai-sales-agent" target="_blank">ai-sales-agent</a></div>
+                <div class="repo-desc">🤖 Automação de vendas com IA para PMEs</div>
+                <div class="repo-meta">
+                    <span class="tag lang-ts">TypeScript</span>
+                    <span class="tag">📅 27 Jan</span>
+                </div>
+            </div>
+            
+            <div class="repo-card active" data-status="active">
+                <div class="repo-name"><a href="https://github.com/bilalmachraa82/rag-aiparat" target="_blank">rag-aiparat</a></div>
+                <div class="repo-desc">RAG system AiParaTi</div>
+                <div class="repo-meta">
+                    <span class="tag lang-ts">TypeScript</span>
+                    <span class="tag">📅 25 Jan</span>
+                </div>
+            </div>
+            
+            <div class="repo-card active" data-status="active">
+                <div class="repo-name"><a href="https://github.com/bilalmachraa82/rag-aiparati" target="_blank">rag-aiparati</a></div>
+                <div class="repo-desc">RAG (duplicado?)</div>
+                <div class="repo-meta">
+                    <span class="tag lang-ts">TypeScript</span>
+                    <span class="tag">📅 24 Jan</span>
+                </div>
+            </div>
+            
+            <div class="repo-card recent" data-status="recent">
+                <div class="repo-name"><a href="https://github.com/bilalmachraa82/aiparati-portfolio" target="_blank">aiparati-portfolio</a></div>
+                <div class="repo-desc">Website portfólio AiParaTi</div>
+                <div class="repo-meta">
+                    <span class="tag lang-ts">TypeScript</span>
+                    <span class="tag">📅 23 Jan</span>
+                </div>
+            </div>
+            
+            <div class="repo-card recent" data-status="recent">
+                <div class="repo-name"><a href="https://github.com/bilalmachraa82/AIParaTi" target="_blank">AIParaTi</a></div>
+                <div class="repo-desc">Site principal</div>
+                <div class="repo-meta">
+                    <span class="tag lang-html">HTML</span>
+                    <span class="tag">📅 5 Jan</span>
+                </div>
+            </div>
+            
+            <div class="repo-card recent" data-status="recent">
+                <div class="repo-name"><a href="https://github.com/bilalmachraa82/aiparati-express" target="_blank">aiparati-express</a></div>
+                <div class="repo-desc">Backend Express</div>
+                <div class="repo-meta">
+                    <span class="tag lang-py">Python</span>
+                    <span class="tag">📅 4 Jan</span>
+                </div>
+            </div>
+            
+            <div class="repo-card abandoned" data-status="abandoned">
+                <div class="repo-name"><a href="https://github.com/bilalmachraa82/ai-para-ti-launchpad" target="_blank">ai-para-ti-launchpad</a></div>
+                <div class="repo-desc">Launchpad</div>
+                <div class="repo-meta">
+                    <span class="tag lang-ts">TypeScript</span>
+                    <span class="tag">📅 Out 2025</span>
+                </div>
+            </div>
+            
+            <div class="repo-card abandoned" data-status="abandoned">
+                <div class="repo-name"><a href="https://github.com/bilalmachraa82/AiParaTiSaaS" target="_blank">AiParaTiSaaS</a></div>
+                <div class="repo-desc">SaaS version</div>
+                <div class="repo-meta">
+                    <span class="tag">N/A</span>
+                    <span class="tag">📅 Dez 2024</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 🛠️ TOOLS -->
+        <div class="column">
+            <div class="column-header">
+                <span class="emoji">🛠️</span>
+                <h2>Tools & Utils</h2>
+                <span class="count">10</span>
+            </div>
+            
+            <div class="repo-card recent" data-status="recent">
+                <div class="repo-name"><a href="https://github.com/bilalmachraa82/TranscribeAiPRO" target="_blank">TranscribeAiPRO</a></div>
+                <div class="repo-desc">Assistente de transcrição</div>
+                <div class="repo-meta">
+                    <span class="tag lang-ts">TypeScript</span>
+                    <span class="tag">📅 22 Jan</span>
+                </div>
+            </div>
+            
+            <div class="repo-card recent" data-status="recent">
+                <div class="repo-name"><a href="https://github.com/bilalmachraa82/llm-council" target="_blank">llm-council</a></div>
+                <div class="repo-desc">Multi-LLM orchestration</div>
+                <div class="repo-meta">
+                    <span class="tag lang-py">Python</span>
+                    <span class="tag">📅 21 Jan</span>
+                </div>
+            </div>
+            
+            <div class="repo-card recent" data-status="recent">
+                <div class="repo-name"><a href="https://github.com/bilalmachraa82/BrandBook-questions" target="_blank">BrandBook-questions</a></div>
+                <div class="repo-desc">Gerador de brand books</div>
+                <div class="repo-meta">
+                    <span class="tag lang-js">JavaScript</span>
+                    <span class="tag">📅 18 Jan</span>
+                </div>
+            </div>
+            
+            <div class="repo-card stale" data-status="stale">
+                <div class="repo-name"><a href="https://github.com/bilalmachraa82/fisc-insight" target="_blank">fisc-insight</a></div>
+                <div class="repo-desc">Fiscal insights</div>
+                <div class="repo-meta">
+                    <span class="tag lang-ts">TypeScript</span>
+                    <span class="tag">📅 19 Dez</span>
+                </div>
+            </div>
+            
+            <div class="repo-card stale" data-status="stale">
+                <div class="repo-name"><a href="https://github.com/bilalmachraa82/AiStackRepositorio" target="_blank">AiStackRepositorio</a></div>
+                <div class="repo-desc">Stack de 100+ apps</div>
+                <div class="repo-meta">
+                    <span class="tag lang-ts">TypeScript</span>
+                    <span class="tag">📅 15 Dez</span>
+                </div>
+            </div>
+            
+            <div class="repo-card abandoned" data-status="abandoned">
+                <div class="repo-name"><a href="https://github.com/bilalmachraa82/pdf-to-excel-enhancer" target="_blank">pdf-to-excel-enhancer</a></div>
+                <div class="repo-desc">Conversor PDF→Excel</div>
+                <div class="repo-meta">
+                    <span class="tag lang-ts">TypeScript</span>
+                    <span class="tag">📅 Dez 2024</span>
+                </div>
+            </div>
+            
+            <div class="repo-card abandoned" data-status="abandoned">
+                <div class="repo-name"><a href="https://github.com/bilalmachraa82/ai-minuta-generator" target="_blank">ai-minuta-generator</a></div>
+                <div class="repo-desc">Gerador de minutas</div>
+                <div class="repo-meta">
+                    <span class="tag lang-ts">TypeScript</span>
+                    <span class="tag">📅 Jan 2025</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 🏢 ALOJAMENTO LOCAL -->
+        <div class="column">
+            <div class="column-header">
+                <span class="emoji">🏢</span>
+                <h2>Alojamento Local</h2>
+                <span class="count">8</span>
+            </div>
+            
+            <div class="repo-card recent" data-status="recent">
+                <div class="repo-name"><a href="https://github.com/bilalmachraa82/alojamento-insight-analyzer" target="_blank">alojamento-insight-analyzer</a></div>
+                <div class="repo-desc">Análise de insights AL</div>
+                <div class="repo-meta">
+                    <span class="tag lang-ts">TypeScript</span>
+                    <span class="tag">📅 5 Jan</span>
+                </div>
+            </div>
+            
+            <div class="repo-card stale" data-status="stale">
+                <div class="repo-name"><a href="https://github.com/bilalmachraa82/MariaIntelligence-1" target="_blank">MariaIntelligence-1</a></div>
+                <div class="repo-desc">Maria Intelligence</div>
+                <div class="repo-meta">
+                    <span class="tag lang-ts">TypeScript</span>
+                    <span class="tag">📅 31 Dez</span>
+                </div>
+            </div>
+            
+            <div class="repo-card abandoned" data-status="abandoned">
+                <div class="repo-name"><a href="https://github.com/bilalmachraa82/mariafaz2025" target="_blank">mariafaz2025</a></div>
+                <div class="repo-desc">Sistema gestão AL</div>
+                <div class="repo-meta">
+                    <span class="tag lang-ts">TypeScript</span>
+                    <span class="tag">📅 Jan 2025</span>
+                </div>
+            </div>
+            
+            <div class="repo-card abandoned" data-status="abandoned">
+                <div class="repo-name"><a href="https://github.com/bilalmachraa82/a-maria-faz" target="_blank">a-maria-faz</a></div>
+                <div class="repo-desc">Maria Faz v1</div>
+                <div class="repo-meta">
+                    <span class="tag lang-ts">TypeScript</span>
+                    <span class="tag">📅 Jan 2025</span>
+                </div>
+            </div>
+            
+            <div class="repo-card abandoned" data-status="abandoned">
+                <div class="repo-name"><a href="https://github.com/bilalmachraa82/property-coordinator-app" target="_blank">property-coordinator-app</a></div>
+                <div class="repo-desc">Coordenador propriedades</div>
+                <div class="repo-meta">
+                    <span class="tag lang-ts">TypeScript</span>
+                    <span class="tag">📅 Ago 2025</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 💰 FUNDOS -->
+        <div class="column">
+            <div class="column-header">
+                <span class="emoji">💰</span>
+                <h2>Fundos & Candidaturas</h2>
+                <span class="count">6</span>
+            </div>
+            
+            <div class="repo-card stale" data-status="stale">
+                <div class="repo-name"><a href="https://github.com/bilalmachraa82/claude-skill-ai-fundos" target="_blank">claude-skill-ai-fundos</a></div>
+                <div class="repo-desc">Skill Claude para fundos</div>
+                <div class="repo-meta">
+                    <span class="tag lang-html">HTML</span>
+                    <span class="tag">📅 21 Nov</span>
+                </div>
+            </div>
+            
+            <div class="repo-card abandoned" data-status="abandoned">
+                <div class="repo-name"><a href="https://github.com/bilalmachraa82/Smart-Founds-Grant" target="_blank">Smart-Founds-Grant</a></div>
+                <div class="repo-desc">IFIC Grant Platform</div>
+                <div class="repo-meta">
+                    <span class="tag lang-py">Python</span>
+                    <span class="tag">📅 Nov 2025</span>
+                </div>
+            </div>
+            
+            <div class="repo-card abandoned" data-status="abandoned">
+                <div class="repo-name"><a href="https://github.com/bilalmachraa82/candidatura-turbo-pt" target="_blank">candidatura-turbo-pt</a></div>
+                <div class="repo-desc">Turbo candidaturas</div>
+                <div class="repo-meta">
+                    <span class="tag lang-ts">TypeScript</span>
+                    <span class="tag">📅 Nov 2025</span>
+                </div>
+            </div>
+            
+            <div class="repo-card abandoned" data-status="abandoned">
+                <div class="repo-name"><a href="https://github.com/bilalmachraa82/smart-grant-buddy" target="_blank">smart-grant-buddy</a></div>
+                <div class="repo-desc">Grant buddy</div>
+                <div class="repo-meta">
+                    <span class="tag lang-ts">TypeScript</span>
+                    <span class="tag">📅 Out 2025</span>
+                </div>
+            </div>
+            
+            <div class="repo-card abandoned" data-status="abandoned">
+                <div class="repo-name"><a href="https://github.com/bilalmachraa82/Fundos-Portugal2030" target="_blank">Fundos-Portugal2030</a></div>
+                <div class="repo-desc">Info fundos PT2030</div>
+                <div class="repo-meta">
+                    <span class="tag">N/A</span>
+                    <span class="tag">📅 Out 2025</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 🧪 EXPERIMENTS -->
+        <div class="column">
+            <div class="column-header">
+                <span class="emoji">🧪</span>
+                <h2>Experiments & Learning</h2>
+                <span class="count">15+</span>
+            </div>
+            
+            <div class="repo-card recent" data-status="recent">
+                <div class="repo-name"><a href="https://github.com/bilalmachraa82/financaspessoalbilal" target="_blank">financaspessoalbilal</a></div>
+                <div class="repo-desc">Finanças pessoais</div>
+                <div class="repo-meta">
+                    <span class="tag lang-py">Python</span>
+                    <span class="tag">📅 4 Jan</span>
+                </div>
+            </div>
+            
+            <div class="repo-card stale" data-status="stale">
+                <div class="repo-name"><a href="https://github.com/bilalmachraa82/Musica-do-natal" target="_blank">Musica-do-natal</a></div>
+                <div class="repo-desc">Projecto Natal</div>
+                <div class="repo-meta">
+                    <span class="tag lang-ts">TypeScript</span>
+                    <span class="tag">📅 25 Dez</span>
+                </div>
+            </div>
+            
+            <div class="repo-card abandoned" data-status="abandoned">
+                <div class="repo-name"><a href="https://github.com/bilalmachraa82/reflectai-digital-diary-hub" target="_blank">reflectai-digital-diary-hub</a></div>
+                <div class="repo-desc">Diário digital IA</div>
+                <div class="repo-meta">
+                    <span class="tag lang-ts">TypeScript</span>
+                    <span class="tag">📅 Dez 2025</span>
+                </div>
+            </div>
+            
+            <div class="repo-card abandoned" data-status="abandoned">
+                <div class="repo-name"><a href="https://github.com/bilalmachraa82/AI-Creative-Suite" target="_blank">AI-Creative-Suite</a></div>
+                <div class="repo-desc">Nano Banana creative</div>
+                <div class="repo-meta">
+                    <span class="tag lang-ts">TypeScript</span>
+                    <span class="tag">📅 Nov 2025</span>
+                </div>
+            </div>
+            
+            <div class="repo-card abandoned" data-status="abandoned">
+                <div class="repo-name"><a href="https://github.com/bilalmachraa82/chapeus-lisboetas" target="_blank">chapeus-lisboetas</a></div>
+                <div class="repo-desc">Projecto chapéus</div>
+                <div class="repo-meta">
+                    <span class="tag lang-php">PHP</span>
+                    <span class="tag">📅 Nov 2025</span>
+                </div>
+            </div>
+            
+            <div class="repo-card abandoned" data-status="abandoned">
+                <div class="repo-name"><a href="https://github.com/bilalmachraa82/Daniela-Healing" target="_blank">Daniela-Healing</a></div>
+                <div class="repo-desc">Site Daniela</div>
+                <div class="repo-meta">
+                    <span class="tag lang-js">JavaScript</span>
+                    <span class="tag">📅 Fev 2025</span>
+                </div>
+            </div>
+            
+            <div class="repo-card abandoned" data-status="abandoned">
+                <div class="repo-name"><a href="https://github.com/bilalmachraa82/mary-ann-spiritual-journey" target="_blank">mary-ann-spiritual-journey</a></div>
+                <div class="repo-desc">Mary Ann proposum</div>
+                <div class="repo-meta">
+                    <span class="tag lang-html">HTML</span>
+                    <span class="tag">📅 Mar 2025</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="recommendations">
+        <h3>📋 Recomendações para o Programador</h3>
+        <ul class="rec-list">
+            <li>
+                <span class="rec-icon">🔴</span>
+                <span class="rec-text"><strong>Arquivar 25 repos abandonados</strong> — Não têm actividade há >6 meses. Manter só se tiverem valor histórico.</span>
+            </li>
+            <li>
+                <span class="rec-icon">🔄</span>
+                <span class="rec-text"><strong>Consolidar duplicados:</strong> rag-aiparat vs rag-aiparati, maria-faz vs mariafaz2025 vs a-maria-faz</span>
+            </li>
+            <li>
+                <span class="rec-icon">📝</span>
+                <span class="rec-text"><strong>Adicionar README</strong> aos repos sem descrição (30% não têm descrição)</span>
+            </li>
+            <li>
+                <span class="rec-icon">🏷️</span>
+                <span class="rec-text"><strong>Usar GitHub Topics</strong> para categorizar (aiparati, cliente, tool, experiment)</span>
+            </li>
+            <li>
+                <span class="rec-icon">⚠️</span>
+                <span class="rec-text"><strong>Corrigir bug:</strong> Raquel---Assitante-IVA tem bug pendente (projecto Claudia)</span>
+            </li>
+            <li>
+                <span class="rec-icon">🎯</span>
+                <span class="rec-text"><strong>Foco nos 8 activos:</strong> fnac_workshop, iva-inteligente, ai-sales-agent, rag-aiparat, bookngo, aiparati-portfolio, TranscribeAiPRO, llm-council</span>
+            </li>
+        </ul>
+    </div>
+
+    <div class="footer">
+        <p>Dashboard gerado pelo Jarvis 🤖 • <a href="https://github.com/bilalmachraa82" target="_blank">github.com/bilalmachraa82</a></p>
+        <p style="margin-top: 5px;">30 Janeiro 2026</p>
+    </div>
+
+    <script>
+        function filterByStatus(status) {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            document.querySelectorAll('.repo-card').forEach(card => {
+                if (status === 'all' || card.dataset.status === status) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+        
+        function searchRepos(query) {
+            query = query.toLowerCase();
+            document.querySelectorAll('.repo-card').forEach(card => {
+                const name = card.querySelector('.repo-name').textContent.toLowerCase();
+                const desc = card.querySelector('.repo-desc')?.textContent.toLowerCase() || '';
+                if (name.includes(query) || desc.includes(query)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>

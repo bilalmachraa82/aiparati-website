@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">
+  <!-- Background -->
+  <rect width="800" height="500" fill="#0a0a0a"/>
+  
+  <!-- Title -->
+  <text x="400" y="40" text-anchor="middle" font-family="Inter, Arial" font-size="24" font-weight="700" fill="#ffffff">ROADMAP 2026</text>
+  <text x="400" y="65" text-anchor="middle" font-family="Inter, Arial" font-size="14" fill="#6b7280">Plano de acção para capturar €5.6M</text>
+  
+  <!-- Timeline base -->
+  <line x1="100" y1="150" x2="700" y2="150" stroke="#2a2a2a" stroke-width="4"/>
+  
+  <!-- Q1 -->
+  <circle cx="150" cy="150" r="20" fill="#dc2626"/>
+  <text x="150" y="155" text-anchor="middle" font-family="Inter, Arial" font-size="12" font-weight="700" fill="#ffffff">Q1</text>
+  <rect x="80" y="180" width="140" height="120" rx="8" fill="#1a1a1a"/>
+  <text x="150" y="205" text-anchor="middle" font-family="Inter, Arial" font-size="12" font-weight="600" fill="#dc2626">URGENTE</text>
+  <text x="95" y="230" font-family="Inter, Arial" font-size="10" fill="#ffffff">☐ Ligar clientes perdidos</text>
+  <text x="95" y="250" font-family="Inter, Arial" font-size="10" fill="#ffffff">☐ Contactar grossistas</text>
+  <text x="95" y="270" font-family="Inter, Arial" font-size="10" fill="#ffffff">☐ Bot Telegram</text>
+  <text x="150" y="295" text-anchor="middle" font-family="Inter, Arial" font-size="14" font-weight="700" fill="#dc2626">€200k</text>
+  
+  <!-- Q2 -->
+  <circle cx="300" cy="150" r="20" fill="#c9a962"/>
+  <text x="300" y="155" text-anchor="middle" font-family="Inter, Arial" font-size="12" font-weight="700" fill="#0a0a0a">Q2</text>
+  <rect x="230" y="180" width="140" height="120" rx="8" fill="#1a1a1a"/>
+  <text x="300" y="205" text-anchor="middle" font-family="Inter, Arial" font-size="12" font-weight="600" fill="#c9a962">ESTRUTURAÇÃO</text>
+  <text x="245" y="230" font-family="Inter, Arial" font-size="10" fill="#ffffff">☐ Entrada Porto</text>
+  <text x="245" y="250" font-family="Inter, Arial" font-size="10" fill="#ffffff">☐ CRM implementado</text>
+  <text x="245" y="270" font-family="Inter, Arial" font-size="10" fill="#ffffff">☐ Seguro crédito</text>
+  <text x="300" y="295" text-anchor="middle" font-family="Inter, Arial" font-size="14" font-weight="700" fill="#c9a962">€300k</text>
+  
+  <!-- Q3 -->
+  <circle cx="450" cy="150" r="20" fill="#c9a962"/>
+  <text x="450" y="155" text-anchor="middle" font-family="Inter, Arial" font-size="12" font-weight="700" fill="#0a0a0a">Q3</text>
+  <rect x="380" y="180" width="140" height="120" rx="8" fill="#1a1a1a"/>
+  <text x="450" y="205" text-anchor="middle" font-family="Inter, Arial" font-size="12" font-weight="600" fill="#c9a962">ÉPOCA ALTA</text>
+  <text x="395" y="230" font-family="Inter, Arial" font-size="10" fill="#ffffff">☐ Escalar Espanha</text>
+  <text x="395" y="250" font-family="Inter, Arial" font-size="10" fill="#ffffff">☐ Rotas optimizadas</text>
+  <text x="395" y="270" font-family="Inter, Arial" font-size="10" fill="#ffffff">☐ Sextas-feiras premium</text>
+  <text x="450" y="295" text-anchor="middle" font-family="Inter, Arial" font-size="14" font-weight="700" fill="#c9a962">€500k</text>
+  
+  <!-- Q4 -->
+  <circle cx="600" cy="150" r="20" fill="#16a34a"/>
+  <text x="600" y="155" text-anchor="middle" font-family="Inter, Arial" font-size="12" font-weight="700" fill="#ffffff">Q4</text>
+  <rect x="530" y="180" width="140" height="120" rx="8" fill="#1a1a1a"/>
+  <text x="600" y="205" text-anchor="middle" font-family="Inter, Arial" font-size="12" font-weight="600" fill="#16a34a">EXPANSÃO</text>
+  <text x="545" y="230" font-family="Inter, Arial" font-size="10" fill="#ffffff">☐ Algarve activo</text>
+  <text x="545" y="250" font-family="Inter, Arial" font-size="10" fill="#ffffff">☐ Galiza preparada</text>
+  <text x="545" y="270" font-family="Inter, Arial" font-size="10" fill="#ffffff">☐ E-commerce B2B</text>
+  <text x="600" y="295" text-anchor="middle" font-family="Inter, Arial" font-size="14" font-weight="700" fill="#16a34a">€600k</text>
+  
+  <!-- Projection -->
+  <g transform="translate(50, 350)">
+    <rect x="0" y="0" width="700" height="100" rx="12" fill="#1a1a1a"/>
+    <text x="30" y="30" font-family="Inter, Arial" font-size="14" font-weight="600" fill="#6b7280">PROJECÇÃO 3 ANOS</text>
+    
+    <text x="150" y="70" text-anchor="middle" font-family="Inter, Arial" font-size="12" fill="#6b7280">2025 (actual)</text>
+    <text x="150" y="90" text-anchor="middle" font-family="Inter, Arial" font-size="20" font-weight="700" fill="#ffffff">€4.4M</text>
+    
+    <text x="300" y="45" text-anchor="middle" font-family="Inter, Arial" font-size="10" fill="#16a34a">+40%</text>
+    <text x="300" y="70" text-anchor="middle" font-family="Inter, Arial" font-size="12" fill="#6b7280">2026</text>
+    <text x="300" y="90" text-anchor="middle" font-family="Inter, Arial" font-size="20" font-weight="700" fill="#c9a962">€6.2M</text>
+    
+    <text x="450" y="45" text-anchor="middle" font-family="Inter, Arial" font-size="10" fill="#16a34a">+37%</text>
+    <text x="450" y="70" text-anchor="middle" font-family="Inter, Arial" font-size="12" fill="#6b7280">2027</text>
+    <text x="450" y="90" text-anchor="middle" font-family="Inter, Arial" font-size="20" font-weight="700" fill="#c9a962">€8.5M</text>
+    
+    <text x="600" y="45" text-anchor="middle" font-family="Inter, Arial" font-size="10" fill="#16a34a">+41%</text>
+    <text x="600" y="70" text-anchor="middle" font-family="Inter, Arial" font-size="12" fill="#6b7280">2028</text>
+    <text x="600" y="90" text-anchor="middle" font-family="Inter, Arial" font-size="20" font-weight="700" fill="#16a34a">€12M</text>
+  </g>
+  
+  <!-- Footer -->
+  <text x="400" y="480" text-anchor="middle" font-family="Inter, Arial" font-size="10" fill="#4a4a4a">AiParaTi | Consultoria de Inteligência Artificial</text>
+</svg>

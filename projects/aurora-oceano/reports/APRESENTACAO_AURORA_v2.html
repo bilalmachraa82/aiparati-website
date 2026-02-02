@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aurora Oceano - Análise Estratégica 2024-2025 | AiParaTi</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap');
+        
+        :root {
+            --primary: #1e40af;
+            --secondary: #0ea5e9;
+            --accent: #f59e0b;
+            --success: #22c55e;
+            --dark: #0f172a;
+            --light: #f1f5f9;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--dark);
+            color: white;
+            line-height: 1.6;
+        }
+        
+        .slide {
+            min-height: 100vh;
+            padding: 60px 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .slide::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at top right, rgba(14, 165, 233, 0.1) 0%, transparent 50%),
+                        radial-gradient(ellipse at bottom left, rgba(245, 158, 11, 0.05) 0%, transparent 50%);
+        }
+        
+        .slide > * { position: relative; z-index: 1; }
+        
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            background: linear-gradient(135deg, var(--secondary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        h2 { font-size: 2.5rem; color: var(--secondary); margin-bottom: 2rem; }
+        h3 { font-size: 1.3rem; color: var(--accent); margin: 1.5rem 0 1rem; }
+        
+        .subtitle { font-size: 1.5rem; color: #94a3b8; margin-bottom: 2rem; }
+        
+        .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem; margin-top: 2rem; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 2rem; }
+        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-top: 2rem; }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 2rem;
+        }
+        
+        .stat-box {
+            text-align: center;
+            padding: 2rem;
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.1), rgba(245, 158, 11, 0.05));
+            border-radius: 16px;
+            border: 1px solid rgba(14, 165, 233, 0.2);
+        }
+        
+        .stat-value { font-size: 2.5rem; font-weight: 700; color: var(--accent); }
+        .stat-label { color: #94a3b8; font-size: 0.9rem; margin-top: 0.5rem; }
+        
+        .big-number { font-size: 5rem; font-weight: 700; }
+        .positive { color: var(--success); }
+        .warning { color: var(--accent); }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+        th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
+        th { color: var(--secondary); font-weight: 500; font-size: 0.9rem; }
+        
+        .tag {
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        .tag-green { background: rgba(34, 197, 94, 0.2); color: #22c55e; }
+        .tag-gold { background: rgba(245, 158, 11, 0.2); color: var(--accent); }
+        .tag-blue { background: rgba(14, 165, 233, 0.2); color: var(--secondary); }
+        .tag-red { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+        
+        .bar-chart { margin: 1.5rem 0; }
+        .bar-row { display: flex; align-items: center; margin: 0.5rem 0; }
+        .bar-label { width: 120px; font-size: 0.85rem; color: #94a3b8; }
+        .bar-container { flex: 1; height: 24px; background: rgba(255,255,255,0.05); border-radius: 4px; overflow: hidden; }
+        .bar-2024 { height: 100%; background: var(--secondary); opacity: 0.5; }
+        .bar-2025 { height: 100%; background: var(--accent); margin-top: -24px; }
+        .bar-value { width: 100px; text-align: right; font-size: 0.85rem; }
+        
+        .highlight-box {
+            background: linear-gradient(135deg, var(--primary), #1e3a8a);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        .cta {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            background: linear-gradient(135deg, var(--accent), #f97316);
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 1.2rem;
+            margin-top: 2rem;
+        }
+        
+        .page-number {
+            position: absolute;
+            bottom: 20px;
+            right: 40px;
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .slide { padding: 30px 20px; }
+            h1 { font-size: 2rem; }
+            .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+            .stat-value { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Slide 1: Capa -->
+<section class="slide">
+    <div style="display: flex; align-items: center; gap: 2rem; margin-bottom: 2rem;">
+        <div style="width: 100px; height: 100px; background: linear-gradient(135deg, #0369a1, #0891b2); border-radius: 20px; display: flex; align-items: center; justify-content: center; font-size: 3rem;">🌊</div>
+        <div>
+            <div style="font-size: 2.5rem; font-weight: 700;">Aurora Oceano</div>
+            <p style="color: #94a3b8;">Distribuição Alimentar</p>
+        </div>
+    </div>
+    <h1>Análise Estratégica 2024-2025</h1>
+    <p class="subtitle">Diagnóstico completo com dados de 16.332 facturas</p>
+    <div style="margin-top: 3rem; display: flex; align-items: center; gap: 1rem;">
+        <span style="color: #94a3b8;">Powered by</span>
+        <span style="font-weight: 600; color: var(--accent); font-size: 1.2rem;">AiParaTi</span>
+    </div>
+    <p style="color: #64748b; margin-top: 3rem;">Fevereiro 2026 | Confidencial</p>
+    <span class="page-number">1/10</span>
+</section>
+
+<!-- Slide 2: Executive Summary -->
+<section class="slide">
+    <h2>Sumário Executivo</h2>
+    <div class="grid-4">
+        <div class="stat-box">
+            <div class="stat-value positive">+60.6%</div>
+            <div class="stat-label">Crescimento 2024→2025</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-value">€4.4M</div>
+            <div class="stat-label">Faturação 2025</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-value positive">+86%</div>
+            <div class="stat-label">Ticket Médio</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-value">15%</div>
+            <div class="stat-label">Exportação Espanha</div>
+        </div>
+    </div>
+    <h3>Principais Descobertas</h3>
+    <div class="grid-2">
+        <div class="card">
+            <h4 style="color: var(--success);">✅ Pontos Fortes</h4>
+            <ul style="margin-top: 1rem; color: #94a3b8; list-style: none;">
+                <li>• Crescimento excepcional (+60.6% YoY)</li>
+                <li>• Transformação: menos volume, mais valor</li>
+                <li>• Internacionalização bem-sucedida</li>
+                <li>• Atracção de grandes clientes B2B</li>
+            </ul>
+        </div>
+        <div class="card">
+            <h4 style="color: var(--accent);">⚠️ Áreas de Atenção</h4>
+            <ul style="margin-top: 1rem; color: #94a3b8; list-style: none;">
+                <li>• Top 3 clientes = 26% faturação</li>
+                <li>• €803k em crédito 60 dias</li>
+                <li>• Churn de 31% dos clientes</li>
+                <li>• Porto/Algarve inexplorados</li>
+            </ul>
+        </div>
+    </div>
+    <span class="page-number">2/10</span>
+</section>
+
+<!-- Slide 3: Evolução Financeira -->
+<section class="slide">
+    <h2>Evolução Financeira</h2>
+    <div class="grid-2">
+        <div>
+            <h3>Comparativo Anual</h3>
+            <table>
+                <tr>
+                    <th>Indicador</th>
+                    <th>2024</th>
+                    <th>2025</th>
+                    <th>Δ</th>
+                </tr>
+                <tr>
+                    <td>Faturação</td>
+                    <td>€2.75M</td>
+                    <td>€4.41M</td>
+                    <td><span class="tag tag-green">+60.6%</span></td>
+                </tr>
+                <tr>
+                    <td>Nº Facturas</td>
+                    <td>8.767</td>
+                    <td>7.565</td>
+                    <td><span class="tag tag-gold">-13.7%</span></td>
+                </tr>
+                <tr>
+                    <td>Ticket Médio</td>
+                    <td>€313</td>
+                    <td>€583</td>
+                    <td><span class="tag tag-green">+86%</span></td>
+                </tr>
+                <tr>
+                    <td>Clientes</td>
+                    <td>304</td>
+                    <td>275</td>
+                    <td><span class="tag tag-gold">-9.5%</span></td>
+                </tr>
+                <tr>
+                    <td>€/Cliente</td>
+                    <td>€9.042</td>
+                    <td>€16.051</td>
+                    <td><span class="tag tag-green">+77.5%</span></td>
+                </tr>
+            </table>
+        </div>
+        <div class="highlight-box">
+            <p style="font-size: 1.1rem; color: rgba(255,255,255,0.8);">Modelo de Negócio</p>
+            <p style="font-size: 2rem; font-weight: 600; margin: 1rem 0;">Volume → Valor</p>
+            <p style="color: rgba(255,255,255,0.7);">Menos transacções<br>Maior valor por cliente<br>Foco em B2B estratégico</p>
+        </div>
+    </div>
+    <span class="page-number">3/10</span>
+</section>
+
+<!-- Slide 4: Sazonalidade -->
+<section class="slide">
+    <h2>Padrão Sazonal</h2>
+    <p class="subtitle">Faturação Mensal 2024 vs 2025 (€ milhares)</p>
+    <div class="bar-chart">
+        <div class="bar-row">
+            <span class="bar-label">Janeiro</span>
+            <div class="bar-container">
+                <div class="bar-2024" style="width: 14%;"></div>
+                <div class="bar-2025" style="width: 32%;"></div>
+            </div>
+            <span class="bar-value">€102k → €224k</span>
+        </div>
+        <div class="bar-row">
+            <span class="bar-label">Fevereiro</span>
+            <div class="bar-container">
+                <div class="bar-2024" style="width: 17%;"></div>
+                <div class="bar-2025" style="width: 25%;"></div>
+            </div>
+            <span class="bar-value">€118k → €172k</span>
+        </div>
+        <div class="bar-row">
+            <span class="bar-label">Março</span>
+            <div class="bar-container">
+                <div class="bar-2024" style="width: 26%;"></div>
+                <div class="bar-2025" style="width: 42%;"></div>
+            </div>
+            <span class="bar-value">€184k → €291k</span>
+        </div>
+        <div class="bar-row">
+            <span class="bar-label">Julho</span>
+            <div class="bar-container">
+                <div class="bar-2024" style="width: 57%;"></div>
+                <div class="bar-2025" style="width: 80%;"></div>
+            </div>
+            <span class="bar-value" style="color: var(--accent);">€403k → €560k ⭐</span>
+        </div>
+        <div class="bar-row">
+            <span class="bar-label">Agosto</span>
+            <div class="bar-container">
+                <div class="bar-2024" style="width: 35%;"></div>
+                <div class="bar-2025" style="width: 71%;"></div>
+            </div>
+            <span class="bar-value">€248k → €500k</span>
+        </div>
+        <div class="bar-row">
+            <span class="bar-label">Outubro</span>
+            <div class="bar-container">
+                <div class="bar-2024" style="width: 44%;"></div>
+                <div class="bar-2025" style="width: 100%;"></div>
+            </div>
+            <span class="bar-value" style="color: var(--success);">€307k → €701k 🔥</span>
+        </div>
+        <div class="bar-row">
+            <span class="bar-label">Novembro</span>
+            <div class="bar-container">
+                <div class="bar-2024" style="width: 34%;"></div>
+                <div class="bar-2025" style="width: 70%;"></div>
+            </div>
+            <span class="bar-value">€236k → €489k</span>
+        </div>
+    </div>
+    <div class="grid-3" style="margin-top: 1rem;">
+        <div class="card" style="text-align: center;">
+            <div style="font-size: 2rem; color: var(--accent);">61%</div>
+            <div style="color: #94a3b8; font-size: 0.9rem;">Jul-Nov = época alta</div>
+        </div>
+        <div class="card" style="text-align: center;">
+            <div style="font-size: 2rem; color: var(--secondary);">30%</div>
+            <div style="color: #94a3b8; font-size: 0.9rem;">Mar-Jun + Dez</div>
+        </div>
+        <div class="card" style="text-align: center;">
+            <div style="font-size: 2rem; color: #94a3b8;">9%</div>
+            <div style="color: #94a3b8; font-size: 0.9rem;">Jan-Fev (baixa)</div>
+        </div>
+    </div>
+    <span class="page-number">4/10</span>
+</section>
+
+<!-- Slide 5: Top Clientes -->
+<section class="slide">
+    <h2>Top 10 Clientes 2025</h2>
+    <table>
+        <tr>
+            <th>#</th>
+            <th>Cliente</th>
+            <th>Zona</th>
+            <th>Faturação</th>
+            <th>%</th>
+            <th>Trend</th>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td><strong>Consumintenso</strong></td>
+            <td>Braga 🇵🇹</td>
+            <td>€580.281</td>
+            <td>13.1%</td>
+            <td><span class="tag tag-blue">🆕 Novo</span></td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>MARBOTRADE SL</td>
+            <td>Ayamonte 🇪🇸</td>
+            <td>€296.786</td>
+            <td>6.7%</td>
+            <td><span class="tag tag-green">+265%</span></td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td>PESCADOS CAMOROS</td>
+            <td>Espanha 🇪🇸</td>
+            <td>€261.228</td>
+            <td>5.9%</td>
+            <td><span class="tag tag-blue">🆕 Novo</span></td>
+        </tr>
+        <tr>
+            <td>4</td>
+            <td>BELIZAZEL</td>
+            <td>Frielas</td>
+            <td>€205.942</td>
+            <td>4.7%</td>
+            <td><span class="tag tag-gold">-5%</span></td>
+        </tr>
+        <tr>
+            <td>5</td>
+            <td>ONIMOD TIERRA Y MAR</td>
+            <td>Madrid 🇪🇸</td>
+            <td>€202.775</td>
+            <td>4.6%</td>
+            <td><span class="tag tag-green">+70%</span></td>
+        </tr>
+        <tr>
+            <td>6</td>
+            <td>ICEMIX</td>
+            <td>-</td>
+            <td>€137.431</td>
+            <td>3.1%</td>
+            <td><span class="tag tag-green">+71%</span></td>
+        </tr>
+        <tr>
+            <td>7</td>
+            <td>TITO CARVALHO</td>
+            <td>-</td>
+            <td>€111.095</td>
+            <td>2.5%</td>
+            <td><span class="tag tag-green">+105%</span></td>
+        </tr>
+    </table>
+    <div class="grid-2" style="margin-top: 2rem;">
+        <div class="card" style="border-color: var(--accent);">
+            <h4 style="color: var(--accent);">⚠️ Risco de Concentração</h4>
+            <p style="color: #94a3b8; margin-top: 0.5rem;">Top 3 clientes = <strong>25.7%</strong> da faturação total</p>
+        </div>
+        <div class="card" style="border-color: var(--success);">
+            <h4 style="color: var(--success);">✅ Internacionalização</h4>
+            <p style="color: #94a3b8; margin-top: 0.5rem;">Espanha = <strong>15%+</strong> (€668k) da faturação</p>
+        </div>
+    </div>
+    <span class="page-number">5/10</span>
+</section>
+
+<!-- Slide 6: Geografia -->
+<section class="slide">
+    <h2>Análise Geográfica 2025</h2>
+    <div class="grid-2">
+        <div>
+            <h3>Top Zonas por Faturação</h3>
+            <table>
+                <tr><th>Zona</th><th>Valor</th><th>%</th></tr>
+                <tr><td>🥇 Braga</td><td>€585k</td><td>13.2%</td></tr>
+                <tr><td>🥈 Lisboa</td><td>€338k</td><td>7.7%</td></tr>
+                <tr><td>🥉 Ayamonte 🇪🇸</td><td>€297k</td><td>6.7%</td></tr>
+                <tr><td>Madrid 🇪🇸</td><td>€209k</td><td>4.7%</td></tr>
+                <tr><td>Frielas</td><td>€206k</td><td>4.7%</td></tr>
+                <tr><td>Almada</td><td>€142k</td><td>3.2%</td></tr>
+                <tr><td>Sintra</td><td>€140k</td><td>3.2%</td></tr>
+            </table>
+        </div>
+        <div>
+            <h3>Oportunidades</h3>
+            <div class="card" style="margin-bottom: 1rem;">
+                <h4 style="color: var(--success);">🎯 Porto</h4>
+                <p style="color: #94a3b8; font-size: 0.9rem;">Penetração: 0% | Potencial: Muito Alto</p>
+            </div>
+            <div class="card" style="margin-bottom: 1rem;">
+                <h4 style="color: var(--success);">🎯 Algarve</h4>
+                <p style="color: #94a3b8; font-size: 0.9rem;">Penetração: Baixa | Potencial: Alto (turismo)</p>
+            </div>
+            <div class="card">
+                <h4 style="color: var(--secondary);">🎯 Galiza</h4>
+                <p style="color: #94a3b8; font-size: 0.9rem;">Penetração: 0% | Potencial: Alto (corredor ES)</p>
+            </div>
+        </div>
+    </div>
+    <span class="page-number">6/10</span>
+</section>
+
+<!-- Slide 7: Retenção -->
+<section class="slide">
+    <h2>Análise de Clientes</h2>
+    <div class="grid-2">
+        <div>
+            <h3>Funil de Retenção 2024 → 2025</h3>
+            <div class="card" style="text-align: center; margin-bottom: 1rem;">
+                <div style="font-size: 1.5rem;">2024: <strong>304</strong> clientes</div>
+            </div>
+            <div style="display: flex; gap: 1rem;">
+                <div class="card" style="flex: 2; text-align: center; border-color: var(--success);">
+                    <div style="font-size: 2rem; color: var(--success);">209</div>
+                    <div style="color: #94a3b8;">Retidos (68.8%)</div>
+                </div>
+                <div class="card" style="flex: 1; text-align: center; border-color: #ef4444;">
+                    <div style="font-size: 2rem; color: #ef4444;">95</div>
+                    <div style="color: #94a3b8;">Perdidos</div>
+                </div>
+            </div>
+            <div class="card" style="text-align: center; margin-top: 1rem; border-color: var(--secondary);">
+                <div style="font-size: 2rem; color: var(--secondary);">+66</div>
+                <div style="color: #94a3b8;">Novos em 2025</div>
+            </div>
+            <div class="card" style="text-align: center; margin-top: 1rem;">
+                <div style="font-size: 1.5rem;">2025: <strong>275</strong> clientes</div>
+            </div>
+        </div>
+        <div>
+            <h3>Métricas de Retenção</h3>
+            <table>
+                <tr>
+                    <td>Retenção clientes</td>
+                    <td><span class="tag tag-gold">68.8%</span></td>
+                </tr>
+                <tr>
+                    <td>Retenção valor</td>
+                    <td><span class="tag tag-green">85%+</span></td>
+                </tr>
+                <tr>
+                    <td>Valor perdido</td>
+                    <td>€450k</td>
+                </tr>
+                <tr>
+                    <td>Valor novos</td>
+                    <td>€1.2M</td>
+                </tr>
+                <tr>
+                    <td><strong>Ratio novo/perdido</strong></td>
+                    <td><span class="tag tag-green"><strong>2.7x</strong></span></td>
+                </tr>
+            </table>
+            <div class="highlight-box" style="margin-top: 1.5rem;">
+                <p style="font-size: 0.9rem; color: rgba(255,255,255,0.7);">Conclusão</p>
+                <p style="font-size: 1.1rem;">Perdem-se clientes pequenos<br>Ganham-se clientes maiores</p>
+            </div>
+        </div>
+    </div>
+    <span class="page-number">7/10</span>
+</section>
+
+<!-- Slide 8: Riscos -->
+<section class="slide">
+    <h2>Análise de Riscos</h2>
+    <div class="grid-2">
+        <div>
+            <h3>Condições de Pagamento 2025</h3>
+            <table>
+                <tr>
+                    <th>Prazo</th>
+                    <th>Valor</th>
+                    <th>%</th>
+                    <th>Risco</th>
+                </tr>
+                <tr>
+                    <td>30 Dias</td>
+                    <td>€2.28M</td>
+                    <td>51.6%</td>
+                    <td><span class="tag tag-gold">Médio</span></td>
+                </tr>
+                <tr>
+                    <td>Pronto Pag.</td>
+                    <td>€904k</td>
+                    <td>20.5%</td>
+                    <td><span class="tag tag-green">Baixo</span></td>
+                </tr>
+                <tr>
+                    <td>60 Dias</td>
+                    <td>€803k</td>
+                    <td>18.2%</td>
+                    <td><span class="tag tag-red">Alto</span></td>
+                </tr>
+                <tr>
+                    <td>Remessa</td>
+                    <td>€224k</td>
+                    <td>5.1%</td>
+                    <td><span class="tag tag-green">Baixo</span></td>
+                </tr>
+            </table>
+        </div>
+        <div>
+            <h3>Matriz de Riscos</h3>
+            <div class="card" style="border-color: #ef4444; margin-bottom: 1rem;">
+                <h4 style="color: #ef4444;">🔴 Perda Consumintenso</h4>
+                <p style="color: #94a3b8; font-size: 0.9rem;">Impacto: €580k | Mitigação: Contrato plurianual</p>
+            </div>
+            <div class="card" style="border-color: var(--accent); margin-bottom: 1rem;">
+                <h4 style="color: var(--accent);">🟡 Exposição 60 dias</h4>
+                <p style="color: #94a3b8; font-size: 0.9rem;">Impacto: €803k | Mitigação: Seguro crédito</p>
+            </div>
+            <div class="card" style="border-color: var(--accent);">
+                <h4 style="color: var(--accent);">🟡 Capacidade época alta</h4>
+                <p style="color: #94a3b8; font-size: 0.9rem;">Impacto: €560k | Mitigação: Plano contingência</p>
+            </div>
+        </div>
+    </div>
+    <span class="page-number">8/10</span>
+</section>
+
+<!-- Slide 9: Roadmap -->
+<section class="slide">
+    <h2>Roadmap 2026</h2>
+    <div class="grid-4">
+        <div class="card">
+            <h4 style="color: var(--secondary);">Q1 2026</h4>
+            <ul style="color: #94a3b8; font-size: 0.85rem; list-style: none; margin-top: 1rem;">
+                <li>✓ Bot Telegram ops</li>
+                <li>✓ Dashboard KPIs</li>
+                <li>✓ Contratos renovados</li>
+            </ul>
+            <div style="margin-top: 1rem; font-weight: 600;">META: €330k/mês</div>
+        </div>
+        <div class="card">
+            <h4 style="color: var(--secondary);">Q2 2026</h4>
+            <ul style="color: #94a3b8; font-size: 0.85rem; list-style: none; margin-top: 1rem;">
+                <li>→ Entrada Porto</li>
+                <li>→ CRM implementado</li>
+                <li>→ Alertas automáticos</li>
+            </ul>
+            <div style="margin-top: 1rem; font-weight: 600;">META: €450k/mês</div>
+        </div>
+        <div class="card">
+            <h4 style="color: var(--accent);">Q3 2026</h4>
+            <ul style="color: #94a3b8; font-size: 0.85rem; list-style: none; margin-top: 1rem;">
+                <li>→ Época alta optimizada</li>
+                <li>→ Espanha +50%</li>
+                <li>→ Rotas IA</li>
+            </ul>
+            <div style="margin-top: 1rem; font-weight: 600; color: var(--accent);">META: €650k/mês</div>
+        </div>
+        <div class="card">
+            <h4 style="color: var(--success);">Q4 2026</h4>
+            <ul style="color: #94a3b8; font-size: 0.85rem; list-style: none; margin-top: 1rem;">
+                <li>→ Algarve activo</li>
+                <li>→ Grupo consolidado</li>
+                <li>→ E-commerce B2B</li>
+            </ul>
+            <div style="margin-top: 1rem; font-weight: 600; color: var(--success);">META: €550k/mês</div>
+        </div>
+    </div>
+    <h3>Projecção 3 Anos</h3>
+    <div class="grid-3">
+        <div class="stat-box">
+            <div style="color: #94a3b8; font-size: 0.9rem;">2026</div>
+            <div class="stat-value">€6.2M</div>
+            <div style="color: var(--success);">+40%</div>
+        </div>
+        <div class="stat-box">
+            <div style="color: #94a3b8; font-size: 0.9rem;">2027</div>
+            <div class="stat-value">€8.5M</div>
+            <div style="color: var(--success);">+37%</div>
+        </div>
+        <div class="stat-box">
+            <div style="color: #94a3b8; font-size: 0.9rem;">2028</div>
+            <div class="stat-value">€12M</div>
+            <div style="color: var(--success);">+41%</div>
+        </div>
+    </div>
+    <span class="page-number">9/10</span>
+</section>
+
+<!-- Slide 10: CTA -->
+<section class="slide" style="text-align: center;">
+    <h1>Próximos Passos</h1>
+    <p class="subtitle">Transformação digital com IA</p>
+    <div class="grid-3" style="max-width: 900px; margin: 2rem auto;">
+        <div class="stat-box">
+            <div style="font-size: 3rem;">🤖</div>
+            <div style="font-weight: 600; margin-top: 1rem;">Bot + Dashboard</div>
+            <div style="color: #94a3b8; font-size: 0.9rem;">Setup: €2.500</div>
+        </div>
+        <div class="stat-box">
+            <div style="font-size: 3rem;">📊</div>
+            <div style="font-weight: 600; margin-top: 1rem;">ROI Esperado</div>
+            <div style="color: var(--success); font-size: 1.5rem;">709%</div>
+        </div>
+        <div class="stat-box">
+            <div style="font-size: 3rem;">⚡</div>
+            <div style="font-weight: 600; margin-top: 1rem;">Break-even</div>
+            <div style="color: var(--accent); font-size: 1.5rem;">6 semanas</div>
+        </div>
+    </div>
+    <a href="mailto:bilal@aiparati.pt" class="cta">Agendar Reunião</a>
+    <p style="color: #64748b; margin-top: 2rem;">bilal@aiparati.pt | aiparati.pt</p>
+    <p style="color: #475569; margin-top: 1rem; font-size: 0.9rem;">"Simplificar o trabalho digital, libertando tempo para o que importa."</p>
+    <span class="page-number">10/10</span>
+</section>
+
+</body>
+</html>

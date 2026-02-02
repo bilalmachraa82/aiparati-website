@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aurora Oceano - Dashboard & Mission Control</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background: linear-gradient(135deg, #0c1929 0%, #1a365d 100%); min-height: 100vh; }
+        .glass { background: rgba(255,255,255,0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.08); }
+        .glass-light { background: rgba(255,255,255,0.06); }
+        .gradient-blue { background: linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%); }
+        .gradient-green { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
+        .gradient-orange { background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); }
+        .gradient-red { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); }
+        .gradient-purple { background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); }
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-2px); box-shadow: 0 15px 40px rgba(0,0,0,0.3); }
+        .pulse-dot { animation: pulse 2s infinite; }
+        .pulse-urgent { animation: pulse-urgent 1s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.7; transform: scale(1.1); } }
+        @keyframes pulse-urgent { 0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); } 50% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); } }
+        .badge { font-size: 0.65rem; padding: 2px 8px; border-radius: 4px; font-weight: 600; text-transform: uppercase; }
+        .notification-enter { animation: slideIn 0.3s ease-out; }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        .btn-approve { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
+        .btn-approve:hover { background: linear-gradient(135deg, #059669 0%, #047857 100%); }
+        .btn-reject { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); }
+        .btn-reject:hover { background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%); }
+        .btn-counter { background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); }
+        .main-tab-active { background: rgba(255,255,255,0.1); border-bottom: 3px solid #0ea5e9; }
+        .sub-tab-active { background: rgba(255,255,255,0.08); border-bottom: 2px solid #8b5cf6; }
+        input[type="number"], input[type="text"], select { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); }
+        input[type="number"]:focus, input[type="text"]:focus, select:focus { outline: none; border-color: #0ea5e9; }
+    </style>
+</head>
+<body class="text-white p-4 lg:p-6">
+    <!-- Header -->
+    <header class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-4">
+        <div class="flex items-center gap-4">
+            <div class="w-12 h-12 gradient-blue rounded-xl flex items-center justify-center text-2xl">🐟</div>
+            <div>
+                <h1 class="text-2xl lg:text-3xl font-bold">Aurora Oceano</h1>
+                <p class="text-slate-400 text-sm">Gestão Inteligente de Distribuição</p>
+            </div>
+        </div>
+        <div class="flex flex-wrap items-center gap-3">
+            <div class="glass rounded-lg px-3 py-2 text-sm flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-green-500 pulse-dot"></span>
+                <span class="text-green-400 font-medium">Moloni Ligado</span>
+            </div>
+            <div class="glass rounded-lg px-3 py-2 text-sm">
+                <span id="currentTime">19:45</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Navigation -->
+    <div class="flex gap-1 mb-6 glass rounded-xl p-1 w-fit">
+        <button onclick="showMainTab('dashboard')" id="main-tab-dashboard" class="px-5 py-2.5 rounded-lg font-medium transition-all main-tab-active flex items-center gap-2">
+            📊 Dashboard
+        </button>
+        <button onclick="showMainTab('mission')" id="main-tab-mission" class="px-5 py-2.5 rounded-lg font-medium transition-all hover:bg-white/5 flex items-center gap-2">
+            🎛️ Mission Control
+            <span class="badge bg-orange-500/30 text-orange-400">4</span>
+        </button>
+    </div>
+
+    <!-- ==================== DASHBOARD TAB ==================== -->
+    <div id="content-dashboard" class="main-content">
+        <!-- KPIs -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+            <div class="glass rounded-xl p-5 card-hover">
+                <div class="flex justify-between items-start mb-3">
+                    <div class="w-10 h-10 gradient-blue rounded-lg flex items-center justify-center">💰</div>
+                    <span class="badge bg-green-500/20 text-green-400">+12%</span>
+                </div>
+                <p class="text-slate-400 text-sm">Vendas Hoje</p>
+                <h2 class="text-2xl lg:text-3xl font-bold mt-1">€12.450</h2>
+                <p class="text-xs text-slate-500 mt-2">Meta: €15.000</p>
+            </div>
+            <div class="glass rounded-xl p-5 card-hover">
+                <div class="flex justify-between items-start mb-3">
+                    <div class="w-10 h-10 gradient-green rounded-lg flex items-center justify-center">📦</div>
+                    <span class="badge bg-yellow-500/20 text-yellow-400">3 pendentes</span>
+                </div>
+                <p class="text-slate-400 text-sm">Encomendas</p>
+                <h2 class="text-2xl lg:text-3xl font-bold mt-1">28</h2>
+                <p class="text-xs text-slate-500 mt-2">+5 vs ontem</p>
+            </div>
+            <div class="glass rounded-xl p-5 card-hover">
+                <div class="flex justify-between items-start mb-3">
+                    <div class="w-10 h-10 gradient-orange rounded-lg flex items-center justify-center">🚚</div>
+                </div>
+                <p class="text-slate-400 text-sm">Entregas Hoje</p>
+                <h2 class="text-2xl lg:text-3xl font-bold mt-1">18/22</h2>
+                <p class="text-xs text-slate-500 mt-2">82% concluídas</p>
+            </div>
+            <div class="glass rounded-xl p-5 card-hover">
+                <div class="flex justify-between items-start mb-3">
+                    <div class="w-10 h-10 gradient-red rounded-lg flex items-center justify-center">⚠️</div>
+                    <span class="badge bg-red-500/20 text-red-400">2 urgentes</span>
+                </div>
+                <p class="text-slate-400 text-sm">Alertas</p>
+                <h2 class="text-2xl lg:text-3xl font-bold mt-1">5</h2>
+                <p class="text-xs text-slate-500 mt-2">Stock + Pagamentos</p>
+            </div>
+        </div>
+
+        <!-- Alertas -->
+        <div class="mb-6 space-y-2">
+            <div class="glass border-l-4 border-red-500 rounded-lg p-4 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <span class="text-2xl">🔴</span>
+                    <div>
+                        <p class="font-semibold">Pagamento Vencido Hoje</p>
+                        <p class="text-sm text-slate-400">Pescanova - €2.500,00</p>
+                    </div>
+                </div>
+                <button class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg text-sm font-medium transition-all">Marcar Pago</button>
+            </div>
+            <div class="glass border-l-4 border-orange-500 rounded-lg p-4 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <span class="text-2xl">⚠️</span>
+                    <div>
+                        <p class="font-semibold">Stock Baixo</p>
+                        <p class="text-sm text-slate-400">Bacalhau Lombo 300/400 - apenas 5 caixas</p>
+                    </div>
+                </div>
+                <button class="bg-orange-500 hover:bg-orange-600 px-4 py-2 rounded-lg text-sm font-medium transition-all">Encomendar</button>
+            </div>
+        </div>
+
+        <!-- Ranking Vendedores + Meta -->
+        <div class="grid lg:grid-cols-2 gap-6 mb-6">
+            <div class="glass rounded-xl p-5">
+                <h3 class="font-semibold mb-4 flex items-center gap-2">🏆 Ranking Vendedores</h3>
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between p-3 rounded-lg bg-yellow-500/10 border border-yellow-500/20">
+                        <div class="flex items-center gap-3">
+                            <span class="text-xl">🥇</span>
+                            <div>
+                                <p class="font-medium">Ana Silva</p>
+                                <p class="text-xs text-slate-500">Zona Norte</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="font-bold text-green-400">€4.280</p>
+                            <p class="text-xs text-slate-500">142% da meta</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between p-3 rounded-lg glass-light">
+                        <div class="flex items-center gap-3">
+                            <span class="text-xl">🥈</span>
+                            <div>
+                                <p class="font-medium">Carlos Mendes</p>
+                                <p class="text-xs text-slate-500">Zona Sul</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="font-bold text-green-400">€3.890</p>
+                            <p class="text-xs text-slate-500">130% da meta</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between p-3 rounded-lg glass-light">
+                        <div class="flex items-center gap-3">
+                            <span class="text-xl">🥉</span>
+                            <div>
+                                <p class="font-medium">Miguel Costa</p>
+                                <p class="text-xs text-slate-500">Zona Centro</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="font-bold text-yellow-400">€2.120</p>
+                            <p class="text-xs text-slate-500">71% da meta</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass rounded-xl p-5">
+                <h3 class="font-semibold mb-4 flex items-center gap-2">🎯 Meta Anual: €4.6M</h3>
+                <div class="mb-4">
+                    <div class="flex justify-between text-sm mb-2">
+                        <span class="text-slate-400">Progresso YTD</span>
+                        <span class="font-bold">€385.000 (8.4%)</span>
+                    </div>
+                    <div class="w-full bg-slate-700 rounded-full h-4">
+                        <div class="gradient-blue h-4 rounded-full" style="width: 8.4%"></div>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4 text-center">
+                    <div class="glass-light rounded-lg p-3">
+                        <p class="text-2xl font-bold">€12.6k</p>
+                        <p class="text-xs text-slate-500">Meta Diária</p>
+                    </div>
+                    <div class="glass-light rounded-lg p-3">
+                        <p class="text-2xl font-bold text-green-400">99%</p>
+                        <p class="text-xs text-slate-500">Hoje vs Meta</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== MISSION CONTROL TAB ==================== -->
+    <div id="content-mission" class="main-content hidden">
+        <!-- Sub-tabs -->
+        <div class="flex gap-1 mb-6 glass rounded-xl p-1 w-fit">
+            <button onclick="showSubTab('aprovacoes')" id="sub-tab-aprovacoes" class="px-4 py-2 rounded-lg text-sm font-medium transition-all sub-tab-active">
+                🔔 Aprovações <span class="badge bg-orange-500/30 text-orange-400 ml-1">4</span>
+            </button>
+            <button onclick="showSubTab('dividas')" id="sub-tab-dividas" class="px-4 py-2 rounded-lg text-sm font-medium transition-all hover:bg-white/5">
+                ⚠️ Alertas Dívida <span class="badge bg-red-500/30 text-red-400 ml-1">2</span>
+            </button>
+            <button onclick="showSubTab('historico')" id="sub-tab-historico" class="px-4 py-2 rounded-lg text-sm font-medium transition-all hover:bg-white/5">
+                📊 Histórico Preços
+            </button>
+            <button onclick="showSubTab('regras')" id="sub-tab-regras" class="px-4 py-2 rounded-lg text-sm font-medium transition-all hover:bg-white/5">
+                📋 Regras
+            </button>
+        </div>
+
+        <!-- Stats Mission Control -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+            <div class="glass rounded-xl p-4 card-hover">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 gradient-orange rounded-lg flex items-center justify-center">⏳</div>
+                    <div>
+                        <p class="text-2xl font-bold" id="pendingCount">4</p>
+                        <p class="text-slate-400 text-xs">Pendentes</p>
+                    </div>
+                </div>
+            </div>
+            <div class="glass rounded-xl p-4 card-hover">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 gradient-green rounded-lg flex items-center justify-center">✅</div>
+                    <div>
+                        <p class="text-2xl font-bold">12</p>
+                        <p class="text-slate-400 text-xs">Aprovados Hoje</p>
+                    </div>
+                </div>
+            </div>
+            <div class="glass rounded-xl p-4 card-hover">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 gradient-red rounded-lg flex items-center justify-center">⚠️</div>
+                    <div>
+                        <p class="text-2xl font-bold">2</p>
+                        <p class="text-slate-400 text-xs">Clientes c/ Dívida</p>
+                    </div>
+                </div>
+            </div>
+            <div class="glass rounded-xl p-4 card-hover">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 gradient-blue rounded-lg flex items-center justify-center">💰</div>
+                    <div>
+                        <p class="text-2xl font-bold">€847</p>
+                        <p class="text-slate-400 text-xs">Descontos Hoje</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SUB-TAB: Aprovações -->
+        <div id="sub-content-aprovacoes" class="sub-content">
+            <div class="grid lg:grid-cols-3 gap-6">
+                <div class="lg:col-span-2 space-y-4">
+                    <!-- Pedido URGENTE -->
+                    <div class="glass rounded-xl p-5 card-hover border-l-4 border-red-500 pulse-urgent">
+                        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                            <div class="flex-1">
+                                <div class="flex items-center gap-2 mb-2">
+                                    <span class="badge bg-red-500/30 text-red-400">🚨 URGENTE</span>
+                                    <span class="badge bg-purple-500/20 text-purple-400">Desconto &gt; 10%</span>
+                                    <span class="text-xs text-slate-500">há 2 min</span>
+                                </div>
+                                <div class="flex items-center gap-3 mb-3">
+                                    <div class="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center">CM</div>
+                                    <div>
+                                        <p class="font-semibold">Carlos Mendes</p>
+                                        <p class="text-sm text-slate-400">Vendedor #3 • Zona Sul</p>
+                                    </div>
+                                </div>
+                                <div class="glass-light rounded-lg p-3 mb-3">
+                                    <p class="text-sm text-slate-300 mb-2">💬 <em>"O cliente diz que a concorrência oferece a 11€/kg."</em></p>
+                                    <div class="flex flex-wrap gap-4 text-sm">
+                                        <div><span class="text-slate-500">Cliente:</span> <span class="font-medium">Restaurante Mar Azul</span></div>
+                                        <div><span class="text-slate-500">Produto:</span> <span class="font-medium">Polvo 2000/3000</span></div>
+                                        <div><span class="text-slate-500">Qtd:</span> <span class="font-medium">50kg</span></div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-4 text-sm">
+                                    <div><span class="text-slate-500">€12,20</span> → <span class="text-red-400 font-bold">€11,00</span> <span class="badge bg-red-500/20 text-red-400">-9.8%</span></div>
+                                    <div><span class="text-slate-500">Impacto:</span> <span class="text-red-400">-€60</span></div>
+                                </div>
+                            </div>
+                            <div class="flex lg:flex-col gap-2">
+                                <button onclick="aprovar(this, 'Carlos Mendes')" class="btn-approve px-5 py-2 rounded-lg font-semibold transition-all">✅ Aprovar</button>
+                                <button onclick="showToast('💬', 'Contraproposta', '€11,50 enviado', 'counter')" class="btn-counter px-5 py-2 rounded-lg font-semibold transition-all">💬 €11,50</button>
+                                <button onclick="rejeitar(this, 'Carlos Mendes')" class="btn-reject px-5 py-2 rounded-lg font-semibold transition-all">❌ Rejeitar</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pedido Normal -->
+                    <div class="glass rounded-xl p-5 card-hover border-l-4 border-orange-500">
+                        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                            <div class="flex-1">
+                                <div class="flex items-center gap-2 mb-2">
+                                    <span class="badge bg-orange-500/20 text-orange-400">5-10%</span>
+                                    <span class="text-xs text-slate-500">há 15 min</span>
+                                </div>
+                                <div class="flex items-center gap-3 mb-2">
+                                    <div class="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center">AS</div>
+                                    <div>
+                                        <p class="font-semibold">Ana Silva</p>
+                                        <p class="text-sm text-slate-400">Zona Norte</p>
+                                    </div>
+                                </div>
+                                <div class="flex flex-wrap gap-4 text-sm">
+                                    <div><span class="text-slate-500">Cliente:</span> <span class="font-medium">Hotel Cascais</span> <span class="badge bg-blue-500/20 text-blue-400">Regular</span></div>
+                                    <div><span class="text-slate-500">Salmão Posta:</span> <span class="font-semibold">€9,65</span> → <span class="text-orange-400">€9,00</span></div>
+                                </div>
+                            </div>
+                            <div class="flex lg:flex-col gap-2">
+                                <button onclick="aprovar(this, 'Ana Silva')" class="btn-approve px-5 py-2 rounded-lg font-semibold text-sm">✅</button>
+                                <button onclick="rejeitar(this, 'Ana Silva')" class="btn-reject px-5 py-2 rounded-lg font-semibold text-sm">❌</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sidebar -->
+                <div class="space-y-4">
+                    <div class="glass rounded-xl p-5">
+                        <h3 class="font-semibold mb-4">👥 Vendedores Online</h3>
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-2">
+                                    <div class="relative">
+                                        <div class="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center text-xs">AS</div>
+                                        <span class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-green-500 rounded-full border-2 border-slate-900"></span>
+                                    </div>
+                                    <span class="text-sm">Ana Silva</span>
+                                </div>
+                                <span class="text-green-400 text-sm font-medium">€4.2k</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-2">
+                                    <div class="relative">
+                                        <div class="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center text-xs">CM</div>
+                                        <span class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-green-500 rounded-full border-2 border-slate-900"></span>
+                                    </div>
+                                    <span class="text-sm">Carlos Mendes</span>
+                                </div>
+                                <span class="text-green-400 text-sm font-medium">€3.9k</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SUB-TAB: Alertas Dívida -->
+        <div id="sub-content-dividas" class="sub-content hidden">
+            <div class="space-y-4">
+                <div class="glass rounded-xl p-5 border-l-4 border-red-500 pulse-urgent">
+                    <div class="flex flex-col lg:flex-row lg:items-start justify-between gap-4">
+                        <div class="flex-1">
+                            <div class="flex items-center gap-2 mb-3">
+                                <span class="badge bg-red-500/30 text-red-400">🚨 DÍVIDA VENCIDA</span>
+                            </div>
+                            <div class="flex items-center gap-3 mb-4">
+                                <div class="w-12 h-12 rounded-full bg-red-500/20 flex items-center justify-center text-xl">🏪</div>
+                                <div>
+                                    <p class="font-semibold text-lg">Restaurante Beira Mar</p>
+                                    <p class="text-sm text-slate-400">Cliente desde 2019 • 156 encomendas</p>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
+                                <div class="glass-light rounded-lg p-3 text-center">
+                                    <p class="text-xl font-bold text-red-400">€2.450</p>
+                                    <p class="text-xs text-slate-500">Dívida</p>
+                                </div>
+                                <div class="glass-light rounded-lg p-3 text-center">
+                                    <p class="text-xl font-bold text-orange-400">45 dias</p>
+                                    <p class="text-xs text-slate-500">Vencida</p>
+                                </div>
+                                <div class="glass-light rounded-lg p-3 text-center">
+                                    <p class="text-xl font-bold text-yellow-400">3</p>
+                                    <p class="text-xs text-slate-500">Facturas</p>
+                                </div>
+                                <div class="glass-light rounded-lg p-3 text-center">
+                                    <p class="text-xl font-bold text-blue-400">€890</p>
+                                    <p class="text-xs text-slate-500">Nova Encomenda</p>
+                                </div>
+                            </div>
+                            <div class="glass-light rounded-lg p-3">
+                                <p class="text-sm"><strong>📦 Pedido:</strong> Polvo 1000/2000 (20kg) + Camarão 30/40 (15kg)</p>
+                                <p class="text-xs text-slate-500 mt-1">Vendedor: Carlos Mendes</p>
+                            </div>
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <button onclick="showToast('⚠️', 'Aprovado', 'Vendedor alertado', 'counter')" class="bg-yellow-500 hover:bg-yellow-600 text-black px-5 py-2 rounded-lg font-semibold">⚠️ Aprovar c/ Aviso</button>
+                            <button onclick="showToast('🚫', 'Bloqueado', 'Cliente notificado', 'reject')" class="btn-reject px-5 py-2 rounded-lg font-semibold">🚫 Bloquear</button>
+                            <button onclick="showToast('📞', 'A Ligar...', '912 345 678', 'info')" class="glass hover:bg-white/10 px-5 py-2 rounded-lg font-semibold">📞 Ligar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SUB-TAB: Histórico Preços -->
+        <div id="sub-content-historico" class="sub-content hidden">
+            <div class="glass rounded-xl p-6">
+                <h2 class="text-xl font-bold mb-4">📊 Consulta de Histórico de Preços</h2>
+                <p class="text-slate-400 mb-6">Vendedor pergunta ao bot: <code class="bg-slate-700 px-2 py-1 rounded">"Preço polvo para Restaurante Mar Azul"</code></p>
+                
+                <div class="grid lg:grid-cols-2 gap-6">
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm text-slate-400 mb-2">Cliente</label>
+                            <select class="w-full rounded-lg px-4 py-3 text-white">
+                                <option value="">Seleccionar cliente...</option>
+                                <option value="mar-azul" selected>Restaurante Mar Azul</option>
+                                <option value="hotel-cascais">Hotel Cascais</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm text-slate-400 mb-2">Produto</label>
+                            <select class="w-full rounded-lg px-4 py-3 text-white">
+                                <option value="">Seleccionar produto...</option>
+                                <option value="polvo-2000" selected>Polvo 2000/3000</option>
+                                <option value="camarao-30">Camarão 30/40</option>
+                            </select>
+                        </div>
+                        <button onclick="showToast('🔍', 'Pesquisado', 'Resultados actualizados', 'info')" class="w-full gradient-blue px-6 py-3 rounded-lg font-semibold">🔍 Pesquisar</button>
+                    </div>
+
+                    <div class="glass-light rounded-xl p-5">
+                        <h3 class="font-semibold mb-4">📋 Polvo 2000/3000 → Restaurante Mar Azul</h3>
+                        <div class="space-y-2">
+                            <div class="flex justify-between p-2 rounded bg-white/5">
+                                <div>
+                                    <p class="font-medium">15 Jan 2026</p>
+                                    <p class="text-xs text-slate-500">50kg • Carlos</p>
+                                </div>
+                                <div class="text-right">
+                                    <p class="font-bold text-green-400">€11,50/kg</p>
+                                    <p class="text-xs text-slate-500">-5.7%</p>
+                                </div>
+                            </div>
+                            <div class="flex justify-between p-2 rounded bg-white/5">
+                                <div>
+                                    <p class="font-medium">28 Dez 2025</p>
+                                    <p class="text-xs text-slate-500">30kg • Carlos</p>
+                                </div>
+                                <div class="text-right">
+                                    <p class="font-bold text-yellow-400">€11,80/kg</p>
+                                    <p class="text-xs text-slate-500">-3.3%</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-4 pt-4 border-t border-white/10 text-sm">
+                            <div class="flex justify-between"><span class="text-slate-400">Média:</span><span class="font-bold">€11,65/kg</span></div>
+                            <div class="flex justify-between"><span class="text-slate-400">Total:</span><span class="font-bold">80kg (€932)</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SUB-TAB: Regras -->
+        <div id="sub-content-regras" class="sub-content hidden">
+            <div class="glass rounded-xl p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-xl font-bold">📋 Regras de Desconto & Políticas</h2>
+                    <button onclick="guardarRegras()" class="gradient-green px-6 py-2 rounded-lg font-semibold">💾 Guardar</button>
+                </div>
+
+                <div class="grid lg:grid-cols-2 gap-6">
+                    <div class="space-y-4">
+                        <h3 class="font-semibold border-b border-white/10 pb-2">💰 Limites de Desconto</h3>
+                        
+                        <div class="glass-light rounded-lg p-4">
+                            <label class="font-medium block mb-2">Auto-Aprovação</label>
+                            <div class="flex items-center gap-3">
+                                <span class="text-slate-400">Até</span>
+                                <input type="number" id="regra-auto" value="5" class="w-20 rounded-lg px-3 py-2 text-center text-white font-bold">
+                                <span class="text-slate-400">%</span>
+                                <span class="badge bg-green-500/20 text-green-400 ml-auto">Activo</span>
+                            </div>
+                        </div>
+
+                        <div class="glass-light rounded-lg p-4">
+                            <label class="font-medium block mb-2">Paula Aprova</label>
+                            <div class="flex items-center gap-3">
+                                <span class="text-slate-400">De</span>
+                                <input type="number" id="regra-paula-min" value="5" class="w-16 rounded-lg px-2 py-2 text-center text-white font-bold">
+                                <span class="text-slate-400">a</span>
+                                <input type="number" id="regra-paula-max" value="10" class="w-16 rounded-lg px-2 py-2 text-center text-white font-bold">
+                                <span class="text-slate-400">%</span>
+                            </div>
+                        </div>
+
+                        <div class="glass-light rounded-lg p-4">
+                            <label class="font-medium block mb-2">Desconto Excepcional</label>
+                            <div class="flex items-center gap-3">
+                                <span class="text-slate-400">Acima de</span>
+                                <input type="number" id="regra-excepcional" value="10" class="w-20 rounded-lg px-3 py-2 text-center text-white font-bold">
+                                <span class="text-slate-400">% → Justificação obrigatória</span>
+                            </div>
+                        </div>
+
+                        <div class="glass-light rounded-lg p-4">
+                            <label class="font-medium block mb-2">Bónus Cliente Regular</label>
+                            <div class="flex items-center gap-3 flex-wrap">
+                                <span class="text-slate-400">Após</span>
+                                <input type="number" id="regra-regular-pedidos" value="10" class="w-16 rounded-lg px-2 py-2 text-center text-white font-bold">
+                                <span class="text-slate-400">pedidos, +</span>
+                                <input type="number" id="regra-regular-bonus" value="5" class="w-16 rounded-lg px-2 py-2 text-center text-white font-bold">
+                                <span class="text-slate-400">%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <h3 class="font-semibold border-b border-white/10 pb-2">⚠️ Políticas de Dívida</h3>
+                        
+                        <div class="glass-light rounded-lg p-4">
+                            <label class="font-medium block mb-2">Alerta ao Vendedor</label>
+                            <div class="flex items-center gap-3">
+                                <span class="text-slate-400">Dívida &gt;</span>
+                                <input type="number" id="regra-divida-dias" value="7" class="w-16 rounded-lg px-2 py-2 text-center text-white font-bold">
+                                <span class="text-slate-400">dias</span>
+                            </div>
+                        </div>
+
+                        <div class="glass-light rounded-lg p-4">
+                            <label class="font-medium block mb-2">Bloqueio Automático</label>
+                            <div class="flex items-center gap-3 mb-2">
+                                <span class="text-slate-400">Dívida &gt;</span>
+                                <input type="number" id="regra-bloqueio-valor" value="3000" class="w-24 rounded-lg px-2 py-2 text-center text-white font-bold">
+                                <span class="text-slate-400">€</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <span class="text-slate-400">OU vencida &gt;</span>
+                                <input type="number" id="regra-bloqueio-dias" value="60" class="w-16 rounded-lg px-2 py-2 text-center text-white font-bold">
+                                <span class="text-slate-400">dias</span>
+                            </div>
+                        </div>
+
+                        <div class="glass-light rounded-lg p-4">
+                            <label class="font-medium block mb-3">Lembretes Automáticos</label>
+                            <div class="space-y-2 text-sm">
+                                <label class="flex items-center gap-2"><input type="checkbox" checked class="rounded"> 1 dia após vencimento</label>
+                                <label class="flex items-center gap-2"><input type="checkbox" checked class="rounded"> 7 dias após vencimento</label>
+                                <label class="flex items-center gap-2"><input type="checkbox" checked class="rounded"> 15 dias após vencimento</label>
+                                <label class="flex items-center gap-2"><input type="checkbox" checked class="rounded"> 30 dias (último aviso)</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast" class="fixed top-4 right-4 glass rounded-xl p-4 shadow-2xl hidden notification-enter border-l-4" style="min-width: 280px;">
+        <div class="flex items-center gap-3">
+            <span id="toastIcon" class="text-2xl">✅</span>
+            <div>
+                <p id="toastTitle" class="font-semibold">Título</p>
+                <p id="toastMessage" class="text-sm text-slate-400">Mensagem</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Time update
+        setInterval(() => {
+            document.getElementById('currentTime').textContent = new Date().toLocaleTimeString('pt-PT', {hour: '2-digit', minute: '2-digit'});
+        }, 1000);
+
+        // Main tab switching
+        function showMainTab(tab) {
+            document.querySelectorAll('.main-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('[id^="main-tab-"]').forEach(el => el.classList.remove('main-tab-active'));
+            document.getElementById('content-' + tab).classList.remove('hidden');
+            document.getElementById('main-tab-' + tab).classList.add('main-tab-active');
+        }
+
+        // Sub tab switching
+        function showSubTab(tab) {
+            document.querySelectorAll('.sub-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('[id^="sub-tab-"]').forEach(el => el.classList.remove('sub-tab-active'));
+            document.getElementById('sub-content-' + tab).classList.remove('hidden');
+            document.getElementById('sub-tab-' + tab).classList.add('sub-tab-active');
+        }
+
+        // Toast
+        function showToast(icon, title, message, type = 'success') {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastIcon').textContent = icon;
+            document.getElementById('toastTitle').textContent = title;
+            document.getElementById('toastMessage').textContent = message;
+            toast.classList.remove('hidden', 'border-green-500', 'border-red-500', 'border-orange-500', 'border-blue-500');
+            const colors = { success: 'border-green-500', reject: 'border-red-500', counter: 'border-orange-500', info: 'border-blue-500' };
+            toast.classList.add(colors[type] || 'border-green-500');
+            setTimeout(() => toast.classList.add('hidden'), 3000);
+        }
+
+        // Actions
+        function aprovar(btn, nome) {
+            const card = btn.closest('.glass');
+            card.style.opacity = '0.3';
+            card.style.transform = 'translateX(50px)';
+            card.style.transition = 'all 0.3s';
+            setTimeout(() => card.remove(), 300);
+            showToast('✅', 'Aprovado!', nome + ' notificado via WhatsApp', 'success');
+            updateCount();
+        }
+
+        function rejeitar(btn, nome) {
+            const card = btn.closest('.glass');
+            card.style.opacity = '0.3';
+            card.style.transform = 'translateX(-50px)';
+            card.style.transition = 'all 0.3s';
+            setTimeout(() => card.remove(), 300);
+            showToast('❌', 'Rejeitado', nome + ' notificado', 'reject');
+            updateCount();
+        }
+
+        function updateCount() {
+            const count = document.querySelectorAll('#sub-content-aprovacoes .border-l-4').length;
+            document.getElementById('pendingCount').textContent = count;
+        }
+
+        function guardarRegras() {
+            const regras = {
+                auto: document.getElementById('regra-auto').value,
+                paulaMin: document.getElementById('regra-paula-min').value,
+                paulaMax: document.getElementById('regra-paula-max').value,
+                excepcional: document.getElementById('regra-excepcional').value,
+                regularPedidos: document.getElementById('regra-regular-pedidos').value,
+                regularBonus: document.getElementById('regra-regular-bonus').value,
+                dividaDias: document.getElementById('regra-divida-dias').value,
+                bloqueioValor: document.getElementById('regra-bloqueio-valor').value,
+                bloqueioDias: document.getElementById('regra-bloqueio-dias').value
+            };
+            localStorage.setItem('auroraRegras', JSON.stringify(regras));
+            showToast('💾', 'Regras Guardadas!', 'Alterações aplicadas', 'success');
+        }
+
+        // Load saved rules
+        document.addEventListener('DOMContentLoaded', () => {
+            const saved = localStorage.getItem('auroraRegras');
+            if (saved) {
+                const r = JSON.parse(saved);
+                if (r.auto) document.getElementById('regra-auto').value = r.auto;
+                if (r.paulaMin) document.getElementById('regra-paula-min').value = r.paulaMin;
+                if (r.paulaMax) document.getElementById('regra-paula-max').value = r.paulaMax;
+                if (r.excepcional) document.getElementById('regra-excepcional').value = r.excepcional;
+                if (r.regularPedidos) document.getElementById('regra-regular-pedidos').value = r.regularPedidos;
+                if (r.regularBonus) document.getElementById('regra-regular-bonus').value = r.regularBonus;
+                if (r.dividaDias) document.getElementById('regra-divida-dias').value = r.dividaDias;
+                if (r.bloqueioValor) document.getElementById('regra-bloqueio-valor').value = r.bloqueioValor;
+                if (r.bloqueioDias) document.getElementById('regra-bloqueio-dias').value = r.bloqueioDias;
+            }
+        });
+    </script>
+</body>
+</html>

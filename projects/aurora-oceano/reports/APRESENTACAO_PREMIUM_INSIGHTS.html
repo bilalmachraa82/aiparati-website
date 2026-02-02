@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aurora Oceano | Insights Escondidos | AiParaTi</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        :root {
+            --black: #0a0a0a;
+            --white: #ffffff;
+            --gold: #c9a962;
+            --gold-light: #e8d5a3;
+            --blue: #2563eb;
+            --green: #16a34a;
+            --red: #dc2626;
+            --gray: #6b7280;
+            --gray-light: #e5e7eb;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--black);
+            color: var(--white);
+            line-height: 1.5;
+        }
+        
+        .slide {
+            min-height: 100vh;
+            padding: 60px 100px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            border-bottom: 1px solid #222;
+        }
+        
+        /* McKinsey-style typography */
+        h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+        }
+        
+        h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 2rem;
+        }
+        
+        h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 1rem;
+        }
+        
+        .subtitle {
+            font-size: 1.5rem;
+            color: var(--gray);
+            font-weight: 300;
+            margin-top: 1rem;
+        }
+        
+        .gold { color: var(--gold); }
+        .green { color: var(--green); }
+        .red { color: var(--red); }
+        
+        /* Insight boxes - key McKinsey element */
+        .insight-box {
+            background: linear-gradient(135deg, #1a1a1a, #0d0d0d);
+            border-left: 4px solid var(--gold);
+            padding: 2rem;
+            margin: 2rem 0;
+            font-size: 1.3rem;
+        }
+        
+        .insight-box strong {
+            color: var(--gold);
+        }
+        
+        /* Grid layouts */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
+        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
+        
+        /* Stat cards */
+        .stat {
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .stat-value {
+            font-size: 4rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--gray);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-top: 0.5rem;
+        }
+        
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th {
+            text-align: left;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--gray);
+            padding: 1rem 0;
+            border-bottom: 1px solid #333;
+        }
+        
+        td {
+            padding: 1rem 0;
+            border-bottom: 1px solid #1a1a1a;
+            font-size: 0.95rem;
+        }
+        
+        .highlight-row {
+            background: linear-gradient(90deg, rgba(201, 169, 98, 0.1), transparent);
+        }
+        
+        /* Tags */
+        .tag {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 2px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .tag-gold { background: var(--gold); color: var(--black); }
+        .tag-green { background: var(--green); color: var(--white); }
+        .tag-red { background: var(--red); color: var(--white); }
+        .tag-outline { border: 1px solid var(--gray); color: var(--gray); }
+        
+        /* Bar charts */
+        .bar-chart { margin: 2rem 0; }
+        .bar-row {
+            display: flex;
+            align-items: center;
+            margin: 0.75rem 0;
+        }
+        .bar-label {
+            width: 100px;
+            font-size: 0.85rem;
+            color: var(--gray);
+        }
+        .bar-container {
+            flex: 1;
+            height: 32px;
+            background: #1a1a1a;
+            margin: 0 1rem;
+            position: relative;
+        }
+        .bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--gold), var(--gold-light));
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 0.5rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        .bar-value {
+            width: 80px;
+            text-align: right;
+            font-weight: 600;
+        }
+        
+        /* Waterfall chart style */
+        .waterfall {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            height: 300px;
+            margin-top: 2rem;
+        }
+        
+        .waterfall-bar {
+            width: 80px;
+            background: linear-gradient(180deg, var(--gold), #8a7340);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 0.5rem;
+        }
+        
+        .waterfall-bar.negative {
+            background: linear-gradient(180deg, var(--red), #8b1a1a);
+        }
+        
+        .waterfall-bar.total {
+            background: linear-gradient(180deg, var(--green), #0d5c26);
+        }
+        
+        /* Page numbers */
+        .page-num {
+            position: absolute;
+            bottom: 30px;
+            right: 50px;
+            font-size: 0.85rem;
+            color: var(--gray);
+        }
+        
+        /* Footer */
+        .footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 2rem;
+            border-top: 1px solid #222;
+            margin-top: auto;
+            font-size: 0.85rem;
+            color: var(--gray);
+        }
+        
+        /* Action items */
+        .action-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1.5rem;
+            background: #111;
+            margin: 0.5rem 0;
+            border-radius: 4px;
+        }
+        
+        .action-priority {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            border-radius: 50%;
+        }
+        
+        .priority-1 { background: var(--red); }
+        .priority-2 { background: var(--gold); color: var(--black); }
+        .priority-3 { background: var(--green); }
+        
+        @media (max-width: 1024px) {
+            .slide { padding: 40px; }
+            h1 { font-size: 2.5rem; }
+            .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- SLIDE 1: Cover -->
+<section class="slide" style="justify-content: flex-end; padding-bottom: 100px;">
+    <h3>Confidencial</h3>
+    <h1>Os €5.6M Que Não<br>Estão a Capturar</h1>
+    <p class="subtitle">Análise Premium de Insights Escondidos | Aurora Oceano</p>
+    <div class="footer" style="margin-top: 4rem;">
+        <div>AiParaTi Strategic Consulting</div>
+        <div>Fevereiro 2026</div>
+    </div>
+    <span class="page-num">01</span>
+</section>
+
+<!-- SLIDE 2: The Big Number -->
+<section class="slide" style="text-align: center; justify-content: center;">
+    <h3>O Número Que Importa</h3>
+    <div class="stat-value gold" style="font-size: 8rem;">€5.6M</div>
+    <p class="subtitle">Valor anual em oportunidades não capturadas</p>
+    <div class="grid-4" style="margin-top: 4rem;">
+        <div class="stat">
+            <div class="stat-value">€358k</div>
+            <div class="stat-label">Clientes para recuperar</div>
+        </div>
+        <div class="stat">
+            <div class="stat-value">€5M</div>
+            <div class="stat-label">Clientes subutilizados</div>
+        </div>
+        <div class="stat">
+            <div class="stat-value">€150k</div>
+            <div class="stat-label">Cross-sell potencial</div>
+        </div>
+        <div class="stat">
+            <div class="stat-value">€99k</div>
+            <div class="stat-label">Época baixa perdida</div>
+        </div>
+    </div>
+    <span class="page-num">02</span>
+</section>
+
+<!-- SLIDE 3: The Hidden Pattern -->
+<section class="slide">
+    <h3>Insight #1</h3>
+    <h2>Sexta-feira vale 3x mais que os outros dias</h2>
+    
+    <div class="insight-box">
+        O ticket médio de <strong>sexta-feira é €1.412</strong> — três vezes superior aos restantes dias da semana. Os grandes clientes B2B fazem encomendas à sexta para receber na segunda.
+    </div>
+    
+    <div class="bar-chart">
+        <div class="bar-row">
+            <span class="bar-label">Segunda</span>
+            <div class="bar-container"><div class="bar" style="width: 40%;">€566</div></div>
+        </div>
+        <div class="bar-row">
+            <span class="bar-label">Terça</span>
+            <div class="bar-container"><div class="bar" style="width: 38%;">€538</div></div>
+        </div>
+        <div class="bar-row">
+            <span class="bar-label">Quarta</span>
+            <div class="bar-container"><div class="bar" style="width: 37%;">€529</div></div>
+        </div>
+        <div class="bar-row">
+            <span class="bar-label">Quinta</span>
+            <div class="bar-container"><div class="bar" style="width: 34%;">€476</div></div>
+        </div>
+        <div class="bar-row">
+            <span class="bar-label"><strong>Sexta</strong></span>
+            <div class="bar-container"><div class="bar" style="width: 100%; background: linear-gradient(90deg, #16a34a, #22c55e);">€1.412 ⭐</div></div>
+        </div>
+    </div>
+    
+    <h3 style="margin-top: 2rem;">Acção Imediata</h3>
+    <p>Equipar sextas com melhores recursos. Criar promoção "Friday Premium" para pedidos >€2k.</p>
+    <span class="page-num">03</span>
+</section>
+
+<!-- SLIDE 4: Lost Customers -->
+<section class="slide">
+    <h3>Insight #2</h3>
+    <h2>€358k fugiram sem explicação</h2>
+    
+    <div class="insight-box">
+        Quatro clientes que valiam <strong>€400k em 2024</strong> reduziram drasticamente em 2025. Ainda compram algo — a relação existe, mas algo correu mal.
+    </div>
+    
+    <table style="margin-top: 2rem;">
+        <tr>
+            <th>Cliente</th>
+            <th>2024</th>
+            <th>2025</th>
+            <th>Perdido</th>
+            <th>Urgência</th>
+        </tr>
+        <tr class="highlight-row">
+            <td><strong>DOCA REAL</strong></td>
+            <td>€143.582</td>
+            <td>€9.685</td>
+            <td class="red">-€134k</td>
+            <td><span class="tag tag-red">LIGAR HOJE</span></td>
+        </tr>
+        <tr>
+            <td><strong>RAPOSIN (ES)</strong></td>
+            <td>€107.838</td>
+            <td>€6.464</td>
+            <td class="red">-€101k</td>
+            <td><span class="tag tag-red">VISITAR</span></td>
+        </tr>
+        <tr>
+            <td><strong>REST. ORIENTAL PALACE</strong></td>
+            <td>€95.598</td>
+            <td>€3.517</td>
+            <td class="red">-€92k</td>
+            <td><span class="tag tag-gold">INVESTIGAR</span></td>
+        </tr>
+        <tr>
+            <td><strong>ITALIAN REPUBLIC</strong></td>
+            <td>€54.179</td>
+            <td>€23.085</td>
+            <td class="red">-€31k</td>
+            <td><span class="tag tag-outline">MÉDIO</span></td>
+        </tr>
+    </table>
+    
+    <div class="grid-2" style="margin-top: 2rem;">
+        <div>
+            <h3>Porquê investigar?</h3>
+            <p style="color: var(--gray);">Estes clientes não desapareceram. Ainda há transacções. Algo específico causou a queda — descobrir e resolver pode recuperar €358k/ano.</p>
+        </div>
+        <div>
+            <h3>Script de chamada</h3>
+            <p style="color: var(--gray);">"Notámos que as vossas encomendas diminuíram. O que aconteceu? Como podemos ajudar?"</p>
+        </div>
+    </div>
+    <span class="page-num">04</span>
+</section>
+
+<!-- SLIDE 5: Underused Customers -->
+<section class="slide">
+    <h3>Insight #3</h3>
+    <h2>€5M em clientes subutilizados</h2>
+    
+    <div class="insight-box">
+        10 clientes fizeram apenas <strong>1-8 compras</strong> em 2025, mas com ticket médio superior a €10.000. São grossistas que testaram a Aurora. Se convertidos em clientes regulares, valem <strong>€5M/ano</strong>.
+    </div>
+    
+    <table>
+        <tr>
+            <th>Cliente</th>
+            <th>Compras</th>
+            <th>Total</th>
+            <th>Média</th>
+            <th>Se 30x/ano</th>
+        </tr>
+        <tr class="highlight-row">
+            <td><strong>Abrancongelados</strong></td>
+            <td>1</td>
+            <td>€28k</td>
+            <td>€28.278</td>
+            <td class="green">€848k</td>
+        </tr>
+        <tr>
+            <td>Gelcentro</td>
+            <td>2</td>
+            <td>€42k</td>
+            <td>€20.930</td>
+            <td class="green">€628k</td>
+        </tr>
+        <tr>
+            <td>Polargel</td>
+            <td>2</td>
+            <td>€42k</td>
+            <td>€20.759</td>
+            <td class="green">€623k</td>
+        </tr>
+        <tr>
+            <td>ATALHO URGENTE</td>
+            <td>1</td>
+            <td>€15k</td>
+            <td>€15.054</td>
+            <td class="green">€452k</td>
+        </tr>
+        <tr>
+            <td>Friguarda</td>
+            <td>8</td>
+            <td>€88k</td>
+            <td>€10.958</td>
+            <td class="green">€329k</td>
+        </tr>
+    </table>
+    
+    <h3 style="margin-top: 2rem;">Estratégia</h3>
+    <p style="color: var(--gray);">Contactar cada um: "Como correu a encomenda? Podemos agendar outra?" Propor acordo anual com preço especial para volume garantido.</p>
+    <span class="page-num">05</span>
+</section>
+
+<!-- SLIDE 6: The Super Salesman -->
+<section class="slide">
+    <h3>Insight #4</h3>
+    <h2>Um vendedor faz 49x mais que os outros</h2>
+    
+    <div class="grid-2">
+        <div>
+            <div class="insight-box">
+                Vendedor #173379 tem ticket médio de <strong>€11.925</strong> por factura. A média dos outros é €242. O que faz ele de diferente?
+            </div>
+            
+            <table style="margin-top: 2rem;">
+                <tr>
+                    <th>Vendedor</th>
+                    <th>Facturas</th>
+                    <th>Total</th>
+                    <th>Média</th>
+                </tr>
+                <tr>
+                    <td>#139585</td>
+                    <td>5.929</td>
+                    <td>€1.44M</td>
+                    <td>€242</td>
+                </tr>
+                <tr>
+                    <td>#139583</td>
+                    <td>1.233</td>
+                    <td>€605k</td>
+                    <td>€490</td>
+                </tr>
+                <tr class="highlight-row">
+                    <td><strong>#173379</strong></td>
+                    <td>93</td>
+                    <td>€1.11M</td>
+                    <td class="gold">€11.925 ⭐</td>
+                </tr>
+            </table>
+        </div>
+        <div style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
+            <div class="stat-value gold" style="font-size: 6rem;">49x</div>
+            <div class="stat-label">Diferença de produtividade</div>
+            <p style="margin-top: 2rem; color: var(--gray); text-align: center;">Estudar a técnica deste vendedor e formar os outros pode aumentar a produtividade média em 20-50%.</p>
+        </div>
+    </div>
+    <span class="page-num">06</span>
+</section>
+
+<!-- SLIDE 7: Credit Risk -->
+<section class="slide">
+    <h3>Insight #5</h3>
+    <h2>€803k em 60 dias — risco novo</h2>
+    
+    <div class="insight-box" style="border-color: var(--red);">
+        O crédito a 60 dias cresceu de <strong>€0 em 2024</strong> para <strong>€803k em 2025</strong>. Alguém negociou condições especiais sem análise de risco adequada.
+    </div>
+    
+    <div class="grid-2" style="margin-top: 2rem;">
+        <div>
+            <h3>Evolução do Crédito</h3>
+            <table>
+                <tr>
+                    <th>Condição</th>
+                    <th>2024</th>
+                    <th>2025</th>
+                    <th>Δ</th>
+                </tr>
+                <tr>
+                    <td>30 Dias</td>
+                    <td>€1.92M</td>
+                    <td>€2.28M</td>
+                    <td>+19%</td>
+                </tr>
+                <tr>
+                    <td>Pronto Pag.</td>
+                    <td>€263k</td>
+                    <td>€904k</td>
+                    <td class="green">+244%</td>
+                </tr>
+                <tr class="highlight-row">
+                    <td><strong>60 Dias</strong></td>
+                    <td>€0</td>
+                    <td>€803k</td>
+                    <td class="red">⚠️ NOVO</td>
+                </tr>
+            </table>
+        </div>
+        <div>
+            <h3>Acções de Mitigação</h3>
+            <div class="action-item">
+                <div class="action-priority priority-1">1</div>
+                <div>
+                    <strong>Identificar quem tem 60 dias</strong>
+                    <p style="color: var(--gray); font-size: 0.9rem;">São os grandes clientes espanhóis?</p>
+                </div>
+            </div>
+            <div class="action-item">
+                <div class="action-priority priority-1">2</div>
+                <div>
+                    <strong>Contratar seguro de crédito</strong>
+                    <p style="color: var(--gray); font-size: 0.9rem;">Proteger contra default</p>
+                </div>
+            </div>
+            <div class="action-item">
+                <div class="action-priority priority-2">3</div>
+                <div>
+                    <strong>Renegociar para 30 dias</strong>
+                    <p style="color: var(--gray); font-size: 0.9rem;">Oferecer 2% desconto</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <span class="page-num">07</span>
+</section>
+
+<!-- SLIDE 8: Geographic Opportunity -->
+<section class="slide">
+    <h3>Insight #6</h3>
+    <h2>Porto: €0 penetração no maior mercado do Norte</h2>
+    
+    <div class="grid-2">
+        <div>
+            <div class="insight-box">
+                O maior cliente novo de 2025 é de <strong>Braga</strong> e fez <strong>€580k</strong>. O Norte tem apetite. Mas Porto — a segunda maior cidade — tem penetração <strong>zero</strong>.
+            </div>
+            
+            <h3 style="margin-top: 2rem;">Tamanho da Oportunidade</h3>
+            <table>
+                <tr>
+                    <td>População Porto Metro</td>
+                    <td>1.7M</td>
+                </tr>
+                <tr>
+                    <td>Restaurantes estimados</td>
+                    <td>~5.000</td>
+                </tr>
+                <tr>
+                    <td>Mercado total estimado</td>
+                    <td>€50-100M/ano</td>
+                </tr>
+                <tr class="highlight-row">
+                    <td><strong>Quota captável (2-5%)</strong></td>
+                    <td class="gold"><strong>€1-5M/ano</strong></td>
+                </tr>
+            </table>
+        </div>
+        <div style="background: #111; padding: 2rem; border-radius: 8px;">
+            <h3>Plano de Entrada</h3>
+            <div class="action-item">
+                <div class="action-priority priority-2">Q2</div>
+                <div>
+                    <strong>Contratar rep. comercial local</strong>
+                    <p style="color: var(--gray); font-size: 0.9rem;">Com rede de contactos na restauração</p>
+                </div>
+            </div>
+            <div class="action-item">
+                <div class="action-priority priority-2">Q2</div>
+                <div>
+                    <strong>Usar Consumintenso como case</strong>
+                    <p style="color: var(--gray); font-size: 0.9rem;">"Já servimos Braga com sucesso"</p>
+                </div>
+            </div>
+            <div class="action-item">
+                <div class="action-priority priority-3">Q3</div>
+                <div>
+                    <strong>Parceria logística</strong>
+                    <p style="color: var(--gray); font-size: 0.9rem;">Resolver custo de transporte</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <span class="page-num">08</span>
+</section>
+
+<!-- SLIDE 9: Spain Explosion -->
+<section class="slide">
+    <h3>Insight #7</h3>
+    <h2>Espanha cresceu 117% — escalar agora</h2>
+    
+    <div class="grid-2">
+        <div>
+            <div class="bar-chart">
+                <h3>Mercado Espanhol</h3>
+                <div class="bar-row">
+                    <span class="bar-label">2024</span>
+                    <div class="bar-container"><div class="bar" style="width: 46%;">€308k</div></div>
+                </div>
+                <div class="bar-row">
+                    <span class="bar-label">2025</span>
+                    <div class="bar-container"><div class="bar" style="width: 100%; background: linear-gradient(90deg, #16a34a, #22c55e);">€668k (+117%)</div></div>
+                </div>
+            </div>
+            
+            <table style="margin-top: 2rem;">
+                <tr>
+                    <th>Zona</th>
+                    <th>2024</th>
+                    <th>2025</th>
+                    <th>Δ</th>
+                </tr>
+                <tr class="highlight-row">
+                    <td>Ayamonte</td>
+                    <td>€81k</td>
+                    <td>€297k</td>
+                    <td class="green">+265%</td>
+                </tr>
+                <tr>
+                    <td>Madrid</td>
+                    <td>€227k</td>
+                    <td>€209k</td>
+                    <td class="red">-8%</td>
+                </tr>
+                <tr>
+                    <td>Outros</td>
+                    <td>€0</td>
+                    <td>€162k</td>
+                    <td class="green">Novo</td>
+                </tr>
+            </table>
+        </div>
+        <div>
+            <div class="insight-box">
+                <strong>Ayamonte funciona.</strong> A porta de entrada pela fronteira sul está a escalar. Madrid estagnou — precisa de atenção. Galiza é o próximo mercado natural.
+            </div>
+            
+            <h3 style="margin-top: 2rem;">Estratégia 2026</h3>
+            <div class="action-item">
+                <div class="action-priority priority-1">1</div>
+                <div>
+                    <strong>Dobrar Ayamonte</strong>
+                    <p style="color: var(--gray); font-size: 0.9rem;">Está a funcionar — escalar</p>
+                </div>
+            </div>
+            <div class="action-item">
+                <div class="action-priority priority-2">2</div>
+                <div>
+                    <strong>Investigar Madrid</strong>
+                    <p style="color: var(--gray); font-size: 0.9rem;">Porque estagnou?</p>
+                </div>
+            </div>
+            <div class="action-item">
+                <div class="action-priority priority-3">3</div>
+                <div>
+                    <strong>Preparar Galiza</strong>
+                    <p style="color: var(--gray); font-size: 0.9rem;">Corredor A3 — próximo mercado</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <span class="page-num">09</span>
+</section>
+
+<!-- SLIDE 10: Action Plan -->
+<section class="slide">
+    <h3>Plano de Acção</h3>
+    <h2>Os próximos 90 dias</h2>
+    
+    <div class="grid-3">
+        <div style="background: #111; padding: 2rem; border-top: 4px solid var(--red);">
+            <h3 style="color: var(--red);">Semana 1-2</h3>
+            <p style="font-size: 2rem; font-weight: 700;">€200k</p>
+            <p style="color: var(--gray); font-size: 0.9rem; margin-bottom: 1rem;">Quick wins</p>
+            <ul style="color: var(--gray); font-size: 0.9rem; list-style: none;">
+                <li>☐ Ligar DOCA REAL</li>
+                <li>☐ Ligar RAPOSIN</li>
+                <li>☐ Ligar REST. ORIENTAL</li>
+                <li>☐ Contactar 5 grossistas</li>
+            </ul>
+        </div>
+        <div style="background: #111; padding: 2rem; border-top: 4px solid var(--gold);">
+            <h3>Mês 1-2</h3>
+            <p style="font-size: 2rem; font-weight: 700;">€300k</p>
+            <p style="color: var(--gray); font-size: 0.9rem; margin-bottom: 1rem;">Estruturação</p>
+            <ul style="color: var(--gray); font-size: 0.9rem; list-style: none;">
+                <li>☐ Seguro de crédito</li>
+                <li>☐ Estudar vendedor #173379</li>
+                <li>☐ Optimizar sextas-feiras</li>
+                <li>☐ Preparar Porto</li>
+            </ul>
+        </div>
+        <div style="background: #111; padding: 2rem; border-top: 4px solid var(--green);">
+            <h3 style="color: var(--green);">Mês 3</h3>
+            <p style="font-size: 2rem; font-weight: 700;">€500k</p>
+            <p style="color: var(--gray); font-size: 0.9rem; margin-bottom: 1rem;">Expansão</p>
+            <ul style="color: var(--gray); font-size: 0.9rem; list-style: none;">
+                <li>☐ Rep. Porto contratado</li>
+                <li>☐ Escalar Ayamonte</li>
+                <li>☐ Acordos com grossistas</li>
+                <li>☐ Campanha Jan-Fev</li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="insight-box" style="margin-top: 3rem; text-align: center; border-left: none; border-top: 4px solid var(--gold);">
+        <h3 style="text-align: center;">Próximo Passo Imediato</h3>
+        <p style="font-size: 1.5rem; margin-top: 1rem;"><strong>Segunda-feira de manhã:</strong> Ligar para DOCA REAL, RAPOSIN, e REST. ORIENTAL PALACE.</p>
+    </div>
+    <span class="page-num">10</span>
+</section>
+
+<!-- SLIDE 11: Closing -->
+<section class="slide" style="text-align: center; justify-content: center;">
+    <h3>Em Resumo</h3>
+    <h1>€5.6M na mesa.<br><span class="gold">Vamos buscar.</span></h1>
+    <p class="subtitle" style="margin-top: 2rem;">A diferença entre dados e insights é a capacidade de agir.</p>
+    <div class="footer" style="margin-top: 6rem; justify-content: center; gap: 3rem;">
+        <div>AiParaTi</div>
+        <div>bilal@aiparati.pt</div>
+        <div>aiparati.pt</div>
+    </div>
+    <span class="page-num">11</span>
+</section>
+
+</body>
+</html>

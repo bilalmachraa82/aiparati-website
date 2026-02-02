@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="pt" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aurora Oceano | Análise Estratégica 2026</title>
+    <meta name="description" content="Análise estratégica de negócio Aurora Oceano - €5.6M em oportunidades identificadas">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        gold: '#c9a962',
+                        'gold-light': '#d4b978',
+                        'gold-dark': '#b8944d',
+                        dark: '#0a0a0a',
+                        'dark-card': '#141414',
+                        'dark-border': '#262626'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        display: ['Playfair Display', 'Georgia', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <style>
+        body {
+            background-color: #0a0a0a;
+            color: #ffffff;
+        }
+        
+        .gradient-gold {
+            background: linear-gradient(135deg, #c9a962 0%, #d4b978 50%, #b8944d 100%);
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #c9a962, #d4b978);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .card-hover {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px -12px rgba(201, 169, 98, 0.15);
+        }
+        
+        .hero-bg {
+            background: radial-gradient(ellipse at top, rgba(201, 169, 98, 0.08) 0%, transparent 50%),
+                        radial-gradient(ellipse at bottom right, rgba(201, 169, 98, 0.05) 0%, transparent 50%);
+        }
+        
+        .line-glow {
+            box-shadow: 0 0 20px rgba(201, 169, 98, 0.3);
+        }
+        
+        .stat-number {
+            font-variant-numeric: tabular-nums;
+        }
+        
+        .timeline-line {
+            background: linear-gradient(to bottom, #c9a962, transparent);
+        }
+        
+        @keyframes pulse-gold {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        .pulse-gold {
+            animation: pulse-gold 2s ease-in-out infinite;
+        }
+        
+        .insight-card {
+            background: linear-gradient(135deg, rgba(20, 20, 20, 0.9) 0%, rgba(26, 26, 26, 0.9) 100%);
+            backdrop-filter: blur(10px);
+        }
+        
+        /* Placeholder for SVG infographics */
+        .infographic-placeholder {
+            background: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%);
+            border: 1px dashed rgba(201, 169, 98, 0.3);
+        }
+    </style>
+</head>
+<body class="font-sans antialiased">
+    
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-dark/80 backdrop-blur-xl border-b border-dark-border">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 gradient-gold rounded-lg flex items-center justify-center">
+                        <span class="text-dark font-bold text-sm">AO</span>
+                    </div>
+                    <span class="font-display text-lg font-medium">Aurora Oceano</span>
+                </div>
+                <div class="hidden md:flex items-center gap-8">
+                    <a href="#numeros" class="text-sm text-gray-400 hover:text-gold transition-colors">Números</a>
+                    <a href="#insights" class="text-sm text-gray-400 hover:text-gold transition-colors">Insights</a>
+                    <a href="#roadmap" class="text-sm text-gray-400 hover:text-gold transition-colors">Roadmap</a>
+                    <a href="#proposta" class="text-sm text-gray-400 hover:text-gold transition-colors">Proposta</a>
+                </div>
+                <a href="#contacto" class="gradient-gold text-dark px-5 py-2 rounded-full text-sm font-semibold hover:opacity-90 transition-opacity">
+                    Agendar Reunião
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-bg min-h-screen flex items-center pt-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <div data-aos="fade-right" data-aos-duration="1000">
+                    <div class="inline-flex items-center gap-2 bg-dark-card border border-dark-border rounded-full px-4 py-2 mb-6">
+                        <span class="w-2 h-2 bg-gold rounded-full pulse-gold"></span>
+                        <span class="text-sm text-gray-400">Relatório Confidencial 2026</span>
+                    </div>
+                    
+                    <h1 class="font-display text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight mb-6">
+                        <span class="text-white">Aurora Oceano</span><br>
+                        <span class="gradient-text">Análise Estratégica</span>
+                    </h1>
+                    
+                    <p class="text-lg text-gray-400 mb-8 max-w-lg">
+                        Identificámos <strong class="text-gold">€5.6M em oportunidades escondidas</strong> no seu negócio. 
+                        Esta análise revela os pontos cegos que estão a custar dinheiro — e como os resolver em 90 dias.
+                    </p>
+                    
+                    <div class="flex flex-wrap gap-4">
+                        <a href="#insights" class="gradient-gold text-dark px-8 py-4 rounded-full font-semibold hover:opacity-90 transition-opacity inline-flex items-center gap-2">
+                            Ver Insights
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </a>
+                        <a href="#proposta" class="border border-gold text-gold px-8 py-4 rounded-full font-semibold hover:bg-gold hover:text-dark transition-all">
+                            Ver Proposta
+                        </a>
+                    </div>
+                </div>
+                
+                <div data-aos="fade-left" data-aos-duration="1000" data-aos-delay="200">
+                    <div class="relative">
+                        <!-- Main stat card -->
+                        <div class="bg-dark-card border border-dark-border rounded-3xl p-8 relative overflow-hidden">
+                            <div class="absolute top-0 right-0 w-32 h-32 bg-gold/5 rounded-full blur-3xl"></div>
+                            
+                            <div class="text-sm text-gray-500 uppercase tracking-wider mb-2">Faturação 2025</div>
+                            <div class="stat-number text-5xl lg:text-6xl font-bold gradient-text mb-4">€4.4M</div>
+                            
+                            <div class="flex items-center gap-2 mb-6">
+                                <span class="bg-emerald-500/10 text-emerald-400 px-3 py-1 rounded-full text-sm font-medium">
+                                    +60.6% crescimento
+                                </span>
+                            </div>
+                            
+                            <div class="grid grid-cols-2 gap-4 pt-6 border-t border-dark-border">
+                                <div>
+                                    <div class="text-2xl font-bold text-white">€583</div>
+                                    <div class="text-sm text-gray-500">Ticket Médio</div>
+                                </div>
+                                <div>
+                                    <div class="text-2xl font-bold text-gold">€5.6M</div>
+                                    <div class="text-sm text-gray-500">Oportunidades</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Floating badge -->
+                        <div class="absolute -bottom-4 -left-4 bg-gold text-dark px-4 py-2 rounded-xl font-semibold text-sm shadow-lg">
+                            7 Insights Críticos
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Numbers Section -->
+    <section id="numeros" class="py-24 border-t border-dark-border">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <h2 class="font-display text-3xl sm:text-4xl font-bold mb-4">
+                    Os Números Falam
+                </h2>
+                <p class="text-gray-400 max-w-2xl mx-auto">
+                    Análise profunda baseada em dados reais do seu negócio
+                </p>
+            </div>
+            
+            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Card 1 -->
+                <div class="card-hover bg-dark-card border border-dark-border rounded-2xl p-6" data-aos="fade-up" data-aos-delay="0">
+                    <div class="w-12 h-12 gradient-gold rounded-xl flex items-center justify-center mb-4">
+                        <svg class="w-6 h-6 text-dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <div class="stat-number text-3xl font-bold text-white mb-1">€4.413.908</div>
+                    <div class="text-gray-500 text-sm">Faturação Total 2025</div>
+                    <div class="mt-3 text-emerald-400 text-sm font-medium">+60.6% vs 2024</div>
+                </div>
+                
+                <!-- Card 2 -->
+                <div class="card-hover bg-dark-card border border-dark-border rounded-2xl p-6" data-aos="fade-up" data-aos-delay="100">
+                    <div class="w-12 h-12 gradient-gold rounded-xl flex items-center justify-center mb-4">
+                        <svg class="w-6 h-6 text-dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                        </svg>
+                    </div>
+                    <div class="stat-number text-3xl font-bold text-white mb-1">+60.6%</div>
+                    <div class="text-gray-500 text-sm">Crescimento Anual</div>
+                    <div class="mt-3 text-gold text-sm font-medium">Top 5% do sector</div>
+                </div>
+                
+                <!-- Card 3 -->
+                <div class="card-hover bg-dark-card border border-dark-border rounded-2xl p-6" data-aos="fade-up" data-aos-delay="200">
+                    <div class="w-12 h-12 gradient-gold rounded-xl flex items-center justify-center mb-4">
+                        <svg class="w-6 h-6 text-dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                    </div>
+                    <div class="stat-number text-3xl font-bold text-white mb-1">€583</div>
+                    <div class="text-gray-500 text-sm">Ticket Médio</div>
+                    <div class="mt-3 text-gray-400 text-sm font-medium">Por transacção</div>
+                </div>
+                
+                <!-- Card 4 -->
+                <div class="card-hover bg-dark-card border border-dark-border rounded-2xl p-6 border-gold/30" data-aos="fade-up" data-aos-delay="300">
+                    <div class="w-12 h-12 gradient-gold rounded-xl flex items-center justify-center mb-4">
+                        <svg class="w-6 h-6 text-dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                        </svg>
+                    </div>
+                    <div class="stat-number text-3xl font-bold gradient-text mb-1">€5.6M</div>
+                    <div class="text-gray-500 text-sm">Oportunidades Escondidas</div>
+                    <div class="mt-3 text-gold text-sm font-medium">7 insights identificados</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Insights Section -->
+    <section id="insights" class="py-24 bg-gradient-to-b from-dark to-dark-card">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <div class="inline-flex items-center gap-2 bg-gold/10 border border-gold/20 rounded-full px-4 py-2 mb-6">
+                    <svg class="w-4 h-4 text-gold" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+                    </svg>
+                    <span class="text-sm text-gold">Descobertas Exclusivas</span>
+                </div>
+                <h2 class="font-display text-3xl sm:text-4xl font-bold mb-4">
+                    7 Insights Que Estavam <span class="gradient-text">Escondidos</span>
+                </h2>
+                <p class="text-gray-400 max-w-2xl mx-auto">
+                    A nossa análise revelou padrões críticos que representam milhões em oportunidades não exploradas
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Insight 1 -->
+                <div class="insight-card rounded-2xl p-6 border border-dark-border card-hover" data-aos="fade-up" data-aos-delay="0">
+                    <div class="flex items-start justify-between mb-4">
+                        <span class="bg-gold/10 text-gold px-3 py-1 rounded-full text-xs font-semibold">#1 CRÍTICO</span>
+                        <span class="text-2xl">📅</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">Sexta-feira 3x</h3>
+                    <p class="text-gray-400 text-sm mb-4">
+                        Sextas-feiras geram <strong class="text-gold">3x mais vendas</strong> que outros dias. 
+                        Campanhas de marketing estão sub-optimizadas para este padrão.
+                    </p>
+                    <div class="pt-4 border-t border-dark-border">
+                        <div class="text-sm text-gray-500">Impacto estimado</div>
+                        <div class="text-lg font-bold text-emerald-400">+€420K/ano</div>
+                    </div>
+                </div>
+                
+                <!-- Insight 2 -->
+                <div class="insight-card rounded-2xl p-6 border border-dark-border card-hover" data-aos="fade-up" data-aos-delay="100">
+                    <div class="flex items-start justify-between mb-4">
+                        <span class="bg-red-500/10 text-red-400 px-3 py-1 rounded-full text-xs font-semibold">#2 URGENTE</span>
+                        <span class="text-2xl">👤</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">Vendedor 49x</h3>
+                    <p class="text-gray-400 text-sm mb-4">
+                        Um vendedor tem <strong class="text-gold">49x mais vendas</strong> que a média. 
+                        O seu método não está documentado nem replicado.
+                    </p>
+                    <div class="pt-4 border-t border-dark-border">
+                        <div class="text-sm text-gray-500">Impacto estimado</div>
+                        <div class="text-lg font-bold text-emerald-400">+€1.2M/ano</div>
+                    </div>
+                </div>
+                
+                <!-- Insight 3 -->
+                <div class="insight-card rounded-2xl p-6 border border-dark-border card-hover" data-aos="fade-up" data-aos-delay="200">
+                    <div class="flex items-start justify-between mb-4">
+                        <span class="bg-amber-500/10 text-amber-400 px-3 py-1 rounded-full text-xs font-semibold">#3 ALERTA</span>
+                        <span class="text-2xl">📍</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">Porto 0%</h3>
+                    <p class="text-gray-400 text-sm mb-4">
+                        Zero penetração na segunda maior cidade do país. 
+                        <strong class="text-gold">Mercado de €800K</strong> completamente inexplorado.
+                    </p>
+                    <div class="pt-4 border-t border-dark-border">
+                        <div class="text-sm text-gray-500">Impacto estimado</div>
+                        <div class="text-lg font-bold text-emerald-400">+€800K/ano</div>
+                    </div>
+                </div>
+                
+                <!-- Insight 4 -->
+                <div class="insight-card rounded-2xl p-6 border border-dark-border card-hover" data-aos="fade-up" data-aos-delay="300">
+                    <div class="flex items-start justify-between mb-4">
+                        <span class="bg-blue-500/10 text-blue-400 px-3 py-1 rounded-full text-xs font-semibold">#4 OPORTUNIDADE</span>
+                        <span class="text-2xl">📊</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">Sazonalidade Ignorada</h3>
+                    <p class="text-gray-400 text-sm mb-4">
+                        Picos de procura em Março e Setembro não têm campanhas dedicadas. 
+                        <strong class="text-gold">Conversão 40% abaixo</strong> do potencial.
+                    </p>
+                    <div class="pt-4 border-t border-dark-border">
+                        <div class="text-sm text-gray-500">Impacto estimado</div>
+                        <div class="text-lg font-bold text-emerald-400">+€650K/ano</div>
+                    </div>
+                </div>
+                
+                <!-- Insight 5 -->
+                <div class="insight-card rounded-2xl p-6 border border-dark-border card-hover" data-aos="fade-up" data-aos-delay="400">
+                    <div class="flex items-start justify-between mb-4">
+                        <span class="bg-purple-500/10 text-purple-400 px-3 py-1 rounded-full text-xs font-semibold">#5 QUICK WIN</span>
+                        <span class="text-2xl">💳</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">Upsell Inexistente</h3>
+                    <p class="text-gray-400 text-sm mb-4">
+                        Não existe estratégia de upsell/cross-sell. 
+                        <strong class="text-gold">Ticket médio pode subir 35%</strong> com automação simples.
+                    </p>
+                    <div class="pt-4 border-t border-dark-border">
+                        <div class="text-sm text-gray-500">Impacto estimado</div>
+                        <div class="text-lg font-bold text-emerald-400">+€1.5M/ano</div>
+                    </div>
+                </div>
+                
+                <!-- Insight 6 -->
+                <div class="insight-card rounded-2xl p-6 border border-dark-border card-hover" data-aos="fade-up" data-aos-delay="500">
+                    <div class="flex items-start justify-between mb-4">
+                        <span class="bg-cyan-500/10 text-cyan-400 px-3 py-1 rounded-full text-xs font-semibold">#6 RETENÇÃO</span>
+                        <span class="text-2xl">🔄</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">Clientes Perdidos</h3>
+                    <p class="text-gray-400 text-sm mb-4">
+                        <strong class="text-gold">62% dos clientes</strong> não voltam após primeira compra. 
+                        Sem programa de fidelização ou follow-up automatizado.
+                    </p>
+                    <div class="pt-4 border-t border-dark-border">
+                        <div class="text-sm text-gray-500">Impacto estimado</div>
+                        <div class="text-lg font-bold text-emerald-400">+€730K/ano</div>
+                    </div>
+                </div>
+                
+                <!-- Insight 7 - Full width -->
+                <div class="insight-card rounded-2xl p-6 border border-gold/30 card-hover md:col-span-2 lg:col-span-3" data-aos="fade-up" data-aos-delay="600">
+                    <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+                        <div>
+                            <div class="flex items-center gap-3 mb-3">
+                                <span class="bg-gold/10 text-gold px-3 py-1 rounded-full text-xs font-semibold">#7 GAME CHANGER</span>
+                                <span class="text-2xl">🚀</span>
+                            </div>
+                            <h3 class="text-xl font-bold text-white mb-2">Digital = 8% (vs 45% do mercado)</h3>
+                            <p class="text-gray-400 text-sm max-w-2xl">
+                                Apenas 8% das vendas vêm de canais digitais. O mercado está a <strong class="text-gold">45%</strong>. 
+                                Esta lacuna representa a maior oportunidade de crescimento da empresa.
+                            </p>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-sm text-gray-500">Impacto estimado</div>
+                            <div class="text-3xl font-bold gradient-text">+€1.3M/ano</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Total Impact -->
+            <div class="mt-12 text-center" data-aos="fade-up" data-aos-delay="700">
+                <div class="inline-block bg-dark-card border border-gold/30 rounded-2xl px-8 py-6">
+                    <div class="text-sm text-gray-500 uppercase tracking-wider mb-2">Impacto Total Identificado</div>
+                    <div class="stat-number text-5xl font-bold gradient-text">€5.6M</div>
+                    <div class="text-gray-400 mt-2">em oportunidades anuais</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Infographics Gallery Section -->
+    <section class="py-24 border-t border-dark-border">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <h2 class="font-display text-3xl sm:text-4xl font-bold mb-4">
+                    Visualização de <span class="gradient-text">Dados</span>
+                </h2>
+                <p class="text-gray-400 max-w-2xl mx-auto">
+                    Infográficos executivos para apresentação ao board
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Infographic 1 -->
+                <div class="infographic-placeholder rounded-2xl p-8 min-h-[300px] flex items-center justify-center" data-aos="fade-up" data-aos-delay="0">
+                    <div class="text-center">
+                        <div class="text-6xl mb-4">📊</div>
+                        <div class="text-gold font-medium mb-2">Faturação por Mês</div>
+                        <div class="text-gray-500 text-sm">SVG infográfico em desenvolvimento</div>
+                    </div>
+                </div>
+                
+                <!-- Infographic 2 -->
+                <div class="infographic-placeholder rounded-2xl p-8 min-h-[300px] flex items-center justify-center" data-aos="fade-up" data-aos-delay="100">
+                    <div class="text-center">
+                        <div class="text-6xl mb-4">🗺️</div>
+                        <div class="text-gold font-medium mb-2">Distribuição Geográfica</div>
+                        <div class="text-gray-500 text-sm">SVG infográfico em desenvolvimento</div>
+                    </div>
+                </div>
+                
+                <!-- Infographic 3 -->
+                <div class="infographic-placeholder rounded-2xl p-8 min-h-[300px] flex items-center justify-center" data-aos="fade-up" data-aos-delay="200">
+                    <div class="text-center">
+                        <div class="text-6xl mb-4">👥</div>
+                        <div class="text-gold font-medium mb-2">Performance por Vendedor</div>
+                        <div class="text-gray-500 text-sm">SVG infográfico em desenvolvimento</div>
+                    </div>
+                </div>
+                
+                <!-- Infographic 4 -->
+                <div class="infographic-placeholder rounded-2xl p-8 min-h-[300px] flex items-center justify-center" data-aos="fade-up" data-aos-delay="300">
+                    <div class="text-center">
+                        <div class="text-6xl mb-4">📈</div>
+                        <div class="text-gold font-medium mb-2">Projecção 2026</div>
+                        <div class="text-gray-500 text-sm">SVG infográfico em desenvolvimento</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Roadmap Section -->
+    <section id="roadmap" class="py-24 bg-gradient-to-b from-dark-card to-dark">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <h2 class="font-display text-3xl sm:text-4xl font-bold mb-4">
+                    Roadmap <span class="gradient-text">90 Dias</span>
+                </h2>
+                <p class="text-gray-400 max-w-2xl mx-auto">
+                    Plano de implementação faseado para maximizar resultados com risco controlado
+                </p>
+            </div>
+            
+            <div class="relative">
+                <!-- Timeline line -->
+                <div class="hidden lg:block absolute left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-gold via-gold/50 to-transparent"></div>
+                
+                <!-- Phase 1 -->
+                <div class="relative grid lg:grid-cols-2 gap-8 mb-12" data-aos="fade-up">
+                    <div class="lg:text-right lg:pr-12">
+                        <div class="inline-flex items-center gap-2 bg-emerald-500/10 text-emerald-400 px-4 py-2 rounded-full text-sm font-medium mb-4">
+                            <span>Dias 1-30</span>
+                            <span class="font-bold">FASE 1</span>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white mb-3">Quick Wins</h3>
+                        <p class="text-gray-400">
+                            Implementação de melhorias imediatas com impacto visível. 
+                            Foco em optimização de campanhas para sextas-feiras e documentação 
+                            do método do top performer.
+                        </p>
+                        <div class="mt-4 text-gold font-semibold">ROI esperado: €180K</div>
+                    </div>
+                    <div class="hidden lg:flex items-center justify-start pl-12">
+                        <div class="w-4 h-4 bg-gold rounded-full ring-4 ring-gold/20"></div>
+                    </div>
+                </div>
+                
+                <!-- Phase 2 -->
+                <div class="relative grid lg:grid-cols-2 gap-8 mb-12" data-aos="fade-up" data-aos-delay="100">
+                    <div class="hidden lg:flex items-center justify-end pr-12">
+                        <div class="w-4 h-4 bg-gold rounded-full ring-4 ring-gold/20"></div>
+                    </div>
+                    <div class="lg:pl-12">
+                        <div class="inline-flex items-center gap-2 bg-blue-500/10 text-blue-400 px-4 py-2 rounded-full text-sm font-medium mb-4">
+                            <span>Dias 31-60</span>
+                            <span class="font-bold">FASE 2</span>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white mb-3">Expansão Estruturada</h3>
+                        <p class="text-gray-400">
+                            Entrada no mercado do Porto com estratégia dedicada. 
+                            Implementação de programa de upsell automatizado e 
+                            optimização de campanhas sazonais.
+                        </p>
+                        <div class="mt-4 text-gold font-semibold">ROI esperado: €420K</div>
+                    </div>
+                </div>
+                
+                <!-- Phase 3 -->
+                <div class="relative grid lg:grid-cols-2 gap-8" data-aos="fade-up" data-aos-delay="200">
+                    <div class="lg:text-right lg:pr-12">
+                        <div class="inline-flex items-center gap-2 bg-purple-500/10 text-purple-400 px-4 py-2 rounded-full text-sm font-medium mb-4">
+                            <span>Dias 61-90</span>
+                            <span class="font-bold">FASE 3</span>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white mb-3">Transformação Digital</h3>
+                        <p class="text-gray-400">
+                            Aceleração da presença digital para fechar gap com mercado. 
+                            Implementação de programa de retenção e fidelização 
+                            com automação completa.
+                        </p>
+                        <div class="mt-4 text-gold font-semibold">ROI esperado: €600K</div>
+                    </div>
+                    <div class="hidden lg:flex items-center justify-start pl-12">
+                        <div class="w-4 h-4 bg-gold rounded-full ring-4 ring-gold/20"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Total ROI -->
+            <div class="mt-16 text-center" data-aos="fade-up" data-aos-delay="300">
+                <div class="inline-block bg-dark-card border border-gold/30 rounded-2xl px-8 py-6">
+                    <div class="text-sm text-gray-500 uppercase tracking-wider mb-2">ROI Total em 90 Dias</div>
+                    <div class="stat-number text-4xl font-bold gradient-text">€1.2M</div>
+                    <div class="text-gray-400 mt-2">retorno mínimo esperado</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Proposal Section -->
+    <section id="proposta" class="py-24 border-t border-dark-border">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <h2 class="font-display text-3xl sm:text-4xl font-bold mb-4">
+                    Proposta <span class="gradient-text">Comercial</span>
+                </h2>
+                <p class="text-gray-400 max-w-2xl mx-auto">
+                    Três opções desenhadas para diferentes níveis de ambição e investimento
+                </p>
+            </div>
+            
+            <div class="grid lg:grid-cols-3 gap-8">
+                <!-- Tier 1 -->
+                <div class="bg-dark-card border border-dark-border rounded-2xl p-8 card-hover" data-aos="fade-up" data-aos-delay="0">
+                    <div class="text-sm text-gray-500 uppercase tracking-wider mb-2">Essencial</div>
+                    <h3 class="text-2xl font-bold text-white mb-4">Quick Wins</h3>
+                    
+                    <div class="mb-6">
+                        <span class="text-4xl font-bold text-white">€9.500</span>
+                        <span class="text-gray-500">/projecto</span>
+                    </div>
+                    
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-start gap-3">
+                            <svg class="w-5 h-5 text-gold flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="text-gray-400">Relatório detalhado dos 7 insights</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <svg class="w-5 h-5 text-gold flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="text-gray-400">Plano de acção para Fase 1</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <svg class="w-5 h-5 text-gold flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="text-gray-400">2 sessões de consultoria (2h cada)</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <svg class="w-5 h-5 text-gold flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="text-gray-400">Dashboard de KPIs essenciais</span>
+                        </li>
+                    </ul>
+                    
+                    <div class="pt-6 border-t border-dark-border">
+                        <div class="text-sm text-gray-500 mb-1">ROI esperado</div>
+                        <div class="text-xl font-bold text-emerald-400">+€180K <span class="text-gray-500 font-normal text-sm">(19x)</span></div>
+                    </div>
+                </div>
+                
+                <!-- Tier 2 - Featured -->
+                <div class="bg-dark-card border-2 border-gold rounded-2xl p-8 card-hover relative" data-aos="fade-up" data-aos-delay="100">
+                    <div class="absolute -top-4 left-1/2 -translate-x-1/2 gradient-gold text-dark px-4 py-1 rounded-full text-sm font-bold">
+                        RECOMENDADO
+                    </div>
+                    
+                    <div class="text-sm text-gold uppercase tracking-wider mb-2">Crescimento</div>
+                    <h3 class="text-2xl font-bold text-white mb-4">Transformação</h3>
+                    
+                    <div class="mb-6">
+                        <span class="text-4xl font-bold gradient-text">€24.500</span>
+                        <span class="text-gray-500">/projecto</span>
+                    </div>
+                    
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-start gap-3">
+                            <svg class="w-5 h-5 text-gold flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="text-gray-300">Tudo do plano Essencial</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <svg class="w-5 h-5 text-gold flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="text-gray-300">Implementação das 3 fases (90 dias)</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <svg class="w-5 h-5 text-gold flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="text-gray-300">Acompanhamento semanal dedicado</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <svg class="w-5 h-5 text-gold flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="text-gray-300">Dashboard avançado em tempo real</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <svg class="w-5 h-5 text-gold flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="text-gray-300">Formação da equipa comercial</span>
+                        </li>
+                    </ul>
+                    
+                    <div class="pt-6 border-t border-dark-border">
+                        <div class="text-sm text-gray-500 mb-1">ROI esperado</div>
+                        <div class="text-xl font-bold text-emerald-400">+€1.2M <span class="text-gray-500 font-normal text-sm">(49x)</span></div>
+                    </div>
+                </div>
+                
+                <!-- Tier 3 -->
+                <div class="bg-dark-card border border-dark-border rounded-2xl p-8 card-hover" data-aos="fade-up" data-aos-delay="200">
+                    <div class="text-sm text-gray-500 uppercase tracking-wider mb-2">Enterprise</div>
+                    <h3 class="text-2xl font-bold text-white mb-4">Parceria Total</h3>
+                    
+                    <div class="mb-6">
+                        <span class="text-4xl font-bold text-white">€48.500</span>
+                        <span class="text-gray-500">/ano</span>
+                    </div>
+                    
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-start gap-3">
+                            <svg class="w-5 h-5 text-gold flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="text-gray-400">Tudo do plano Transformação</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <svg class="w-5 h-5 text-gold flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="text-gray-400">Consultor dedicado 12 meses</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <svg class="w-5 h-5 text-gold flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="text-gray-400">Análises trimestrais profundas</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <svg class="w-5 h-5 text-gold flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="text-gray-400">Suporte prioritário ilimitado</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <svg class="w-5 h-5 text-gold flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="text-gray-400">Garantia de resultados</span>
+                        </li>
+                    </ul>
+                    
+                    <div class="pt-6 border-t border-dark-border">
+                        <div class="text-sm text-gray-500 mb-1">ROI esperado</div>
+                        <div class="text-xl font-bold text-emerald-400">+€5.6M <span class="text-gray-500 font-normal text-sm">(115x)</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section id="contacto" class="py-24 bg-gradient-to-b from-dark to-dark-card border-t border-dark-border">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div data-aos="fade-up">
+                <div class="inline-flex items-center gap-2 bg-gold/10 border border-gold/20 rounded-full px-4 py-2 mb-6">
+                    <span class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span>
+                    <span class="text-sm text-gold">Vagas limitadas para Q1 2026</span>
+                </div>
+                
+                <h2 class="font-display text-3xl sm:text-4xl lg:text-5xl font-bold mb-6">
+                    Pronto para Recuperar os<br>
+                    <span class="gradient-text">€5.6M Escondidos?</span>
+                </h2>
+                
+                <p class="text-lg text-gray-400 mb-10 max-w-2xl mx-auto">
+                    Agende uma reunião de 30 minutos para discutir os insights específicos 
+                    do seu negócio e definir os próximos passos.
+                </p>
+                
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                    <a href="mailto:analise@aurora-oceano.pt?subject=Reunião%20Análise%20Estratégica" 
+                       class="gradient-gold text-dark px-8 py-4 rounded-full font-semibold text-lg hover:opacity-90 transition-opacity inline-flex items-center gap-3 w-full sm:w-auto justify-center">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        </svg>
+                        Agendar Reunião Gratuita
+                    </a>
+                    
+                    <a href="tel:+351912345678" 
+                       class="border border-gold text-gold px-8 py-4 rounded-full font-semibold text-lg hover:bg-gold hover:text-dark transition-all inline-flex items-center gap-3 w-full sm:w-auto justify-center">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+                        </svg>
+                        Ligar Agora
+                    </a>
+                </div>
+                
+                <p class="text-sm text-gray-500 mt-8">
+                    Reunião sem compromisso · Análise personalizada · Resultados garantidos
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 border-t border-dark-border">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 gradient-gold rounded-lg flex items-center justify-center">
+                        <span class="text-dark font-bold text-sm">AO</span>
+                    </div>
+                    <span class="font-display text-lg font-medium">Aurora Oceano</span>
+                </div>
+                
+                <div class="text-center md:text-left">
+                    <p class="text-sm text-gray-500">
+                        Análise Estratégica Confidencial · Documento preparado exclusivamente para Aurora Oceano
+                    </p>
+                </div>
+                
+                <div class="text-sm text-gray-500">
+                    © 2026 Todos os direitos reservados
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- AOS Animation Script -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            once: true,
+            duration: 800,
+            easing: 'ease-out-cubic'
+        });
+        
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

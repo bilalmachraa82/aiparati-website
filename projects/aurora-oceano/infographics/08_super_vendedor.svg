@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">
+  <!-- Background -->
+  <rect width="800" height="500" fill="#0a0a0a"/>
+  
+  <!-- Title -->
+  <text x="400" y="40" text-anchor="middle" font-family="Inter, Arial" font-size="24" font-weight="700" fill="#ffffff">PERFORMANCE VENDEDORES</text>
+  <text x="400" y="65" text-anchor="middle" font-family="Inter, Arial" font-size="14" fill="#6b7280">Ticket médio por vendedor (2025)</text>
+  
+  <!-- Big Insight -->
+  <g transform="translate(200, 90)">
+    <rect x="0" y="0" width="400" height="100" rx="12" fill="url(#goldGrad3)"/>
+    <text x="200" y="35" text-anchor="middle" font-family="Inter, Arial" font-size="16" fill="#0a0a0a">Vendedor #173379 faz</text>
+    <text x="200" y="75" text-anchor="middle" font-family="Inter, Arial" font-size="48" font-weight="800" fill="#0a0a0a">49x MAIS</text>
+    <defs>
+      <linearGradient id="goldGrad3" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#c9a962"/>
+        <stop offset="100%" style="stop-color:#e8d5a3"/>
+      </linearGradient>
+    </defs>
+  </g>
+  
+  <!-- Comparison bars -->
+  <g transform="translate(100, 220)">
+    <!-- Vendedor 139585 -->
+    <text x="0" y="15" font-family="Inter, Arial" font-size="11" fill="#6b7280">#139585</text>
+    <rect x="100" y="0" width="60" height="30" rx="4" fill="#4a4a4a"/>
+    <text x="170" y="20" font-family="Inter, Arial" font-size="14" fill="#ffffff">€242</text>
+    <text x="220" y="20" font-family="Inter, Arial" font-size="10" fill="#6b7280">5.929 fat</text>
+    
+    <!-- Vendedor 139583 -->
+    <text x="0" y="60" font-family="Inter, Arial" font-size="11" fill="#6b7280">#139583</text>
+    <rect x="100" y="45" width="122" height="30" rx="4" fill="#4a4a4a"/>
+    <text x="232" y="65" font-family="Inter, Arial" font-size="14" fill="#ffffff">€490</text>
+    <text x="280" y="65" font-family="Inter, Arial" font-size="10" fill="#6b7280">1.233 fat</text>
+    
+    <!-- Vendedor 173379 - STAR -->
+    <text x="0" y="115" font-family="Inter, Arial" font-size="12" font-weight="700" fill="#c9a962">#173379 ⭐</text>
+    <rect x="100" y="95" width="500" height="40" rx="4" fill="#c9a962"/>
+    <text x="130" y="122" font-family="Inter, Arial" font-size="20" font-weight="700" fill="#0a0a0a">€11.925</text>
+    <text x="280" y="120" font-family="Inter, Arial" font-size="12" fill="#0a0a0a">93 facturas | €1.11M total</text>
+    
+    <!-- Scale indicator -->
+    <line x1="100" y1="150" x2="600" y2="150" stroke="#2a2a2a" stroke-width="1"/>
+    <text x="100" y="165" font-family="Inter, Arial" font-size="9" fill="#4a4a4a">€0</text>
+    <text x="350" y="165" text-anchor="middle" font-family="Inter, Arial" font-size="9" fill="#4a4a4a">€6k</text>
+    <text x="600" y="165" text-anchor="end" font-family="Inter, Arial" font-size="9" fill="#4a4a4a">€12k</text>
+  </g>
+  
+  <!-- Insight boxes -->
+  <g transform="translate(50, 400)">
+    <rect x="0" y="0" width="330" height="70" rx="8" fill="#1a1a1a"/>
+    <text x="20" y="25" font-family="Inter, Arial" font-size="12" font-weight="600" fill="#c9a962">🎯 O QUE FAZ DE DIFERENTE?</text>
+    <text x="20" y="48" font-family="Inter, Arial" font-size="11" fill="#ffffff">Foca em grandes contas B2B.</text>
+    <text x="20" y="62" font-family="Inter, Arial" font-size="11" fill="#ffffff">Menos volume, maior valor.</text>
+    
+    <rect x="360" y="0" width="330" height="70" rx="8" fill="#1a1a1a"/>
+    <text x="380" y="25" font-family="Inter, Arial" font-size="12" font-weight="600" fill="#16a34a">💡 ACÇÃO RECOMENDADA</text>
+    <text x="380" y="48" font-family="Inter, Arial" font-size="11" fill="#ffffff">Estudar técnica e formar outros.</text>
+    <text x="380" y="62" font-family="Inter, Arial" font-size="11" fill="#ffffff">Criar especialista grandes contas.</text>
+  </g>
+  
+  <!-- Footer -->
+  <text x="400" y="495" text-anchor="middle" font-family="Inter, Arial" font-size="10" fill="#4a4a4a">AiParaTi | Análise de performance comercial</text>
+</svg>

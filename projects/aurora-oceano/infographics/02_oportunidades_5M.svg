@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">
+  <defs>
+    <linearGradient id="goldGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#c9a962"/>
+      <stop offset="100%" style="stop-color:#a08442"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="800" height="500" fill="#0a0a0a"/>
+  
+  <!-- Title -->
+  <text x="400" y="40" text-anchor="middle" font-family="Inter, Arial" font-size="24" font-weight="700" fill="#ffffff">OPORTUNIDADES NÃO CAPTURADAS</text>
+  <text x="400" y="65" text-anchor="middle" font-family="Inter, Arial" font-size="14" fill="#6b7280">Valor anual em potencial escondido</text>
+  
+  <!-- Big Number -->
+  <text x="400" y="130" text-anchor="middle" font-family="Inter, Arial" font-size="80" font-weight="800" fill="url(#goldGrad2)">€5.6M</text>
+  
+  <!-- Waterfall Chart -->
+  <g transform="translate(50, 160)">
+    <!-- Bars -->
+    <!-- Clientes Perdidos -->
+    <rect x="30" y="120" width="120" height="80" rx="4" fill="#c9a962"/>
+    <text x="90" y="115" text-anchor="middle" font-family="Inter, Arial" font-size="16" font-weight="700" fill="#ffffff">€358k</text>
+    <text x="90" y="220" text-anchor="middle" font-family="Inter, Arial" font-size="11" fill="#6b7280">Clientes</text>
+    <text x="90" y="235" text-anchor="middle" font-family="Inter, Arial" font-size="11" fill="#6b7280">Perdidos</text>
+    
+    <!-- Grossistas -->
+    <rect x="180" y="20" width="120" height="180" rx="4" fill="#c9a962"/>
+    <text x="240" y="15" text-anchor="middle" font-family="Inter, Arial" font-size="16" font-weight="700" fill="#ffffff">€5M</text>
+    <text x="240" y="220" text-anchor="middle" font-family="Inter, Arial" font-size="11" fill="#6b7280">Grossistas</text>
+    <text x="240" y="235" text-anchor="middle" font-family="Inter, Arial" font-size="11" fill="#6b7280">Subutilizados</text>
+    
+    <!-- Cross-sell -->
+    <rect x="330" y="140" width="120" height="60" rx="4" fill="#c9a962"/>
+    <text x="390" y="135" text-anchor="middle" font-family="Inter, Arial" font-size="16" font-weight="700" fill="#ffffff">€150k</text>
+    <text x="390" y="220" text-anchor="middle" font-family="Inter, Arial" font-size="11" fill="#6b7280">Cross-sell</text>
+    <text x="390" y="235" text-anchor="middle" font-family="Inter, Arial" font-size="11" fill="#6b7280">Potencial</text>
+    
+    <!-- Época Baixa -->
+    <rect x="480" y="150" width="120" height="50" rx="4" fill="#c9a962"/>
+    <text x="540" y="145" text-anchor="middle" font-family="Inter, Arial" font-size="16" font-weight="700" fill="#ffffff">€99k</text>
+    <text x="540" y="220" text-anchor="middle" font-family="Inter, Arial" font-size="11" fill="#6b7280">Época</text>
+    <text x="540" y="235" text-anchor="middle" font-family="Inter, Arial" font-size="11" fill="#6b7280">Baixa</text>
+    
+    <!-- Total -->
+    <rect x="630" y="10" width="120" height="190" rx="4" fill="#16a34a"/>
+    <text x="690" y="5" text-anchor="middle" font-family="Inter, Arial" font-size="16" font-weight="700" fill="#16a34a">€5.6M</text>
+    <text x="690" y="220" text-anchor="middle" font-family="Inter, Arial" font-size="11" fill="#6b7280">TOTAL</text>
+    <text x="690" y="235" text-anchor="middle" font-family="Inter, Arial" font-size="11" fill="#6b7280">POTENCIAL</text>
+  </g>
+  
+  <!-- Action Items -->
+  <g transform="translate(50, 420)">
+    <rect x="0" y="0" width="700" height="60" rx="8" fill="#1a1a1a"/>
+    <text x="350" y="25" text-anchor="middle" font-family="Inter, Arial" font-size="14" font-weight="600" fill="#c9a962">ACÇÃO IMEDIATA</text>
+    <text x="350" y="45" text-anchor="middle" font-family="Inter, Arial" font-size="12" fill="#ffffff">Ligar a DOCA REAL, RAPOSIN e REST. ORIENTAL PALACE → €358k recuperáveis</text>
+  </g>
+  
+  <!-- Footer -->
+  <text x="400" y="495" text-anchor="middle" font-family="Inter, Arial" font-size="10" fill="#4a4a4a">AiParaTi | Consultoria de Inteligência Artificial</text>
+</svg>

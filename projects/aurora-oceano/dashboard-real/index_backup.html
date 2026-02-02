@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aurora Oceano - Painel Operacional</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        body { font-family: 'Inter', system-ui, sans-serif; }
+        .dark-bg { background: #0a0a0f; }
+        .card { background: #12121a; border: 1px solid #1e1e2e; }
+        .card-header { background: #1a1a24; border-bottom: 1px solid #2a2a3a; }
+        .clickable { cursor: pointer; transition: all 0.2s; }
+        .clickable:hover { transform: translateY(-2px); box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 100; }
+        .modal.active { display: flex; align-items: center; justify-content: center; }
+        .modal-content { background: #12121a; border: 1px solid #2a2a3a; border-radius: 1rem; max-width: 90%; max-height: 90%; overflow: auto; }
+        @media print { 
+            .no-print { display: none !important; } 
+            body { background: white; color: black; }
+            .print-only { display: block !important; }
+        }
+        .print-only { display: none; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .pulse { animation: pulse 2s infinite; }
+    </style>
+</head>
+<body class="dark-bg min-h-screen text-gray-100">
+    <!-- Header -->
+    <header class="bg-[#12121a] border-b border-[#1e1e2e] sticky top-0 z-50 no-print">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <span class="text-2xl">🌊</span>
+                <div>
+                    <h1 class="text-lg font-bold">Aurora Oceano</h1>
+                    <p class="text-xs text-gray-500">Painel Interactivo • Clique para detalhes</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-4">
+                <button onclick="printAllOrders()" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg font-semibold flex items-center gap-2 transition">
+                    🖨️ Imprimir Rotas
+                </button>
+                <div class="text-right text-sm">
+                    <p class="text-gray-400">29 Jan 2026</p>
+                    <p class="text-green-400 text-xs flex items-center gap-1">
+                        <span class="w-2 h-2 bg-green-400 rounded-full pulse"></span> Online
+                    </p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto p-4 space-y-4 no-print">
+        
+        <!-- 🚨 ALERTAS CLICÁVEIS -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+            <div onclick="showModal('stockModal')" class="clickable bg-red-500/10 border border-red-500/30 rounded-lg p-3">
+                <p class="text-red-400 text-xs font-medium">🚨 STOCK NEGATIVO</p>
+                <p class="text-2xl font-bold text-white">7 produtos</p>
+                <p class="text-xs text-gray-400">Clique para ver detalhes →</p>
+            </div>
+            <div onclick="showModal('pagamentosModal')" class="clickable bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-3">
+                <p class="text-yellow-400 text-xs font-medium">💰 A PAGAR (30 dias)</p>
+                <p class="text-2xl font-bold text-white">€25,778</p>
+                <p class="text-xs text-gray-400">Clique para ver detalhes →</p>
+            </div>
+            <div onclick="showModal('encomendasModal')" class="clickable bg-blue-500/10 border border-blue-500/30 rounded-lg p-3">
+                <p class="text-blue-400 text-xs font-medium">📦 ENCOMENDAS HOJE</p>
+                <p class="text-2xl font-bold text-white">24</p>
+                <p class="text-xs text-gray-400">Clique para ver detalhes →</p>
+            </div>
+            <div onclick="showModal('targetModal')" class="clickable bg-green-500/10 border border-green-500/30 rounded-lg p-3">
+                <p class="text-green-400 text-xs font-medium">🎯 TARGET JANEIRO</p>
+                <p class="text-2xl font-bold text-white">21%</p>
+                <p class="text-xs text-gray-400">€28k de €133k →</p>
+            </div>
+        </div>
+
+        <!-- 🚚 SETUP MANHÃ - ROTAS OPTIMIZADAS -->
+        <div class="card rounded-xl overflow-hidden">
+            <div class="card-header px-4 py-3 bg-gradient-to-r from-blue-500/20 to-green-500/20">
+                <div class="flex justify-between items-center">
+                    <h2 class="font-semibold flex items-center gap-2">🌅 Setup Manhã - Rotas Prontas para Despacho</h2>
+                    <button onclick="printAllOrders()" class="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg font-bold flex items-center gap-2 transition text-lg">
+                        🖨️ IMPRIMIR TUDO
+                    </button>
+                </div>
+            </div>
+            <div class="p-4">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                    <!-- ROTA NORTE -->
+                    <div class="bg-blue-500/5 rounded-xl p-4 border border-blue-500/20">
+                        <div class="flex justify-between items-center mb-3">
+                            <h3 class="font-semibold text-blue-400 flex items-center gap-2">
+                                🔵 ROTA NORTE - Vendedor 1
+                            </h3>
+                            <div class="text-right">
+                                <span class="text-lg font-bold">€1,500</span>
+                                <p class="text-xs text-gray-500">43.9 km</p>
+                            </div>
+                        </div>
+                        <div class="space-y-1 text-sm" id="rotaNorteList">
+                            <div class="flex items-center gap-2 py-1 border-b border-white/5"><span class="bg-blue-500 text-white text-xs w-5 h-5 rounded flex items-center justify-center">1</span><span class="flex-1">CAFÉ DO BAIRRO</span><span class="text-gray-500 text-xs">Loures</span><span class="font-medium">€50</span></div>
+                            <div class="flex items-center gap-2 py-1 border-b border-white/5"><span class="bg-blue-500 text-white text-xs w-5 h-5 rounded flex items-center justify-center">2</span><span class="flex-1">REST. O CABANENSE</span><span class="text-gray-500 text-xs">Belas</span><span class="font-medium">€263</span></div>
+                            <div class="flex items-center gap-2 py-1 border-b border-white/5"><span class="bg-blue-500 text-white text-xs w-5 h-5 rounded flex items-center justify-center">3</span><span class="flex-1">O NORTE DA CHINA</span><span class="text-gray-500 text-xs">Lisboa</span><span class="font-medium">€246</span></div>
+                            <div class="flex items-center gap-2 py-1 border-b border-white/5"><span class="bg-blue-500 text-white text-xs w-5 h-5 rounded flex items-center justify-center">4</span><span class="flex-1">REST. NUVEM MAR</span><span class="text-gray-500 text-xs">Lisboa</span><span class="font-medium">€122</span></div>
+                            <div class="flex items-center gap-2 py-1 border-b border-white/5"><span class="bg-blue-500 text-white text-xs w-5 h-5 rounded flex items-center justify-center">5</span><span class="flex-1">JAMIE'S ITALIAN</span><span class="text-gray-500 text-xs">Lisboa</span><span class="font-medium">€238</span></div>
+                            <div class="flex items-center gap-2 py-1 border-b border-white/5"><span class="bg-blue-500 text-white text-xs w-5 h-5 rounded flex items-center justify-center">6</span><span class="flex-1">REST. LI YUAN</span><span class="text-gray-500 text-xs">Lisboa</span><span class="font-medium">€135</span></div>
+                            <div class="flex items-center gap-2 py-1 border-b border-white/5"><span class="bg-blue-500 text-white text-xs w-5 h-5 rounded flex items-center justify-center">7</span><span class="flex-1">MEGASTORIA</span><span class="text-gray-500 text-xs">Lisboa</span><span class="font-medium">€324</span></div>
+                            <div class="flex items-center gap-2 py-1"><span class="bg-blue-500 text-white text-xs w-5 h-5 rounded flex items-center justify-center">8</span><span class="flex-1">FAST FOOD WORLD</span><span class="text-gray-500 text-xs">Lisboa</span><span class="font-medium">€123</span></div>
+                        </div>
+                        <div class="mt-3 pt-3 border-t border-blue-500/20 flex justify-between items-center">
+                            <span class="text-blue-400 font-semibold">8 entregas</span>
+                            <button onclick="printRoute('norte')" class="bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 px-3 py-1 rounded text-sm">🖨️ Imprimir Rota</button>
+                        </div>
+                    </div>
+                    
+                    <!-- ROTA SUL -->
+                    <div class="bg-green-500/5 rounded-xl p-4 border border-green-500/20">
+                        <div class="flex justify-between items-center mb-3">
+                            <h3 class="font-semibold text-green-400 flex items-center gap-2">
+                                🟢 ROTA SUL - Vendedor 2
+                            </h3>
+                            <div class="text-right">
+                                <span class="text-lg font-bold">€2,831</span>
+                                <p class="text-xs text-gray-500">82.6 km</p>
+                            </div>
+                        </div>
+                        <div class="space-y-1 text-sm max-h-48 overflow-y-auto" id="rotaSulList">
+                            <div class="flex items-center gap-2 py-1 border-b border-white/5"><span class="bg-green-500 text-white text-xs w-5 h-5 rounded flex items-center justify-center">1</span><span class="flex-1">MIRAGEM DESAFIANTE</span><span class="text-gray-500 text-xs">Seixal</span><span class="font-medium">€23</span></div>
+                            <div class="flex items-center gap-2 py-1 border-b border-white/5"><span class="bg-green-500 text-white text-xs w-5 h-5 rounded flex items-center justify-center">2</span><span class="flex-1">BRANCO E RIBEIRO</span><span class="text-gray-500 text-xs">Paio Pires</span><span class="font-medium">€76</span></div>
+                            <div class="flex items-center gap-2 py-1 border-b border-white/5"><span class="bg-green-500 text-white text-xs w-5 h-5 rounded flex items-center justify-center">3</span><span class="flex-1">CLAUDIA PINTO</span><span class="text-gray-500 text-xs">Paio Pires</span><span class="font-medium">€148</span></div>
+                            <div class="flex items-center gap-2 py-1 border-b border-white/5"><span class="bg-green-500 text-white text-xs w-5 h-5 rounded flex items-center justify-center">4</span><span class="flex-1">CHURRASQ. CAMPEÃO</span><span class="text-gray-500 text-xs">Q. Conde</span><span class="font-medium">€270</span></div>
+                            <div class="flex items-center gap-2 py-1 border-b border-white/5"><span class="bg-green-500 text-white text-xs w-5 h-5 rounded flex items-center justify-center">5</span><span class="flex-1">LAR NOVA FAMILIA</span><span class="text-gray-500 text-xs">Q. Conde</span><span class="font-medium">€30</span></div>
+                            <div class="flex items-center gap-2 py-1 border-b border-white/5"><span class="bg-green-500 text-white text-xs w-5 h-5 rounded flex items-center justify-center">6</span><span class="flex-1">CASA DAS FRANCESINHAS</span><span class="text-gray-500 text-xs">Azeitão</span><span class="font-medium">€203</span></div>
+                            <div class="flex items-center gap-2 py-1 border-b border-white/5"><span class="bg-green-500 text-white text-xs w-5 h-5 rounded flex items-center justify-center">7</span><span class="flex-1">LAR AS TIAS</span><span class="text-gray-500 text-xs">Sesimbra</span><span class="font-medium">€30</span></div>
+                            <div class="flex items-center gap-2 py-1 border-b border-white/5"><span class="bg-green-500 text-white text-xs w-5 h-5 rounded flex items-center justify-center">8</span><span class="flex-1">PÁTEO D'ALEGRIA</span><span class="text-gray-500 text-xs">Belverde</span><span class="font-medium">€222</span></div>
+                            <div class="flex items-center gap-2 py-1 border-b border-white/5"><span class="bg-green-500 text-white text-xs w-5 h-5 rounded flex items-center justify-center">9</span><span class="flex-1">CARLA GASPAR</span><span class="text-gray-500 text-xs">F. Ferro</span><span class="font-medium">€101</span></div>
+                            <div class="flex items-center gap-2 py-1 border-b border-white/5"><span class="bg-green-500 text-white text-xs w-5 h-5 rounded flex items-center justify-center">10</span><span class="flex-1">TUTTIPACK</span><span class="text-gray-500 text-xs">F. Ferro</span><span class="font-medium">€84</span></div>
+                            <div class="flex items-center gap-2 py-1 border-b border-white/5"><span class="bg-green-500 text-white text-xs w-5 h-5 rounded flex items-center justify-center">11</span><span class="flex-1">MARTINHO E APOLINÁRIO</span><span class="text-gray-500 text-xs">Charneca</span><span class="font-medium">€140</span></div>
+                            <div class="flex items-center gap-2 py-1 border-b border-white/5"><span class="bg-green-500 text-white text-xs w-5 h-5 rounded flex items-center justify-center">12</span><span class="flex-1">TABERNA A OLHAR O TEJO</span><span class="text-gray-500 text-xs">Trafaria</span><span class="font-medium">€323</span></div>
+                            <div class="flex items-center gap-2 py-1 border-b border-white/5"><span class="bg-green-500 text-white text-xs w-5 h-5 rounded flex items-center justify-center">13</span><span class="flex-1">CHURRASQ. GRELHA FINA</span><span class="text-gray-500 text-xs">Almada</span><span class="font-medium">€404</span></div>
+                            <div class="flex items-center gap-2 py-1 border-b border-white/5"><span class="bg-green-500 text-white text-xs w-5 h-5 rounded flex items-center justify-center">14</span><span class="flex-1">REST. TON FON</span><span class="text-gray-500 text-xs">Almada</span><span class="font-medium">€337</span></div>
+                            <div class="flex items-center gap-2 py-1 border-b border-white/5"><span class="bg-green-500 text-white text-xs w-5 h-5 rounded flex items-center justify-center">15</span><span class="flex-1">ISABEL VITORINA</span><span class="text-gray-500 text-xs">Almada</span><span class="font-medium">€147</span></div>
+                            <div class="flex items-center gap-2 py-1"><span class="bg-green-500 text-white text-xs w-5 h-5 rounded flex items-center justify-center">16</span><span class="flex-1">PALCO DE PASSAGEM</span><span class="text-gray-500 text-xs">Barreiro</span><span class="font-medium">€292</span></div>
+                        </div>
+                        <div class="mt-3 pt-3 border-t border-green-500/20 flex justify-between items-center">
+                            <span class="text-green-400 font-semibold">16 entregas</span>
+                            <button onclick="printRoute('sul')" class="bg-green-500/20 hover:bg-green-500/30 text-green-400 px-3 py-1 rounded text-sm">🖨️ Imprimir Rota</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Resumo -->
+                <div class="mt-4 p-4 bg-gradient-to-r from-blue-500/10 to-green-500/10 rounded-lg flex justify-between items-center">
+                    <div class="flex gap-6">
+                        <span>📦 <strong>24</strong> entregas</span>
+                        <span>📏 <strong>126.5 km</strong> total</span>
+                        <span>💰 <strong>€4,331</strong> facturado</span>
+                        <span class="text-green-400">⚡ Optimizado em <strong>9ms</strong></span>
+                    </div>
+                    <span class="text-xs text-gray-500">VROOM Engine</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Outros Cards -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <!-- Vendedores -->
+            <div onclick="showModal('vendedoresModal')" class="clickable card rounded-xl overflow-hidden">
+                <div class="card-header px-4 py-3"><h2 class="font-semibold">👥 Vendedores</h2></div>
+                <div class="p-4 space-y-3">
+                    <div class="flex items-center justify-between"><div class="flex items-center gap-3"><div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-sm font-bold">AM</div><span>Andre Marques</span></div><span class="text-blue-400 font-bold">21 clientes</span></div>
+                    <div class="flex items-center justify-between"><div class="flex items-center gap-3"><div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center text-sm font-bold">HS</div><span>Helder de Sousa</span></div><span class="text-green-400 font-bold">20 clientes</span></div>
+                    <div class="flex items-center justify-between"><div class="flex items-center gap-3"><div class="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center text-sm font-bold">BA</div><span>Beatriz & Alexandre</span></div><span class="text-purple-400 font-bold">8 clientes</span></div>
+                </div>
+            </div>
+
+            <!-- Target 2026 Mini -->
+            <div onclick="showModal('targetModal')" class="clickable card rounded-xl overflow-hidden">
+                <div class="card-header px-4 py-3"><h2 class="font-semibold">🎯 Target 2026</h2></div>
+                <div class="p-4">
+                    <div class="mb-2"><div class="flex justify-between text-sm mb-1"><span>Janeiro</span><span class="text-blue-400">€28k / €133k</span></div><div class="w-full bg-gray-800 rounded-full h-3"><div class="bg-blue-500 h-3 rounded-full" style="width: 21%"></div></div></div>
+                    <div class="grid grid-cols-6 gap-1 text-center text-xs mt-4">
+                        <div class="p-1 bg-blue-500/20 rounded"><p class="text-blue-400 font-bold">Jan</p></div>
+                        <div class="p-1 bg-gray-800 rounded"><p class="text-gray-500">Fev</p></div>
+                        <div class="p-1 bg-gray-800 rounded"><p class="text-gray-500">Mar</p></div>
+                        <div class="p-1 bg-gray-800 rounded"><p class="text-gray-500">...</p></div>
+                        <div class="p-1 bg-yellow-500/20 rounded"><p class="text-yellow-400 font-bold">Jul</p></div>
+                        <div class="p-1 bg-purple-500/20 rounded"><p class="text-purple-400">Dez</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="text-center text-gray-600 text-xs py-4">
+            <p>Aurora Oceano • Dashboard Interactivo • VROOM Engine • AiParaTi</p>
+        </footer>
+    </main>
+
+    <!-- MODALS -->
+    
+    <!-- Stock Modal -->
+    <div id="stockModal" class="modal" onclick="if(event.target===this)closeModal('stockModal')">
+        <div class="modal-content p-6 w-full max-w-2xl">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold text-red-400">🚨 Stock Negativo - Detalhes</h2>
+                <button onclick="closeModal('stockModal')" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+            </div>
+            <table class="w-full text-sm">
+                <thead class="text-gray-500 border-b border-gray-700"><tr><th class="py-2 text-left">Ref</th><th class="text-left">Produto</th><th class="text-right">Stock</th><th class="text-right">Acção</th></tr></thead>
+                <tbody>
+                    <tr class="border-b border-gray-800"><td class="py-2 text-gray-400">3020</td><td>CAMARÃO S/C 36/40 VAN CX 10X2KG</td><td class="text-right text-red-500 font-bold">-4,706</td><td class="text-right"><button class="text-blue-400 text-xs">Regularizar</button></td></tr>
+                    <tr class="border-b border-gray-800"><td class="py-2 text-gray-400">3524</td><td>CAMARÃO S/C 41/50 VAN CX 10X2KG</td><td class="text-right text-red-500 font-bold">-2,776</td><td class="text-right"><button class="text-blue-400 text-xs">Regularizar</button></td></tr>
+                    <tr class="border-b border-gray-800"><td class="py-2 text-gray-400">3019</td><td>CAMARÃO C/C 40/50 VANAMEI CX 10X2KG</td><td class="text-right text-red-500 font-bold">-2,646</td><td class="text-right"><button class="text-blue-400 text-xs">Regularizar</button></td></tr>
+                    <tr class="border-b border-gray-800"><td class="py-2 text-gray-400">3540</td><td>CAMARAO S/C 21/25 VAN CX 10X2KG</td><td class="text-right text-red-500 font-bold">-666</td><td class="text-right"><button class="text-blue-400 text-xs">Regularizar</button></td></tr>
+                    <tr class="border-b border-gray-800"><td class="py-2 text-gray-400">3527</td><td>CAMARÃO S/C 31/35 VAN CX 6X2KG</td><td class="text-right text-red-400 font-bold">-70</td><td class="text-right"><button class="text-blue-400 text-xs">Regularizar</button></td></tr>
+                    <tr class="border-b border-gray-800"><td class="py-2 text-gray-400">3031</td><td>MIOLO AMEIJOA COZIDO 1000/UP</td><td class="text-right text-red-400 font-bold">-11</td><td class="text-right"><button class="text-blue-400 text-xs">Regularizar</button></td></tr>
+                    <tr><td class="py-2 text-gray-400">1002</td><td>TARTE FRUTOS BOSQUE UN 1300GR</td><td class="text-right text-red-400 font-bold">-1</td><td class="text-right"><button class="text-blue-400 text-xs">Regularizar</button></td></tr>
+                </tbody>
+            </table>
+            <div class="mt-4 p-3 bg-blue-500/10 rounded-lg text-sm"><p>💡 Stock negativo indica vendas não sincronizadas com inventário. Regularizar entradas no Moloni.</p></div>
+        </div>
+    </div>
+
+    <!-- Pagamentos Modal -->
+    <div id="pagamentosModal" class="modal" onclick="if(event.target===this)closeModal('pagamentosModal')">
+        <div class="modal-content p-6 w-full max-w-2xl">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold text-yellow-400">💰 Pagamentos a Fornecedores</h2>
+                <button onclick="closeModal('pagamentosModal')" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+            </div>
+            <table class="w-full text-sm">
+                <thead class="text-gray-500 border-b border-gray-700"><tr><th class="py-2 text-left">Fornecedor</th><th class="text-left">Vencimento</th><th class="text-right">Valor</th><th class="text-right">Estado</th></tr></thead>
+                <tbody>
+                    <tr class="border-b border-gray-800"><td class="py-2">Quinta Frio Internacional</td><td class="text-yellow-400">28 Fev 2026</td><td class="text-right font-bold">€271.22</td><td class="text-right"><span class="bg-yellow-500/20 text-yellow-400 px-2 py-0.5 rounded text-xs">30 dias</span></td></tr>
+                    <tr class="border-b border-gray-800"><td class="py-2">Quinta Frio Internacional</td><td class="text-yellow-400">28 Fev 2026</td><td class="text-right font-bold">€280.45</td><td class="text-right"><span class="bg-yellow-500/20 text-yellow-400 px-2 py-0.5 rounded text-xs">30 dias</span></td></tr>
+                    <tr class="border-b border-gray-800"><td class="py-2">Cifra Total - Lda</td><td class="text-yellow-400">28 Fev 2026</td><td class="text-right font-bold">€530.06</td><td class="text-right"><span class="bg-yellow-500/20 text-yellow-400 px-2 py-0.5 rounded text-xs">30 dias</span></td></tr>
+                    <tr class="border-b border-gray-800"><td class="py-2">Verdadeiramentespecial</td><td class="text-orange-400">30 Mar 2026</td><td class="text-right font-bold">€6,189.36</td><td class="text-right"><span class="bg-orange-500/20 text-orange-400 px-2 py-0.5 rounded text-xs">60 dias</span></td></tr>
+                    <tr class="border-b border-gray-800"><td class="py-2">Verdadeiramentespecial</td><td class="text-orange-400">30 Mar 2026</td><td class="text-right font-bold">€9,387.36</td><td class="text-right"><span class="bg-orange-500/20 text-orange-400 px-2 py-0.5 rounded text-xs">60 dias</span></td></tr>
+                    <tr class="border-b border-gray-800"><td class="py-2">Vasco a Rosa Lda</td><td class="text-yellow-400">26 Fev 2026</td><td class="text-right font-bold">€296.80</td><td class="text-right"><span class="bg-yellow-500/20 text-yellow-400 px-2 py-0.5 rounded text-xs">28 dias</span></td></tr>
+                    <tr class="border-b border-gray-800"><td class="py-2">Belizazel-Soluções Ibéricas</td><td class="text-orange-400">28 Mar 2026</td><td class="text-right font-bold">€1,288.55</td><td class="text-right"><span class="bg-orange-500/20 text-orange-400 px-2 py-0.5 rounded text-xs">58 dias</span></td></tr>
+                    <tr class="border-b border-gray-800"><td class="py-2">Quinta Frio Internacional</td><td class="text-yellow-400">26 Fev 2026</td><td class="text-right font-bold">€1,810.11</td><td class="text-right"><span class="bg-yellow-500/20 text-yellow-400 px-2 py-0.5 rounded text-xs">28 dias</span></td></tr>
+                    <tr class="border-b border-gray-800"><td class="py-2">Makro-Cash & Carry</td><td class="text-green-400">22 Fev 2026</td><td class="text-right font-bold">€46.87</td><td class="text-right"><span class="bg-green-500/20 text-green-400 px-2 py-0.5 rounded text-xs">24 dias</span></td></tr>
+                    <tr><td class="py-2">SINGULAR</td><td class="text-orange-400">24 Mar 2026</td><td class="text-right font-bold">€5,677.00</td><td class="text-right"><span class="bg-orange-500/20 text-orange-400 px-2 py-0.5 rounded text-xs">54 dias</span></td></tr>
+                </tbody>
+            </table>
+            <div class="mt-4 p-3 bg-red-500/10 rounded-lg flex justify-between items-center"><span class="text-red-400 font-bold">TOTAL A PAGAR:</span><span class="text-2xl font-bold">€25,777.78</span></div>
+        </div>
+    </div>
+
+    <!-- Encomendas Modal -->
+    <div id="encomendasModal" class="modal" onclick="if(event.target===this)closeModal('encomendasModal')">
+        <div class="modal-content p-6 w-full max-w-3xl max-h-[80vh] overflow-auto">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold text-blue-400">📦 Encomendas de Hoje - 29 Jan 2026</h2>
+                <button onclick="closeModal('encomendasModal')" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+            </div>
+            <div class="mb-4 flex gap-4">
+                <span class="bg-blue-500/20 text-blue-400 px-3 py-1 rounded">24 encomendas</span>
+                <span class="bg-green-500/20 text-green-400 px-3 py-1 rounded">€4,331.27 total</span>
+            </div>
+            <table class="w-full text-sm">
+                <thead class="text-gray-500 border-b border-gray-700"><tr><th class="py-2 text-left">Nº</th><th class="text-left">Cliente</th><th class="text-left">Cidade</th><th class="text-right">Valor</th><th class="text-right">Rota</th></tr></thead>
+                <tbody id="encomendasTableBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Target Modal -->
+    <div id="targetModal" class="modal" onclick="if(event.target===this)closeModal('targetModal')">
+        <div class="modal-content p-6 w-full max-w-2xl">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold">🎯 Target 2026: €4.6M</h2>
+                <button onclick="closeModal('targetModal')" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+            </div>
+            <table class="w-full text-sm">
+                <thead class="text-gray-500 border-b border-gray-700"><tr><th class="py-2 text-left">Mês</th><th class="text-right">Target</th><th class="text-right">%</th><th class="text-right">Acumulado</th></tr></thead>
+                <tbody>
+                    <tr class="border-b border-gray-800 bg-blue-500/10"><td class="py-2 font-bold text-blue-400">Janeiro ←</td><td class="text-right">€133,400</td><td class="text-right">2.9%</td><td class="text-right">€133,400</td></tr>
+                    <tr class="border-b border-gray-800"><td class="py-2">Fevereiro</td><td class="text-right">€92,000</td><td class="text-right">2.0%</td><td class="text-right">€225,400</td></tr>
+                    <tr class="border-b border-gray-800"><td class="py-2">Março</td><td class="text-right">€197,800</td><td class="text-right">4.3%</td><td class="text-right">€423,200</td></tr>
+                    <tr class="border-b border-gray-800"><td class="py-2">Abril</td><td class="text-right">€506,000</td><td class="text-right">11.0%</td><td class="text-right">€929,200</td></tr>
+                    <tr class="border-b border-gray-800"><td class="py-2">Maio</td><td class="text-right">€243,800</td><td class="text-right">5.3%</td><td class="text-right">€1,173,000</td></tr>
+                    <tr class="border-b border-gray-800"><td class="py-2">Junho</td><td class="text-right">€161,000</td><td class="text-right">3.5%</td><td class="text-right">€1,334,000</td></tr>
+                    <tr class="border-b border-gray-800 bg-yellow-500/10"><td class="py-2 font-bold text-yellow-400">Julho ⭐</td><td class="text-right font-bold">€1,329,400</td><td class="text-right">28.9%</td><td class="text-right">€2,663,400</td></tr>
+                    <tr class="border-b border-gray-800"><td class="py-2">Agosto</td><td class="text-right">€616,400</td><td class="text-right">13.4%</td><td class="text-right">€3,279,800</td></tr>
+                    <tr class="border-b border-gray-800"><td class="py-2">Setembro</td><td class="text-right">€188,600</td><td class="text-right">4.1%</td><td class="text-right">€3,468,400</td></tr>
+                    <tr class="border-b border-gray-800"><td class="py-2">Outubro</td><td class="text-right">€197,800</td><td class="text-right">4.3%</td><td class="text-right">€3,666,200</td></tr>
+                    <tr class="border-b border-gray-800"><td class="py-2">Novembro</td><td class="text-right">€326,600</td><td class="text-right">7.1%</td><td class="text-right">€3,992,800</td></tr>
+                    <tr class="bg-purple-500/10"><td class="py-2 font-bold text-purple-400">Dezembro</td><td class="text-right">€607,200</td><td class="text-right">13.2%</td><td class="text-right font-bold">€4,600,000</td></tr>
+                </tbody>
+            </table>
+            <div class="mt-4 grid grid-cols-3 gap-3">
+                <div class="p-3 bg-yellow-500/10 rounded-lg text-center"><p class="text-xs text-gray-400">🌞 Verão</p><p class="text-xl font-bold text-yellow-400">€1.95M</p><p class="text-xs">42%</p></div>
+                <div class="p-3 bg-blue-500/10 rounded-lg text-center"><p class="text-xs text-gray-400">❄️ Inverno</p><p class="text-xl font-bold text-blue-400">€225k</p><p class="text-xs">5%</p></div>
+                <div class="p-3 bg-purple-500/10 rounded-lg text-center"><p class="text-xs text-gray-400">🎄 Q4</p><p class="text-xl font-bold text-purple-400">€1.13M</p><p class="text-xs">25%</p></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PRINT TEMPLATE (hidden) -->
+    <div id="printTemplate" class="print-only" style="display:none; padding: 20px; font-family: Arial, sans-serif; color: black; background: white;">
+        <div style="text-align: center; border-bottom: 2px solid black; padding-bottom: 10px; margin-bottom: 20px;">
+            <h1 style="margin: 0; font-size: 24px;">🌊 AURORA OCEANO</h1>
+            <p style="margin: 5px 0;">Folha de Entregas - 29 Janeiro 2026</p>
+        </div>
+        <div id="printContent"></div>
+    </div>
+
+    <script>
+        // Modal functions
+        function showModal(id) { document.getElementById(id).classList.add('active'); }
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+        
+        // Close on Escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal.active').forEach(m => m.classList.remove('active'));
+            }
+        });
+
+        // Encomendas data
+        const encomendas = [
+            {n: 586, cliente: "REST. NUVEM MAR", cidade: "Lisboa", valor: 121.77, rota: "Norte"},
+            {n: 585, cliente: "PALCO DE PASSAGEM", cidade: "Barreiro", valor: 292.45, rota: "Sul"},
+            {n: 584, cliente: "REST. O CABANENSE", cidade: "Belas", valor: 263.24, rota: "Norte"},
+            {n: 583, cliente: "TUTTIPACK", cidade: "Fernão Ferro", valor: 83.95, rota: "Sul"},
+            {n: 582, cliente: "CHURRASQ. GRELHA FINA", cidade: "Almada", valor: 404.35, rota: "Sul"},
+            {n: 581, cliente: "JAMIE'S ITALIAN", cidade: "Lisboa", valor: 237.56, rota: "Norte"},
+            {n: 580, cliente: "ISABEL VITORINA", cidade: "Almada", valor: 146.80, rota: "Sul"},
+            {n: 579, cliente: "CLAUDIA PINTO", cidade: "Paio Pires", valor: 148.18, rota: "Sul"},
+            {n: 578, cliente: "CASA DAS FRANCESINHAS", cidade: "Azeitão", valor: 202.95, rota: "Sul"},
+            {n: 577, cliente: "REST. TON FON", cidade: "Almada", valor: 337.02, rota: "Sul"},
+            {n: 576, cliente: "PÁTEO D'ALEGRIA", cidade: "Belverde", valor: 221.71, rota: "Sul"},
+            {n: 575, cliente: "CARLA GASPAR", cidade: "Fernão Ferro", valor: 101.01, rota: "Sul"},
+            // ... more
+        ];
+
+        // Populate encomendas modal
+        const tbody = document.getElementById('encomendasTableBody');
+        if (tbody) {
+            encomendas.forEach(e => {
+                tbody.innerHTML += `<tr class="border-b border-gray-800">
+                    <td class="py-2 text-gray-400">${e.n}</td>
+                    <td>${e.cliente}</td>
+                    <td class="text-gray-400">${e.cidade}</td>
+                    <td class="text-right font-bold">€${e.valor.toFixed(2)}</td>
+                    <td class="text-right"><span class="px-2 py-0.5 rounded text-xs ${e.rota === 'Norte' ? 'bg-blue-500/20 text-blue-400' : 'bg-green-500/20 text-green-400'}">${e.rota}</span></td>
+                </tr>`;
+            });
+        }
+
+        // Print functions
+        function printAllOrders() {
+            const content = `
+                <div style="display: flex; gap: 40px;">
+                    <div style="flex: 1; border: 1px solid #ccc; padding: 15px;">
+                        <h2 style="color: blue; border-bottom: 1px solid blue; padding-bottom: 5px;">🔵 ROTA NORTE - Vendedor 1</h2>
+                        <p><strong>8 entregas | €1,500.44 | 43.9 km</strong></p>
+                        <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
+                            <tr style="background: #eef;"><th style="border: 1px solid #ccc; padding: 5px;">#</th><th style="border: 1px solid #ccc; padding: 5px;">Cliente</th><th style="border: 1px solid #ccc; padding: 5px;">Cidade</th><th style="border: 1px solid #ccc; padding: 5px;">€</th><th style="border: 1px solid #ccc; padding: 5px;">✓</th></tr>
+                            <tr><td style="border: 1px solid #ccc; padding: 5px; text-align: center;">1</td><td style="border: 1px solid #ccc; padding: 5px;">CAFÉ DO BAIRRO</td><td style="border: 1px solid #ccc; padding: 5px;">Loures</td><td style="border: 1px solid #ccc; padding: 5px;">€50</td><td style="border: 1px solid #ccc; padding: 5px;">☐</td></tr>
+                            <tr><td style="border: 1px solid #ccc; padding: 5px; text-align: center;">2</td><td style="border: 1px solid #ccc; padding: 5px;">REST. O CABANENSE</td><td style="border: 1px solid #ccc; padding: 5px;">Belas</td><td style="border: 1px solid #ccc; padding: 5px;">€263</td><td style="border: 1px solid #ccc; padding: 5px;">☐</td></tr>
+                            <tr><td style="border: 1px solid #ccc; padding: 5px; text-align: center;">3</td><td style="border: 1px solid #ccc; padding: 5px;">O NORTE DA CHINA</td><td style="border: 1px solid #ccc; padding: 5px;">Lisboa</td><td style="border: 1px solid #ccc; padding: 5px;">€246</td><td style="border: 1px solid #ccc; padding: 5px;">☐</td></tr>
+                            <tr><td style="border: 1px solid #ccc; padding: 5px; text-align: center;">4</td><td style="border: 1px solid #ccc; padding: 5px;">REST. NUVEM MAR</td><td style="border: 1px solid #ccc; padding: 5px;">Lisboa</td><td style="border: 1px solid #ccc; padding: 5px;">€122</td><td style="border: 1px solid #ccc; padding: 5px;">☐</td></tr>
+                            <tr><td style="border: 1px solid #ccc; padding: 5px; text-align: center;">5</td><td style="border: 1px solid #ccc; padding: 5px;">JAMIE'S ITALIAN</td><td style="border: 1px solid #ccc; padding: 5px;">Lisboa</td><td style="border: 1px solid #ccc; padding: 5px;">€238</td><td style="border: 1px solid #ccc; padding: 5px;">☐</td></tr>
+                            <tr><td style="border: 1px solid #ccc; padding: 5px; text-align: center;">6</td><td style="border: 1px solid #ccc; padding: 5px;">REST. LI YUAN</td><td style="border: 1px solid #ccc; padding: 5px;">Lisboa</td><td style="border: 1px solid #ccc; padding: 5px;">€135</td><td style="border: 1px solid #ccc; padding: 5px;">☐</td></tr>
+                            <tr><td style="border: 1px solid #ccc; padding: 5px; text-align: center;">7</td><td style="border: 1px solid #ccc; padding: 5px;">MEGASTORIA</td><td style="border: 1px solid #ccc; padding: 5px;">Lisboa</td><td style="border: 1px solid #ccc; padding: 5px;">€324</td><td style="border: 1px solid #ccc; padding: 5px;">☐</td></tr>
+                            <tr><td style="border: 1px solid #ccc; padding: 5px; text-align: center;">8</td><td style="border: 1px solid #ccc; padding: 5px;">FAST FOOD WORLD</td><td style="border: 1px solid #ccc; padding: 5px;">Lisboa</td><td style="border: 1px solid #ccc; padding: 5px;">€123</td><td style="border: 1px solid #ccc; padding: 5px;">☐</td></tr>
+                        </table>
+                    </div>
+                    <div style="flex: 1; border: 1px solid #ccc; padding: 15px;">
+                        <h2 style="color: green; border-bottom: 1px solid green; padding-bottom: 5px;">🟢 ROTA SUL - Vendedor 2</h2>
+                        <p><strong>16 entregas | €2,830.83 | 82.6 km</strong></p>
+                        <table style="width: 100%; border-collapse: collapse; font-size: 11px;">
+                            <tr style="background: #efe;"><th style="border: 1px solid #ccc; padding: 4px;">#</th><th style="border: 1px solid #ccc; padding: 4px;">Cliente</th><th style="border: 1px solid #ccc; padding: 4px;">Cidade</th><th style="border: 1px solid #ccc; padding: 4px;">€</th><th style="border: 1px solid #ccc; padding: 4px;">✓</th></tr>
+                            <tr><td style="border: 1px solid #ccc; padding: 4px; text-align: center;">1</td><td style="border: 1px solid #ccc; padding: 4px;">MIRAGEM DESAFIANTE</td><td style="border: 1px solid #ccc; padding: 4px;">Seixal</td><td style="border: 1px solid #ccc; padding: 4px;">€23</td><td style="border: 1px solid #ccc; padding: 4px;">☐</td></tr>
+                            <tr><td style="border: 1px solid #ccc; padding: 4px; text-align: center;">2</td><td style="border: 1px solid #ccc; padding: 4px;">BRANCO E RIBEIRO</td><td style="border: 1px solid #ccc; padding: 4px;">Paio Pires</td><td style="border: 1px solid #ccc; padding: 4px;">€76</td><td style="border: 1px solid #ccc; padding: 4px;">☐</td></tr>
+                            <tr><td style="border: 1px solid #ccc; padding: 4px; text-align: center;">3</td><td style="border: 1px solid #ccc; padding: 4px;">CLAUDIA PINTO</td><td style="border: 1px solid #ccc; padding: 4px;">Paio Pires</td><td style="border: 1px solid #ccc; padding: 4px;">€148</td><td style="border: 1px solid #ccc; padding: 4px;">☐</td></tr>
+                            <tr><td style="border: 1px solid #ccc; padding: 4px; text-align: center;">4</td><td style="border: 1px solid #ccc; padding: 4px;">CHURRASQ. CAMPEÃO</td><td style="border: 1px solid #ccc; padding: 4px;">Q. Conde</td><td style="border: 1px solid #ccc; padding: 4px;">€270</td><td style="border: 1px solid #ccc; padding: 4px;">☐</td></tr>
+                            <tr><td style="border: 1px solid #ccc; padding: 4px; text-align: center;">5</td><td style="border: 1px solid #ccc; padding: 4px;">LAR NOVA FAMILIA</td><td style="border: 1px solid #ccc; padding: 4px;">Q. Conde</td><td style="border: 1px solid #ccc; padding: 4px;">€30</td><td style="border: 1px solid #ccc; padding: 4px;">☐</td></tr>
+                            <tr><td style="border: 1px solid #ccc; padding: 4px; text-align: center;">6</td><td style="border: 1px solid #ccc; padding: 4px;">CASA FRANCESINHAS</td><td style="border: 1px solid #ccc; padding: 4px;">Azeitão</td><td style="border: 1px solid #ccc; padding: 4px;">€203</td><td style="border: 1px solid #ccc; padding: 4px;">☐</td></tr>
+                            <tr><td style="border: 1px solid #ccc; padding: 4px; text-align: center;">7</td><td style="border: 1px solid #ccc; padding: 4px;">LAR AS TIAS</td><td style="border: 1px solid #ccc; padding: 4px;">Sesimbra</td><td style="border: 1px solid #ccc; padding: 4px;">€30</td><td style="border: 1px solid #ccc; padding: 4px;">☐</td></tr>
+                            <tr><td style="border: 1px solid #ccc; padding: 4px; text-align: center;">8</td><td style="border: 1px solid #ccc; padding: 4px;">PÁTEO D'ALEGRIA</td><td style="border: 1px solid #ccc; padding: 4px;">Belverde</td><td style="border: 1px solid #ccc; padding: 4px;">€222</td><td style="border: 1px solid #ccc; padding: 4px;">☐</td></tr>
+                            <tr><td style="border: 1px solid #ccc; padding: 4px; text-align: center;">9</td><td style="border: 1px solid #ccc; padding: 4px;">CARLA GASPAR</td><td style="border: 1px solid #ccc; padding: 4px;">F. Ferro</td><td style="border: 1px solid #ccc; padding: 4px;">€101</td><td style="border: 1px solid #ccc; padding: 4px;">☐</td></tr>
+                            <tr><td style="border: 1px solid #ccc; padding: 4px; text-align: center;">10</td><td style="border: 1px solid #ccc; padding: 4px;">TUTTIPACK</td><td style="border: 1px solid #ccc; padding: 4px;">F. Ferro</td><td style="border: 1px solid #ccc; padding: 4px;">€84</td><td style="border: 1px solid #ccc; padding: 4px;">☐</td></tr>
+                            <tr><td style="border: 1px solid #ccc; padding: 4px; text-align: center;">11</td><td style="border: 1px solid #ccc; padding: 4px;">MARTINHO APOLINÁRIO</td><td style="border: 1px solid #ccc; padding: 4px;">Charneca</td><td style="border: 1px solid #ccc; padding: 4px;">€140</td><td style="border: 1px solid #ccc; padding: 4px;">☐</td></tr>
+                            <tr><td style="border: 1px solid #ccc; padding: 4px; text-align: center;">12</td><td style="border: 1px solid #ccc; padding: 4px;">TABERNA OLHAR TEJO</td><td style="border: 1px solid #ccc; padding: 4px;">Trafaria</td><td style="border: 1px solid #ccc; padding: 4px;">€323</td><td style="border: 1px solid #ccc; padding: 4px;">☐</td></tr>
+                            <tr><td style="border: 1px solid #ccc; padding: 4px; text-align: center;">13</td><td style="border: 1px solid #ccc; padding: 4px;">CHURRASQ. GRELHA FINA</td><td style="border: 1px solid #ccc; padding: 4px;">Almada</td><td style="border: 1px solid #ccc; padding: 4px;">€404</td><td style="border: 1px solid #ccc; padding: 4px;">☐</td></tr>
+                            <tr><td style="border: 1px solid #ccc; padding: 4px; text-align: center;">14</td><td style="border: 1px solid #ccc; padding: 4px;">REST. TON FON</td><td style="border: 1px solid #ccc; padding: 4px;">Almada</td><td style="border: 1px solid #ccc; padding: 4px;">€337</td><td style="border: 1px solid #ccc; padding: 4px;">☐</td></tr>
+                            <tr><td style="border: 1px solid #ccc; padding: 4px; text-align: center;">15</td><td style="border: 1px solid #ccc; padding: 4px;">ISABEL VITORINA</td><td style="border: 1px solid #ccc; padding: 4px;">Almada</td><td style="border: 1px solid #ccc; padding: 4px;">€147</td><td style="border: 1px solid #ccc; padding: 4px;">☐</td></tr>
+                            <tr><td style="border: 1px solid #ccc; padding: 4px; text-align: center;">16</td><td style="border: 1px solid #ccc; padding: 4px;">PALCO PASSAGEM</td><td style="border: 1px solid #ccc; padding: 4px;">Barreiro</td><td style="border: 1px solid #ccc; padding: 4px;">€292</td><td style="border: 1px solid #ccc; padding: 4px;">☐</td></tr>
+                        </table>
+                    </div>
+                </div>
+                <div style="margin-top: 20px; text-align: center; font-size: 12px; color: #666;">
+                    <p>Total: 24 entregas | €4,331.27 | 126.5 km | Optimizado por VROOM</p>
+                    <p>Aurora Oceano - Gerado em ${new Date().toLocaleString('pt-PT')}</p>
+                </div>
+            `;
+            
+            document.getElementById('printContent').innerHTML = content;
+            
+            const element = document.getElementById('printTemplate');
+            element.style.display = 'block';
+            
+            html2pdf().set({
+                margin: 10,
+                filename: 'aurora-rotas-' + new Date().toISOString().split('T')[0] + '.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
+            }).from(element).save().then(() => {
+                element.style.display = 'none';
+            });
+        }
+
+        function printRoute(route) {
+            alert('A imprimir rota ' + route.toUpperCase() + '...');
+            // Similar implementation for single route
+        }
+    </script>
+</body>
+</html>
