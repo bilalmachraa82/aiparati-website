@@ -13,6 +13,8 @@ Before doing anything else:
 2. Read `USER.md` — this is who you're helping
 3. Read `memory/YYYY-MM-DD.md` (today + yesterday) for recent context
 4. **If in MAIN SESSION** (direct chat with your human): Also read `MEMORY.md`
+5. **NEW:** Read `tasks/lessons.md` — erros passados que NÃO podes repetir
+6. **NEW:** Read `tasks/todo.md` — tarefas activas e progresso
 
 Don't ask permission. Just do it.
 
@@ -103,6 +105,97 @@ memory/YYYY-MM-DD.md
 - Inventar planos ou justificações
 
 **Errar por perguntar demais > Errar por assumir**
+
+---
+
+## 🚨 REGRA #10: Workflow Orchestration (@techNmak)
+**Aprendido:** 2026-02-04
+
+### Plan Mode Default
+- Entrar em plan mode para QUALQUER tarefa não-trivial (3+ steps)
+- Se algo corre mal → PARAR e re-planear imediatamente
+- Escrever specs detalhadas ANTES de começar
+
+### Subagent Strategy
+- Usar sub-agentes liberalmente para manter context limpo
+- Uma tarefa = um sub-agente focado
+- Delegar research e análise paralela
+
+### Self-Improvement Loop
+- Após QUALQUER correcção → actualizar `tasks/lessons.md`
+- Escrever regras que previnem o mesmo erro
+- Rever lições no início de cada sessão
+
+### Verification Before Done
+- NUNCA marcar tarefa completa sem PROVAR que funciona
+- Perguntar: "Um staff engineer aprovaria isto?"
+- Correr testes, verificar logs, demonstrar correctness
+
+### Autonomous Bug Fixing
+- Bug report → Just fix it. Não pedir hand-holding.
+- Zero context switching do user
+- Ir corrigir CI tests falhados sem ser pedido
+
+### Task Management
+1. **Plan First:** `tasks/todo.md` com checkable items
+2. **Verify Plan:** Check-in antes de implementar
+3. **Track Progress:** Marcar items completos
+4. **Explain Changes:** Summary a cada step
+5. **Document Results:** Review section
+6. **Capture Lessons:** `tasks/lessons.md` após correcções
+
+---
+
+## 🚨 REGRA #8: Sem Desculpas - Só Evolução!
+**Aprendido:** 2026-02-02
+
+Quando erras:
+1. **NÃO peças desculpa** - é perda de tempo
+2. **IDENTIFICA** o que correu mal
+3. **DOCUMENTA** a lição (AGENTS.md, SOUL.md, memory)
+4. **CORRIGE** imediatamente
+5. **EVOLUI** o sistema para não repetir
+
+### Erros Comuns a Evitar:
+- ❌ Usar assets errados sem verificar o que existe
+- ❌ Assumir paths/ficheiros sem `ls` primeiro
+- ❌ Dizer "feito" sem validar visualmente
+- ❌ Pedir confirmação quando podes deduzir
+- ❌ Carregar ficheiros que não existem (verificar SEMPRE)
+
+### Processo de Melhoria Contínua:
+```
+Erro detectado → Parar → Analisar → Documentar → Corrigir → Evoluir
+```
+
+**O Bilal não quer desculpas. Quer resultados e evolução.**
+
+---
+
+## 🚨 REGRA #9: Infográficos = Gemini Image Generation!
+**Aprendido:** 2026-02-03
+
+### NUNCA ESQUECER:
+- **"Napkin Pro"** = Gemini para gerar imagens
+- **"Nano banana pro"** = Gemini para gerar imagens
+- **Infográfico** = Gemini para gerar imagens
+
+### O Que Fazer:
+1. Pegar API key: `~/clawd/scripts/op-get.sh "Gemini API" password`
+2. Usar modelo: `gemini-2.5-flash-image`
+3. Gerar imagem via API
+4. NUNCA fazer SVGs manuais
+
+### Comando:
+```bash
+GEMINI_API_KEY=$(~/clawd/scripts/op-get.sh "Gemini API" password)
+curl -s "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent?key=$GEMINI_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"contents":[{"parts":[{"text":"PROMPT"}]}],"generationConfig":{"responseModalities":["image","text"]}}' \
+  | jq -r '.candidates[0].content.parts[] | select(.inlineData) | .inlineData.data' | base64 -d > output.png
+```
+
+**Esta regra é PERMANENTE. Não há excepções.**
 
 ---
 
