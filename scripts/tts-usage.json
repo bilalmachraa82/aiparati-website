@@ -1,0 +1,9 @@
+{
+  "month": "2026-01",
+  "azure": {
+    "limit": 500000,
+    "used": 0,
+    "messages": 0
+  },
+  "history": []
+}

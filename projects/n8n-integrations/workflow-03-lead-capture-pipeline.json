@@ -1,0 +1,223 @@
+{
+  "name": "Workflow 3: Lead Capture → CRM Pipeline (Email + Form)",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinutes",
+              "value": 5
+            }
+          ]
+        },
+        "include": {
+          "simplifyOutput": true
+        },
+        "filters": {
+          "labels": ["INBOX"],
+          "hasAttachments": false
+        }
+      },
+      "id": "gmail-trigger-new-email",
+      "name": "Gmail: New Email Trigger",
+      "type": "n8n-nodes-base.gmailtrigger",
+      "typeVersion": 2,
+      "position": [100, 300],
+      "credentials": {
+        "gmailOAuth2": "gmail_oauth2"
+      }
+    },
+    {
+      "parameters": {
+        "prompt": "Analyze this email and extract lead information:\n\nFrom: {{ $json.from }}\nSubject: {{ $json.subject }}\nBody: {{ $json.text }}\n\nReturn JSON with:\n- firstName (from signature or context)\n- lastName\n- email\n- company\n- phone (if mentioned)\n- leadQuality: 'hot' | 'warm' | 'cold'\n- interest (1 sentence summary)\n\nReturn ONLY valid JSON, no markdown.",
+        "options": {}
+      },
+      "id": "claude-extract-lead-data",
+      "name": "Claude: Extract Lead Data via AI",
+      "type": "n8n-nodes-base.anthropic",
+      "typeVersion": 1,
+      "position": [300, 300],
+      "credentials": {
+        "anthropicApi": "claude_api_key"
+      }
+    },
+    {
+      "parameters": {},
+      "id": "parse-json-response",
+      "name": "Parse JSON Response",
+      "type": "n8n-nodes-base.jsonExtract",
+      "typeVersion": 1,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://crm.aiparati.pt/api/rest/people",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "bearerToken",
+        "sendBody": true,
+        "bodyParametersUi": "json",
+        "bodyJson": {
+          "firstName": "={{ $json.firstName }}",
+          "lastName": "={{ $json.lastName }}",
+          "email": "={{ $json.email }}",
+          "phone": "={{ $json.phone }}",
+          "company": "={{ $json.company }}"
+        }
+      },
+      "id": "create-crm-contact",
+      "name": "Create CRM Contact",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [600, 300],
+      "credentials": {
+        "httpBasicAuth": "crm_api_key"
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://crm.aiparati.pt/api/rest/opportunities",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "bearerToken",
+        "sendBody": true,
+        "bodyParametersUi": "json",
+        "bodyJson": {
+          "name": "Lead from {{ $json.email }}",
+          "personId": "={{ $json.id }}",
+          "stage": "={{ $json.leadQuality | replace: 'hot', 'Pipeline_Hot_Lead' | replace: 'warm', 'Pipeline_Warm_Lead' | replace: 'cold', 'Pipeline_Cold_Lead' }}",
+          "customFields": {
+            "leadSource": "email",
+            "aiClassification": "={{ $json.leadQuality }}",
+            "interest": "={{ $json.interest }}"
+          }
+        }
+      },
+      "id": "create-crm-opportunity",
+      "name": "Create CRM Opportunity from Lead",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [750, 300],
+      "credentials": {
+        "httpBasicAuth": "crm_api_key"
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "{{ $json.from }}",
+        "subject": "✅ Lead Received - Welcome to Our Pipeline",
+        "textBody": "Hi {{ $json.firstName }},\n\nThank you for reaching out! We've received your inquiry and classified it as a {{ $json.leadQuality }} priority lead.\n\nWe'll be in touch soon.\n\nBest regards,\nThe Team"
+      },
+      "id": "send-auto-reply",
+      "name": "Send Auto-Reply Email",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2,
+      "position": [900, 300],
+      "credentials": {
+        "gmailOAuth2": "gmail_oauth2"
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "{{ $json.telegramUserId }}",
+        "text": "🔥 New Lead Captured!\nEmail: {{ $json.email }}\nQuality: {{ $json.leadQuality | upper }}\nInterest: {{ $json.interest }}"
+      },
+      "id": "send-telegram-alert",
+      "name": "Send Telegram Alert",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [1050, 300],
+      "credentials": {
+        "telegramApi": "telegram_bot_token"
+      }
+    }
+  ],
+  "connections": {
+    "Gmail: New Email Trigger": {
+      "main": [
+        [
+          {
+            "node": "Claude: Extract Lead Data via AI",
+            "type": "main",
+            "index": 0,
+            "port": 0
+          }
+        ]
+      ]
+    },
+    "Claude: Extract Lead Data via AI": {
+      "main": [
+        [
+          {
+            "node": "Parse JSON Response",
+            "type": "main",
+            "index": 0,
+            "port": 0
+          }
+        ]
+      ]
+    },
+    "Parse JSON Response": {
+      "main": [
+        [
+          {
+            "node": "Create CRM Contact",
+            "type": "main",
+            "index": 0,
+            "port": 0
+          }
+        ]
+      ]
+    },
+    "Create CRM Contact": {
+      "main": [
+        [
+          {
+            "node": "Create CRM Opportunity from Lead",
+            "type": "main",
+            "index": 0,
+            "port": 0
+          }
+        ]
+      ]
+    },
+    "Create CRM Opportunity from Lead": {
+      "main": [
+        [
+          {
+            "node": "Send Auto-Reply Email",
+            "type": "main",
+            "index": 0,
+            "port": 0
+          },
+          {
+            "node": "Send Telegram Alert",
+            "type": "main",
+            "index": 0,
+            "port": 0
+          }
+        ]
+      ]
+    },
+    "Send Auto-Reply Email": {
+      "main": [
+        [
+          {
+            "node": "Send Telegram Alert",
+            "type": "main",
+            "index": 0,
+            "port": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "pinned": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "tags": ["leads", "crm", "email", "ai-classification"],
+  "versionId": "87c2c9cf-d6d1-4f1e-a123-b4c5d6e7f8g9"
+}

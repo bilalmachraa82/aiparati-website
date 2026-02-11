@@ -1,0 +1,1167 @@
+<!DOCTYPE html>
+<html lang="pt" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JARVIS Command Center v2</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* ========================================
+           CSS VARIABLES - Slate Professional
+           ======================================== */
+        :root {
+            --bg-primary: #0F172A;
+            --bg-surface: #1E293B;
+            --bg-elevated: #334155;
+            --bg-hover: #475569;
+            --border: rgba(148, 163, 184, 0.1);
+            --border-hover: rgba(148, 163, 184, 0.2);
+            
+            --text-primary: #F1F5F9;
+            --text-secondary: #94A3B8;
+            --text-muted: #64748B;
+            
+            --accent: #38BDF8;
+            --accent-glow: rgba(56, 189, 248, 0.15);
+            --success: #4ADE80;
+            --warning: #FBBF24;
+            --danger: #F87171;
+            --purple: #A78BFA;
+            
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+            
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.1);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.15);
+            --shadow-lg: 0 8px 30px rgba(0,0,0,0.2);
+            --shadow-glow: 0 0 20px var(--accent-glow);
+            
+            --transition-fast: 0.15s ease;
+            --transition-normal: 0.25s ease;
+            --transition-slow: 0.4s ease;
+        }
+
+        /* ========================================
+           RESET & BASE
+           ======================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 16px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.5;
+        }
+
+        /* ========================================
+           LAYOUT
+           ======================================== */
+        .app {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 24px;
+            min-height: 100vh;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--accent), var(--purple));
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 20px;
+            box-shadow: var(--shadow-glow);
+        }
+
+        .header-title h1 {
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .header-title p {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .status-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(74, 222, 128, 0.1);
+            border: 1px solid rgba(74, 222, 128, 0.2);
+            border-radius: var(--radius-md);
+            color: var(--success);
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* ========================================
+           TABS
+           ======================================== */
+        .nav-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 32px;
+            border-bottom: 1px solid var(--border);
+            overflow-x: auto;
+            padding-bottom: 0;
+        }
+
+        .nav-tab {
+            padding: 12px 24px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all var(--transition-normal);
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .nav-tab:hover {
+            color: var(--text-primary);
+            background: rgba(56, 189, 248, 0.05);
+        }
+
+        .nav-tab.active {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
+
+        /* ========================================
+           SECTIONS
+           ======================================== */
+        .section {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ========================================
+           BENTO GRID
+           ======================================== */
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: auto;
+            gap: 20px;
+        }
+
+        .card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            transition: all var(--transition-normal);
+            animation: fadeIn 0.5s ease;
+        }
+
+        .card:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .card-sm { grid-column: span 1; }
+        .card-md { grid-column: span 2; }
+        .card-lg { grid-column: span 3; }
+        .card-full { grid-column: span 4; }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .card-header h2 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .card-header .count {
+            background: var(--bg-elevated);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        /* ========================================
+           STAT CARDS
+           ======================================== */
+        .stat-card {
+            text-align: center;
+            padding: 28px 24px;
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 16px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .stat-icon.urgent { background: rgba(248, 113, 113, 0.15); }
+        .stat-icon.progress { background: rgba(251, 191, 36, 0.15); }
+        .stat-icon.done { background: rgba(74, 222, 128, 0.15); }
+        .stat-icon.agents { background: rgba(56, 189, 248, 0.15); }
+
+        .stat-value {
+            font-size: 36px;
+            font-weight: 700;
+            letter-spacing: -1px;
+            margin-bottom: 4px;
+            background: linear-gradient(135deg, var(--text-primary), var(--text-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: countUp 0.8s ease-out;
+        }
+
+        @keyframes countUp {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        /* ========================================
+           KANBAN COLUMNS
+           ======================================== */
+        .kanban {
+            display: flex;
+            gap: 20px;
+            overflow-x: auto;
+            padding-bottom: 20px;
+        }
+
+        .column {
+            min-width: 320px;
+            background: var(--bg-elevated);
+            border-radius: var(--radius-lg);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .column-header {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .column-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .column-count {
+            background: var(--bg-surface);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .cards {
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .kban-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 12px;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .kban-card:hover {
+            border-color: var(--accent);
+            background: var(--bg-hover);
+        }
+
+        .kban-card-title {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .kban-card-desc {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .kban-card-meta {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            display: inline-block;
+            font-size: 10px;
+            padding: 2px 8px;
+            background: rgba(56, 189, 248, 0.2);
+            color: var(--accent);
+            border-radius: 4px;
+        }
+
+        /* ========================================
+           TABLES
+           ======================================== */
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table th {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 1px solid var(--border);
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            background: var(--bg-elevated);
+        }
+
+        .table td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border);
+            font-size: 13px;
+        }
+
+        .table tr:hover {
+            background: var(--bg-hover);
+        }
+
+        /* ========================================
+           FOOTER
+           ======================================== */
+        .footer {
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--text-muted);
+            font-size: 12px;
+        }
+
+        /* ========================================
+           RESPONSIVE
+           ======================================== */
+        @media (max-width: 1200px) {
+            .bento-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .card-lg { grid-column: span 2; }
+            .card-full { grid-column: span 2; }
+        }
+
+        @media (max-width: 768px) {
+            .app {
+                padding: 16px;
+            }
+            
+            .bento-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .card-sm, .card-md, .card-lg, .card-full {
+                grid-column: span 1;
+            }
+            
+            .header {
+                flex-direction: column;
+                gap: 16px;
+                text-align: center;
+            }
+            
+            .header-left {
+                flex-direction: column;
+            }
+
+            .nav-tabs {
+                gap: 4px;
+            }
+
+            .nav-tab {
+                padding: 8px 12px;
+                font-size: 12px;
+            }
+        }
+
+        /* ========================================
+           SCROLLBAR
+           ======================================== */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--bg-elevated);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--bg-hover);
+        }
+
+        /* ========================================
+           UTILITIES
+           ======================================== */
+        .loading {
+            opacity: 0.5;
+        }
+
+        .error {
+            color: var(--danger);
+            padding: 12px;
+            background: rgba(248, 113, 113, 0.1);
+            border-radius: var(--radius-md);
+            margin: 10px 0;
+        }
+
+        .success {
+            color: var(--success);
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <div class="logo">J</div>
+                <div class="header-title">
+                    <h1>JARVIS Command Center v2</h1>
+                    <p>AiParaTi • Unified Dashboard</p>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="status-badge" id="statusBadge">
+                    <span class="status-dot"></span>
+                    <span>Loading...</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigation Tabs -->
+        <div class="nav-tabs" id="navTabs">
+            <button class="nav-tab active" data-tab="overview">📊 Overview</button>
+            <button class="nav-tab" data-tab="crm">💼 CRM</button>
+            <button class="nav-tab" data-tab="jira">🔨 Jira</button>
+            <button class="nav-tab" data-tab="github">📦 GitHub</button>
+            <button class="nav-tab" data-tab="infra">🖥️ Infra</button>
+            <button class="nav-tab" data-tab="optimize">⚡ Optimize</button>
+        </div>
+
+        <!-- ========================================
+             OVERVIEW SECTION
+             ======================================== -->
+        <div id="overview" class="section active">
+            <div class="bento-grid">
+                <!-- KPI Stats -->
+                <div class="card card-sm stat-card">
+                    <div class="stat-icon urgent">🎯</div>
+                    <div class="stat-value" data-count="0" id="kpi-pipeline">€34.3K</div>
+                    <div class="stat-label">Pipeline CRM</div>
+                </div>
+                
+                <div class="card card-sm stat-card">
+                    <div class="stat-icon progress">⚙️</div>
+                    <div class="stat-value" data-count="18">18</div>
+                    <div class="stat-label">Crons Activos</div>
+                </div>
+                
+                <div class="card card-sm stat-card">
+                    <div class="stat-icon done">✅</div>
+                    <div class="stat-value" data-count="63">63</div>
+                    <div class="stat-label">GitHub Repos</div>
+                </div>
+                
+                <div class="card card-sm stat-card">
+                    <div class="stat-icon agents">🤖</div>
+                    <div class="stat-value" data-count="4">4</div>
+                    <div class="stat-label">Bots Activos</div>
+                </div>
+
+                <!-- Status Overview -->
+                <div class="card card-lg">
+                    <div class="card-header">
+                        <h2>🎯 Status Geral</h2>
+                    </div>
+                    <table class="table">
+                        <tr>
+                            <th>Métrica</th>
+                            <th>Valor</th>
+                            <th>Status</th>
+                        </tr>
+                        <tr>
+                            <td>Projectos Activos</td>
+                            <td id="overview-projects">8</td>
+                            <td><span class="success">✅ On Track</span></td>
+                        </tr>
+                        <tr>
+                            <td>Jira Issues</td>
+                            <td id="overview-jira-count">24</td>
+                            <td><span class="success">✅ Updated</span></td>
+                        </tr>
+                        <tr>
+                            <td>GitHub Repos Activos</td>
+                            <td id="overview-github-active">8</td>
+                            <td><span class="success">✅ Green</span></td>
+                        </tr>
+                        <tr>
+                            <td>VPS Status</td>
+                            <td>137.74.112.68</td>
+                            <td><span class="success">✅ Online 14d+</span></td>
+                        </tr>
+                        <tr>
+                            <td>Data Sync</td>
+                            <td id="overview-sync-time">Manual (TBD)</td>
+                            <td><span class="warning">⚠️ Pendente</span></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="card card-md">
+                    <div class="card-header">
+                        <h2>📊 Actividade Recente</h2>
+                    </div>
+                    <div style="font-size: 13px; line-height: 1.8; color: var(--text-secondary);">
+                        <div style="margin-bottom: 12px;">
+                            ✅ <strong>Dashboard v2</strong> Unificado<br>
+                            <span style="font-size: 11px; color: var(--text-muted);">Há 5 minutos</span>
+                        </div>
+                        <div style="margin-bottom: 12px;">
+                            📦 <strong>Jira Sync</strong> com 24 issues<br>
+                            <span style="font-size: 11px; color: var(--text-muted);">Há 30 min</span>
+                        </div>
+                        <div style="margin-bottom: 12px;">
+                            🐙 <strong>GitHub</strong> 63 repos indexados<br>
+                            <span style="font-size: 11px; color: var(--text-muted);">Hoje</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="card card-md">
+                    <div class="card-header">
+                        <h2>⚡ Ações Rápidas</h2>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <button style="padding: 10px; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: var(--radius-md); color: var(--text-primary); cursor: pointer; transition: all var(--transition-fast);" 
+                                onmouseover="this.style.background='var(--accent)'; this.style.color='var(--bg-primary)'" 
+                                onmouseout="this.style.background='var(--bg-elevated)'; this.style.color='var(--text-primary)'">
+                            📤 Refresh Data
+                        </button>
+                        <button style="padding: 10px; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: var(--radius-md); color: var(--text-primary); cursor: pointer; transition: all var(--transition-fast);" 
+                                onmouseover="this.style.background='var(--accent)'; this.style.color='var(--bg-primary)'" 
+                                onmouseout="this.style.background='var(--bg-elevated)'; this.style.color='var(--text-primary)'">
+                            📊 Export JSON
+                        </button>
+                        <button style="padding: 10px; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: var(--radius-md); color: var(--text-primary); cursor: pointer; transition: all var(--transition-fast);" 
+                                onmouseover="this.style.background='var(--accent)'; this.style.color='var(--bg-primary)'" 
+                                onmouseout="this.style.background='var(--bg-elevated)'; this.style.color='var(--text-primary)'">
+                            🔗 Sync APIs
+                        </button>
+                        <button style="padding: 10px; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: var(--radius-md); color: var(--text-primary); cursor: pointer; transition: all var(--transition-fast);" 
+                                onmouseover="this.style.background='var(--accent)'; this.style.color='var(--bg-primary)'" 
+                                onmouseout="this.style.background='var(--bg-elevated)'; this.style.color='var(--text-primary)'">
+                            ⚙️ Settings
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================
+             CRM SECTION
+             ======================================== -->
+        <div id="crm" class="section">
+            <div class="bento-grid">
+                <div class="card card-lg">
+                    <div class="card-header">
+                        <h2>💼 Pipeline CRM (Twenty)</h2>
+                        <span class="count">3 Pipelines</span>
+                    </div>
+                    <table class="table">
+                        <tr>
+                            <th>Pipeline</th>
+                            <th>Contactos</th>
+                            <th>Oportunidades</th>
+                            <th>Valor</th>
+                            <th>Progresso</th>
+                        </tr>
+                        <tr>
+                            <td><strong>Sales</strong></td>
+                            <td>8</td>
+                            <td>11</td>
+                            <td>€34.3K</td>
+                            <td><span class="success">✅ Activo</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Partnerships</strong></td>
+                            <td>3</td>
+                            <td>2</td>
+                            <td>€5.2K</td>
+                            <td><span class="warning">⏳ Negociando</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Internal</strong></td>
+                            <td>2</td>
+                            <td>3</td>
+                            <td>€2.1K</td>
+                            <td><span class="success">✅ Tracking</span></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="card card-md">
+                    <div class="card-header">
+                        <h2>🎯 Top Oportunidades</h2>
+                    </div>
+                    <div style="font-size: 13px;">
+                        <div style="padding: 12px; border-bottom: 1px solid var(--border);">
+                            <div style="font-weight: 600; margin-bottom: 4px;">Accounting Advantage</div>
+                            <div style="color: var(--text-muted); font-size: 12px;">€12.5K • IVAzen MVP Done</div>
+                        </div>
+                        <div style="padding: 12px; border-bottom: 1px solid var(--border);">
+                            <div style="font-weight: 600; margin-bottom: 4px;">Fernando TA Consulting</div>
+                            <div style="color: var(--text-muted); font-size: 12px;">€8.2K • Demos Feitos</div>
+                        </div>
+                        <div style="padding: 12px;">
+                            <div style="font-weight: 600; margin-bottom: 4px;">NML Turismo</div>
+                            <div style="color: var(--text-muted); font-size: 12px;">€3.1K • Proposta PT2030</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================
+             JIRA SECTION
+             ======================================== -->
+        <div id="jira" class="section">
+            <div class="bento-grid">
+                <div class="card card-full">
+                    <div class="card-header">
+                        <h2>🔨 Jira Kanban (DEV Project)</h2>
+                        <span class="count" id="jira-total-count">24 Issues</span>
+                    </div>
+                </div>
+
+                <div id="jiraKanban" class="kanban" style="grid-column: span 4; gap: 15px;">
+                    <div class="column">
+                        <div class="column-header">
+                            <span class="column-title">📋 To Do</span>
+                            <span class="column-count" id="jira-todo">18</span>
+                        </div>
+                        <div class="cards" id="jira-todo-cards"></div>
+                    </div>
+                    <div class="column">
+                        <div class="column-header">
+                            <span class="column-title">🔄 In Progress</span>
+                            <span class="column-count" id="jira-progress">1</span>
+                        </div>
+                        <div class="cards" id="jira-progress-cards"></div>
+                    </div>
+                    <div class="column">
+                        <div class="column-header">
+                            <span class="column-title">👀 In Review</span>
+                            <span class="column-count" id="jira-review">0</span>
+                        </div>
+                        <div class="cards" id="jira-review-cards"></div>
+                    </div>
+                    <div class="column">
+                        <div class="column-header">
+                            <span class="column-title">✅ Done</span>
+                            <span class="column-count" id="jira-done">1</span>
+                        </div>
+                        <div class="cards" id="jira-done-cards"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================
+             GITHUB SECTION
+             ======================================== -->
+        <div id="github" class="section">
+            <div class="bento-grid">
+                <div class="card card-full">
+                    <div class="card-header">
+                        <h2>📦 GitHub Repositories</h2>
+                        <span class="count" id="github-total">63 Repos</span>
+                    </div>
+                </div>
+
+                <div style="grid-column: span 4; display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px;">
+                    <div class="card">
+                        <div style="font-size: 13px; font-weight: 600; color: var(--success);">8</div>
+                        <div style="font-size: 11px; color: var(--text-muted);">🟢 Activos (7 dias)</div>
+                    </div>
+                    <div class="card">
+                        <div style="font-size: 13px; font-weight: 600; color: var(--accent);">12</div>
+                        <div style="font-size: 11px; color: var(--text-muted);">🔵 Recentes (30 dias)</div>
+                    </div>
+                    <div class="card">
+                        <div style="font-size: 13px; font-weight: 600; color: var(--warning);">18</div>
+                        <div style="font-size: 11px; color: var(--text-muted);">🟡 Parados (1-6m)</div>
+                    </div>
+                    <div class="card">
+                        <div style="font-size: 13px; font-weight: 600; color: var(--danger);">25</div>
+                        <div style="font-size: 11px; color: var(--text-muted);">🔴 Abandonados (>6m)</div>
+                    </div>
+                </div>
+
+                <div id="githubKanban" class="kanban" style="grid-column: span 4; gap: 15px;">
+                    <div class="column">
+                        <div class="column-header">
+                            <span class="column-title">🟢 Activos</span>
+                            <span class="column-count">8</span>
+                        </div>
+                        <div class="cards" id="github-active-cards"></div>
+                    </div>
+                    <div class="column">
+                        <div class="column-header">
+                            <span class="column-title">🔵 Recentes</span>
+                            <span class="column-count">12</span>
+                        </div>
+                        <div class="cards" id="github-recent-cards"></div>
+                    </div>
+                    <div class="column">
+                        <div class="column-header">
+                            <span class="column-title">🟡 Parados</span>
+                            <span class="column-count">18</span>
+                        </div>
+                        <div class="cards" id="github-stale-cards"></div>
+                    </div>
+                    <div class="column">
+                        <div class="column-header">
+                            <span class="column-title">🔴 Abandonados</span>
+                            <span class="column-count">25</span>
+                        </div>
+                        <div class="cards" id="github-abandoned-cards"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================
+             INFRA SECTION
+             ======================================== -->
+        <div id="infra" class="section">
+            <div class="bento-grid">
+                <div class="card card-md">
+                    <div class="card-header">
+                        <h2>🖥️ VPS OVH</h2>
+                    </div>
+                    <div style="font-size: 13px; line-height: 1.8;">
+                        <div><strong>IP:</strong> 137.74.112.68</div>
+                        <div><strong>OS:</strong> Linux 6.11.0-19-generic</div>
+                        <div><strong>vCPU:</strong> 6 (Node v25.5.0)</div>
+                        <div><strong>RAM:</strong> 12GB (82% usado)</div>
+                        <div><strong>Disk:</strong> 96GB (60%)</div>
+                        <div style="margin-top: 10px;"><span class="success">✅ Uptime 14+ dias</span></div>
+                    </div>
+                </div>
+
+                <div class="card card-md">
+                    <div class="card-header">
+                        <h2>⚙️ Serviços Activos</h2>
+                    </div>
+                    <table class="table">
+                        <tr>
+                            <td><strong>n8n</strong></td>
+                            <td><span class="success">✅ 105 workflows</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Clawdbot</strong></td>
+                            <td><span class="success">✅ Telegram + Web</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Azure TTS</strong></td>
+                            <td><span class="success">✅ PT/EN/FR</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Brave Search</strong></td>
+                            <td><span class="success">✅ 81/2000 queries</span></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="card card-md">
+                    <div class="card-header">
+                        <h2>💰 Custos Mensais</h2>
+                    </div>
+                    <table class="table">
+                        <tr>
+                            <td>VPS OVH</td>
+                            <td>~€5</td>
+                        </tr>
+                        <tr>
+                            <td>Azure TTS</td>
+                            <td>€0 (free)</td>
+                        </tr>
+                        <tr>
+                            <td>Brave Search</td>
+                            <td>€0 (free)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Claude API</strong></td>
+                            <td><strong>~$50-200</strong></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================
+             OPTIMIZE SECTION
+             ======================================== -->
+        <div id="optimize" class="section">
+            <div class="bento-grid">
+                <div class="card card-lg">
+                    <div class="card-header">
+                        <h2>⚡ Model Pricing</h2>
+                    </div>
+                    <table class="table">
+                        <tr>
+                            <th>Modelo</th>
+                            <th>Input</th>
+                            <th>Output</th>
+                            <th>Recomendação</th>
+                        </tr>
+                        <tr>
+                            <td><strong>Opus 4.5</strong></td>
+                            <td>$5/1M</td>
+                            <td>$25/1M</td>
+                            <td>Conversas, análise complexa</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Sonnet 4.5</strong></td>
+                            <td>$3/1M</td>
+                            <td>$15/1M</td>
+                            <td>Código, resumos</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Haiku 4.5</strong></td>
+                            <td>$1/1M</td>
+                            <td>$5/1M</td>
+                            <td>Heartbeats, crons</td>
+                        </tr>
+                        <tr>
+                            <td><strong>GLM-4.7</strong></td>
+                            <td>€0.006/1K</td>
+                            <td>€0.006/1K</td>
+                            <td>90% mais barato</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="card card-md">
+                    <div class="card-header">
+                        <h2>💡 Cost Reduction</h2>
+                    </div>
+                    <div style="font-size: 13px; line-height: 1.8;">
+                        <div style="margin-bottom: 12px;">
+                            <div style="font-weight: 600; color: var(--success);">Prompt Caching</div>
+                            <div style="color: var(--text-muted); font-size: 12px;">💰 Poupança: 60-90%</div>
+                        </div>
+                        <div style="margin-bottom: 12px;">
+                            <div style="font-weight: 600; color: var(--success);">Model Cascading</div>
+                            <div style="color: var(--text-muted); font-size: 12px;">💰 Poupança: 40-70%</div>
+                        </div>
+                        <div style="margin-bottom: 12px;">
+                            <div style="font-weight: 600; color: var(--success);">Response Cache</div>
+                            <div style="color: var(--text-muted); font-size: 12px;">💰 Poupança: 50-80%</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card card-md">
+                    <div class="card-header">
+                        <h2>📊 Estimativa Mensal</h2>
+                    </div>
+                    <table class="table">
+                        <tr>
+                            <td>Light (100k/dia)</td>
+                            <td><strong>~$45/mês</strong></td>
+                        </tr>
+                        <tr>
+                            <td>Medium (500k/dia)</td>
+                            <td><strong>~$225/mês</strong></td>
+                        </tr>
+                        <tr>
+                            <td>Heavy (1M/dia)</td>
+                            <td><strong>~$450/mês</strong></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Com Caching -60%</strong></td>
+                            <td><strong style="color: var(--success);">-60% a -80%</strong></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div>Última actualização: <span id="lastUpdate">Agora</span></div>
+            <div style="text-align: right;">
+                <div style="font-size: 11px; color: var(--text-muted);">JARVIS Command Center v2</div>
+                <div style="font-size: 11px; color: var(--text-muted);">Deployed on Vercel</div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // ========================================
+        // TAB NAVIGATION
+        // ========================================
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                const tabName = tab.dataset.tab;
+                
+                // Hide all sections
+                document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+                
+                // Remove active class from all tabs
+                document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+                
+                // Show selected section
+                document.getElementById(tabName).classList.add('active');
+                
+                // Add active class to clicked tab
+                tab.classList.add('active');
+            });
+        });
+
+        // ========================================
+        // DATA LOADING
+        // ========================================
+        async function loadDashboardData() {
+            try {
+                // Try to load metrics.json
+                const response = await fetch('/exports/metrics.json');
+                if (response.ok) {
+                    const data = await response.json();
+                    updateDashboard(data);
+                    document.getElementById('statusBadge').innerHTML = '<span class="status-dot"></span><span>Data Synced</span>';
+                    return;
+                }
+            } catch (e) {
+                console.log('metrics.json not found, using mock data...');
+            }
+            
+            // Fallback to mock data
+            loadMockData();
+        }
+
+        function loadMockData() {
+            // Mock Jira data
+            const jiraIssues = [
+                { key: 'DEV-1', summary: 'Launching meetlink.aiparati.pt', status: 'In Progress', priority: 'High' },
+                { key: 'DEV-2', summary: 'Implement core backend services', status: 'To Do', priority: 'Medium' },
+                { key: 'DEV-3', summary: 'Create user authentication system', status: 'To Do', priority: 'Medium' },
+                { key: 'DEV-7', summary: 'Add work to tracking tool', status: 'Done', priority: 'Low' }
+            ];
+            
+            renderJiraKanban(jiraIssues);
+
+            // Mock GitHub data
+            const githubRepos = {
+                active: ['fnac_workshop_gamification', 'iva-inteligente-mvp', 'ai-sales-agent'],
+                recent: ['aiparati-portfolio', 'TranscribeAiPRO', 'rag-aiparati'],
+                stale: ['fisc-insight', 'AiStackRepositorio', 'MariaIntelligence-1'],
+                abandoned: ['pdf-to-excel-enhancer', 'AI-Creative-Suite', 'chapeus-lisboetas']
+            };
+            
+            renderGitHubKanban(githubRepos);
+
+            document.getElementById('statusBadge').innerHTML = '<span class="status-dot"></span><span>Mock Data</span>';
+        }
+
+        function renderJiraKanban(issues) {
+            const columns = { 'To Do': [], 'In Progress': [], 'In Review': [], 'Done': [] };
+            
+            issues.forEach(issue => {
+                if (!columns[issue.status]) columns[issue.status] = [];
+                columns[issue.status].push(issue);
+            });
+            
+            // Render To Do
+            document.getElementById('jira-todo-cards').innerHTML = columns['To Do']
+                .map(i => `<div class="kban-card"><div class="kban-card-title">${i.key}</div><div class="kban-card-desc">${i.summary}</div></div>`)
+                .join('');
+            
+            // Render In Progress
+            document.getElementById('jira-progress-cards').innerHTML = columns['In Progress']
+                .map(i => `<div class="kban-card"><div class="kban-card-title">${i.key}</div><div class="kban-card-desc">${i.summary}</div></div>`)
+                .join('');
+            
+            // Render Done
+            document.getElementById('jira-done-cards').innerHTML = columns['Done']
+                .map(i => `<div class="kban-card"><div class="kban-card-title">${i.key}</div><div class="kban-card-desc">${i.summary}</div></div>`)
+                .join('');
+
+            // Update counts
+            document.getElementById('jira-todo').textContent = columns['To Do'].length;
+            document.getElementById('jira-progress').textContent = columns['In Progress'].length;
+            document.getElementById('jira-done').textContent = columns['Done'].length;
+        }
+
+        function renderGitHubKanban(repos) {
+            const renderColumn = (containerId, repoNames) => {
+                const html = repoNames.map(name => 
+                    `<div class="kban-card"><div class="kban-card-title">${name}</div><div class="kban-card-desc">TypeScript</div></div>`
+                ).join('');
+                document.getElementById(containerId).innerHTML = html;
+            };
+
+            renderColumn('github-active-cards', repos.active);
+            renderColumn('github-recent-cards', repos.recent);
+            renderColumn('github-stale-cards', repos.stale);
+            renderColumn('github-abandoned-cards', repos.abandoned);
+        }
+
+        function updateDashboard(data) {
+            // Update KPIs if data available
+            if (data.kpis) {
+                if (data.kpis.pipeline) document.getElementById('kpi-pipeline').textContent = `€${data.kpis.pipeline}K`;
+                if (data.kpis.crons) document.getElementById('stat-crons').textContent = data.kpis.crons;
+                if (data.kpis.repos) document.getElementById('github-total').textContent = `${data.kpis.repos} Repos`;
+            }
+
+            // Update Jira if available
+            if (data.jira) {
+                renderJiraKanban(data.jira);
+            }
+
+            // Update GitHub if available
+            if (data.github) {
+                renderGitHubKanban(data.github);
+            }
+        }
+
+        // ========================================
+        // INITIALIZATION
+        // ========================================
+        function updateTimestamp() {
+            const now = new Date();
+            const time = now.toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' });
+            document.getElementById('lastUpdate').textContent = time;
+        }
+
+        // Load data on page load
+        window.addEventListener('load', () => {
+            loadDashboardData();
+            updateTimestamp();
+            setInterval(updateTimestamp, 60000);
+        });
+
+        // Allow manual refresh
+        document.addEventListener('keydown', (e) => {
+            if ((e.metaKey || e.ctrlKey) && e.key === 'r') {
+                e.preventDefault();
+                location.reload();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,212 @@
+{
+  "name": "Workflow 4: Daily Report Generator (Jira + CRM + GitHub → Telegram)",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "recurrence": "every",
+              "type": "days",
+              "value": 1
+            }
+          ],
+          "trigger": {
+            "mode": "hours",
+            "hour": 18,
+            "minute": 0
+          }
+        }
+      },
+      "id": "schedule-18-lisbon",
+      "name": "Schedule: 18:00 Lisbon (17:00 UTC)",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [100, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://aiparati.atlassian.net/rest/api/3/search",
+        "authentication": "basicAuth",
+        "sendBody": true,
+        "bodyParametersUi": "json",
+        "bodyJson": {
+          "jql": "project = DEV AND updated >= -1d",
+          "maxResults": 50,
+          "fields": ["key", "summary", "status", "updated", "assignee"]
+        }
+      },
+      "id": "fetch-jira-updates",
+      "name": "Fetch Jira Issues (Last 24h)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [250, 200],
+      "credentials": {
+        "httpBasicAuth": "jira_auth"
+      }
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "https://crm.aiparati.pt/api/rest/opportunities?filter=updatedAt>-1d",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "bearerToken"
+      },
+      "id": "fetch-crm-opportunities",
+      "name": "Fetch CRM Opportunities (Last 24h)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [250, 400],
+      "credentials": {
+        "httpBasicAuth": "crm_api_key"
+      }
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "https://api.github.com/user/events?per_page=20",
+        "authentication": "oauth2"
+      },
+      "id": "fetch-github-activity",
+      "name": "Fetch GitHub Activity (Last 24h)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [250, 600],
+      "credentials": {
+        "oAuth2Api": "github_oauth"
+      }
+    },
+    {
+      "parameters": {
+        "prompt": "Generate a professional daily report in markdown format with:\n\n## Daily Report - {{ now().format('YYYY-MM-DD') }}\n\n### 🎯 Jira Updates (DEV Project)\nIssues updated: {{ $json.jiraCount }}\nKey updates:\n{{ $json.jiraIssues | join(', ') }}\n\n### 💼 CRM Pipeline\nOpportunities updated: {{ $json.crmCount }}\nStatus breakdown:\n{{ $json.crmStatusSummary }}\n\n### 🔧 GitHub Activity\nTotal push events: {{ $json.githubCount }}\nRepositories: {{ $json.repos | join(', ') }}\n\n### ⚠️ Alerts\n{{ $json.alerts }}\n\nReport generated at {{ now().format('HH:mm') }} Lisbon Time",
+        "options": {}
+      },
+      "id": "claude-format-report",
+      "name": "Claude: Format Report",
+      "type": "n8n-nodes-base.anthropic",
+      "typeVersion": 1,
+      "position": [450, 400],
+      "credentials": {
+        "anthropicApi": "claude_api_key"
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "-{{ $json.telegramGroupId }}",
+        "text": "{{ $json.text }}"
+      },
+      "id": "send-telegram-report",
+      "name": "Send to Telegram (Bilal + Luis)",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [600, 400],
+      "credentials": {
+        "telegramApi": "telegram_bot_token"
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "reports@aiparati.pt",
+        "toEmail": "bilal@aiparati.pt,luis@aiparati.pt",
+        "subject": "Daily Report - {{ now().format('YYYY-MM-DD') }}",
+        "textBody": "{{ $json.text }}"
+      },
+      "id": "send-email-report",
+      "name": "Send Email Report",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2,
+      "position": [600, 550],
+      "credentials": {
+        "gmailOAuth2": "gmail_oauth2"
+      }
+    }
+  ],
+  "connections": {
+    "Schedule: 18:00 Lisbon (17:00 UTC)": {
+      "main": [
+        [
+          {
+            "node": "Fetch Jira Issues (Last 24h)",
+            "type": "main",
+            "index": 0,
+            "port": 0
+          },
+          {
+            "node": "Fetch CRM Opportunities (Last 24h)",
+            "type": "main",
+            "index": 0,
+            "port": 0
+          },
+          {
+            "node": "Fetch GitHub Activity (Last 24h)",
+            "type": "main",
+            "index": 0,
+            "port": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Jira Issues (Last 24h)": {
+      "main": [
+        [
+          {
+            "node": "Claude: Format Report",
+            "type": "main",
+            "index": 0,
+            "port": 0
+          }
+        ]
+      ]
+    },
+    "Fetch CRM Opportunities (Last 24h)": {
+      "main": [
+        [
+          {
+            "node": "Claude: Format Report",
+            "type": "main",
+            "index": 0,
+            "port": 0
+          }
+        ]
+      ]
+    },
+    "Fetch GitHub Activity (Last 24h)": {
+      "main": [
+        [
+          {
+            "node": "Claude: Format Report",
+            "type": "main",
+            "index": 0,
+            "port": 0
+          }
+        ]
+      ]
+    },
+    "Claude: Format Report": {
+      "main": [
+        [
+          {
+            "node": "Send to Telegram (Bilal + Luis)",
+            "type": "main",
+            "index": 0,
+            "port": 0
+          },
+          {
+            "node": "Send Email Report",
+            "type": "main",
+            "index": 0,
+            "port": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "pinned": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "tags": ["report", "daily", "summary", "telegram"],
+  "versionId": "87c2c9cf-d6d1-4f1e-a123-b4c5d6e7f8g9"
+}

@@ -1,0 +1,13 @@
+{
+  "timestamp": "2026-02-11T22:44:22Z",
+  "vps": {
+    "mem_total_mb": 11675,
+    "mem_used_mb": 3897,
+    "mem_percent": 33.4,
+    "disk_percent": 56
+  },
+  "clawdbot": {
+    "processes": 0
+0
+  }
+}

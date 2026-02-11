@@ -1,0 +1,1288 @@
+<!DOCTYPE html>
+<html lang="pt" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JARVIS Command Center</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* ========================================
+           CSS VARIABLES - Slate Professional
+           ======================================== */
+        :root {
+            --bg-primary: #0F172A;
+            --bg-surface: #1E293B;
+            --bg-elevated: #334155;
+            --bg-hover: #475569;
+            --border: rgba(148, 163, 184, 0.1);
+            --border-hover: rgba(148, 163, 184, 0.2);
+            
+            --text-primary: #F1F5F9;
+            --text-secondary: #94A3B8;
+            --text-muted: #64748B;
+            
+            --accent: #38BDF8;
+            --accent-glow: rgba(56, 189, 248, 0.15);
+            --success: #4ADE80;
+            --warning: #FBBF24;
+            --danger: #F87171;
+            --purple: #A78BFA;
+            
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+            
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.1);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.15);
+            --shadow-lg: 0 8px 30px rgba(0,0,0,0.2);
+            --shadow-glow: 0 0 20px var(--accent-glow);
+            
+            --transition-fast: 0.15s ease;
+            --transition-normal: 0.25s ease;
+            --transition-slow: 0.4s ease;
+        }
+
+        /* ========================================
+           RESET & BASE
+           ======================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 16px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.5;
+        }
+
+        /* ========================================
+           LAYOUT - Bento Grid
+           ======================================== */
+        .app {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 24px;
+            min-height: 100vh;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--accent), var(--purple));
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 20px;
+            box-shadow: var(--shadow-glow);
+        }
+
+        .header-title h1 {
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .header-title p {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .cmd-trigger {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            color: var(--text-secondary);
+            font-size: 14px;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .cmd-trigger:hover {
+            background: var(--bg-elevated);
+            border-color: var(--border-hover);
+            color: var(--text-primary);
+        }
+
+        .cmd-trigger kbd {
+            background: var(--bg-elevated);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-family: inherit;
+        }
+
+        .status-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(74, 222, 128, 0.1);
+            border: 1px solid rgba(74, 222, 128, 0.2);
+            border-radius: var(--radius-md);
+            color: var(--success);
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* ========================================
+           BENTO GRID
+           ======================================== */
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: auto;
+            gap: 20px;
+        }
+
+        .card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            transition: all var(--transition-normal);
+            animation: fadeIn 0.5s ease;
+        }
+
+        .card:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Card Sizes */
+        .card-sm { grid-column: span 1; }
+        .card-md { grid-column: span 2; }
+        .card-lg { grid-column: span 3; }
+        .card-full { grid-column: span 4; }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .card-header h2 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .card-header .count {
+            background: var(--bg-elevated);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        /* ========================================
+           STATS CARDS (First Row)
+           ======================================== */
+        .stat-card {
+            text-align: center;
+            padding: 28px 24px;
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 16px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .stat-icon.urgent { background: rgba(248, 113, 113, 0.15); }
+        .stat-icon.progress { background: rgba(251, 191, 36, 0.15); }
+        .stat-icon.done { background: rgba(74, 222, 128, 0.15); }
+        .stat-icon.agents { background: rgba(56, 189, 248, 0.15); }
+
+        .stat-value {
+            font-size: 36px;
+            font-weight: 700;
+            letter-spacing: -1px;
+            margin-bottom: 4px;
+            background: linear-gradient(135deg, var(--text-primary), var(--text-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: countUp 0.8s ease-out;
+        }
+
+        @keyframes countUp {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        /* ========================================
+           AI SUMMARY CARD
+           ======================================== */
+        .ai-summary {
+            background: linear-gradient(135deg, var(--bg-surface), rgba(167, 139, 250, 0.05));
+            border-color: rgba(167, 139, 250, 0.2);
+        }
+
+        .ai-summary:hover {
+            border-color: rgba(167, 139, 250, 0.3);
+            box-shadow: 0 8px 30px rgba(167, 139, 250, 0.1);
+        }
+
+        .ai-summary .card-header h2 {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .ai-badge {
+            background: linear-gradient(135deg, var(--purple), var(--accent));
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            color: white;
+            font-weight: 600;
+        }
+
+        .ai-content {
+            font-size: 15px;
+            line-height: 1.7;
+            color: var(--text-primary);
+        }
+
+        .ai-content strong {
+            color: var(--accent);
+        }
+
+        .ai-suggestions {
+            display: flex;
+            gap: 8px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+
+        .ai-suggestion {
+            padding: 8px 14px;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            font-size: 13px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .ai-suggestion:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+            border-color: var(--accent);
+        }
+
+        /* ========================================
+           TASKS LIST
+           ======================================== */
+        .tasks-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .task-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 16px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .task-item:hover {
+            background: var(--bg-elevated);
+            border-color: var(--border-hover);
+            transform: translateX(4px);
+        }
+
+        .task-priority {
+            width: 4px;
+            height: 32px;
+            border-radius: 2px;
+            flex-shrink: 0;
+        }
+
+        .task-priority.urgent { background: var(--danger); }
+        .task-priority.high { background: var(--warning); }
+        .task-priority.normal { background: var(--success); }
+        .task-priority.low { background: var(--text-muted); }
+
+        .task-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .task-title {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .task-meta {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .task-status {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .task-status.pending { background: rgba(251, 191, 36, 0.15); color: var(--warning); }
+        .task-status.active { background: rgba(56, 189, 248, 0.15); color: var(--accent); }
+        .task-status.done { background: rgba(74, 222, 128, 0.15); color: var(--success); }
+
+        /* ========================================
+           PROJECTS LIST
+           ======================================== */
+        .projects-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .project-item {
+            padding: 16px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            transition: all var(--transition-fast);
+        }
+
+        .project-item:hover {
+            border-color: var(--border-hover);
+            background: var(--bg-elevated);
+        }
+
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .project-name {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .project-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .project-icon.productized { background: rgba(248, 113, 113, 0.15); }
+        .project-icon.ivazen { background: rgba(74, 222, 128, 0.15); }
+        .project-icon.sales { background: rgba(56, 189, 248, 0.15); }
+        .project-icon.brand { background: rgba(167, 139, 250, 0.15); }
+
+        .project-title {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .project-client {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .project-progress {
+            height: 6px;
+            background: var(--bg-elevated);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .project-progress-bar {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 1s ease;
+        }
+
+        .project-progress-bar.low { background: var(--danger); }
+        .project-progress-bar.medium { background: var(--warning); }
+        .project-progress-bar.high { background: var(--success); }
+        .project-progress-bar.done { background: var(--accent); }
+
+        .project-footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        /* ========================================
+           ACTIVITY TIMELINE
+           ======================================== */
+        .timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .timeline-item {
+            display: flex;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .timeline-item:last-child {
+            border-bottom: none;
+        }
+
+        .timeline-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-top: 6px;
+            flex-shrink: 0;
+        }
+
+        .timeline-dot.success { background: var(--success); }
+        .timeline-dot.info { background: var(--accent); }
+        .timeline-dot.warning { background: var(--warning); }
+
+        .timeline-content {
+            flex: 1;
+        }
+
+        .timeline-title {
+            font-size: 13px;
+            margin-bottom: 2px;
+        }
+
+        .timeline-time {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        /* ========================================
+           QUICK ACTIONS
+           ======================================== */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .quick-action {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            padding: 20px 16px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .quick-action:hover {
+            background: var(--bg-elevated);
+            border-color: var(--accent);
+            transform: scale(1.02);
+        }
+
+        .quick-action-icon {
+            font-size: 24px;
+        }
+
+        .quick-action-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* ========================================
+           COMMAND PALETTE (⌘K)
+           ======================================== */
+        .cmd-palette-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            display: none;
+            align-items: flex-start;
+            justify-content: center;
+            padding-top: 15vh;
+            z-index: 1000;
+            animation: fadeIn 0.15s ease;
+        }
+
+        .cmd-palette-overlay.active {
+            display: flex;
+        }
+
+        .cmd-palette {
+            width: 100%;
+            max-width: 560px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            animation: slideDown 0.2s ease;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-20px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .cmd-input-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .cmd-input-wrapper svg {
+            color: var(--text-muted);
+            flex-shrink: 0;
+        }
+
+        .cmd-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            color: var(--text-primary);
+            font-family: inherit;
+        }
+
+        .cmd-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .cmd-results {
+            max-height: 320px;
+            overflow-y: auto;
+            padding: 8px;
+        }
+
+        .cmd-group {
+            margin-bottom: 8px;
+        }
+
+        .cmd-group-title {
+            padding: 8px 12px;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .cmd-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .cmd-item:hover, .cmd-item.selected {
+            background: var(--bg-elevated);
+        }
+
+        .cmd-item-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: var(--radius-sm);
+            background: var(--bg-elevated);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .cmd-item-content {
+            flex: 1;
+        }
+
+        .cmd-item-title {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .cmd-item-desc {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .cmd-item-shortcut {
+            display: flex;
+            gap: 4px;
+        }
+
+        .cmd-item-shortcut kbd {
+            padding: 2px 6px;
+            background: var(--bg-primary);
+            border-radius: 4px;
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .cmd-footer {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 16px;
+            border-top: 1px solid var(--border);
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .cmd-footer-hint {
+            display: flex;
+            gap: 16px;
+        }
+
+        .cmd-footer-hint span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* ========================================
+           FOOTER
+           ======================================== */
+        .footer {
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--text-muted);
+            font-size: 12px;
+        }
+
+        .footer-shortcuts {
+            display: flex;
+            gap: 20px;
+        }
+
+        .footer-shortcuts span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .footer-shortcuts kbd {
+            padding: 2px 6px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+        }
+
+        /* ========================================
+           RESPONSIVE
+           ======================================== */
+        @media (max-width: 1200px) {
+            .bento-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .card-lg { grid-column: span 2; }
+            .card-full { grid-column: span 2; }
+        }
+
+        @media (max-width: 768px) {
+            .app {
+                padding: 16px;
+            }
+            
+            .bento-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .card-sm, .card-md, .card-lg, .card-full {
+                grid-column: span 1;
+            }
+            
+            .header {
+                flex-direction: column;
+                gap: 16px;
+                text-align: center;
+            }
+            
+            .header-left {
+                flex-direction: column;
+            }
+            
+            .cmd-trigger {
+                display: none;
+            }
+            
+            .quick-actions {
+                grid-template-columns: repeat(4, 1fr);
+            }
+            
+            .quick-action {
+                padding: 12px 8px;
+            }
+            
+            .quick-action-label {
+                display: none;
+            }
+        }
+
+        /* ========================================
+           SCROLLBAR
+           ======================================== */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--bg-elevated);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--bg-hover);
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <div class="logo">J</div>
+                <div class="header-title">
+                    <h1>JARVIS Command Center</h1>
+                    <p>AiParaTi • Bilal Machraa</p>
+                </div>
+            </div>
+            <div class="header-right">
+                <button class="cmd-trigger" onclick="openCommandPalette()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+                    </svg>
+                    Pesquisar...
+                    <kbd>⌘K</kbd>
+                </button>
+                <div class="status-badge">
+                    <span class="status-dot"></span>
+                    Online
+                </div>
+            </div>
+        </header>
+
+        <!-- Bento Grid -->
+        <div class="bento-grid">
+            <!-- Stats Row -->
+            <div class="card card-sm stat-card">
+                <div class="stat-icon urgent">🔴</div>
+                <div class="stat-value" data-count="3">3</div>
+                <div class="stat-label">Urgentes</div>
+            </div>
+            
+            <div class="card card-sm stat-card">
+                <div class="stat-icon progress">🔄</div>
+                <div class="stat-value" data-count="5">5</div>
+                <div class="stat-label">Em Progresso</div>
+            </div>
+            
+            <div class="card card-sm stat-card">
+                <div class="stat-icon done">✅</div>
+                <div class="stat-value" data-count="12">12</div>
+                <div class="stat-label">Concluídas Hoje</div>
+            </div>
+            
+            <div class="card card-sm stat-card">
+                <div class="stat-icon agents">🤖</div>
+                <div class="stat-value" data-count="3">3</div>
+                <div class="stat-label">Sub-Agentes</div>
+            </div>
+
+            <!-- AI Summary -->
+            <div class="card card-md ai-summary">
+                <div class="card-header">
+                    <h2>
+                        <span>AI Summary</span>
+                        <span class="ai-badge">GPT</span>
+                    </h2>
+                </div>
+                <div class="ai-content">
+                    <strong>Bom dia, Bilal!</strong> Tens <strong>3 tarefas urgentes</strong> - a mais crítica é aprovar a imagem LinkedIn do IVAzen. 
+                    O PRD v3 para o André foi concluído. Recomendo focar primeiro nos pendentes de LinkedIn para manter momentum no marketing.
+                </div>
+                <div class="ai-suggestions">
+                    <button class="ai-suggestion">📸 Ver imagem IVAzen</button>
+                    <button class="ai-suggestion">📄 Abrir PRD v3</button>
+                    <button class="ai-suggestion">📧 Draft Helder</button>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="card card-md">
+                <div class="card-header">
+                    <h2>Ações Rápidas</h2>
+                </div>
+                <div class="quick-actions">
+                    <div class="quick-action" onclick="alert('Nova tarefa')">
+                        <span class="quick-action-icon">➕</span>
+                        <span class="quick-action-label">Nova Tarefa</span>
+                    </div>
+                    <div class="quick-action" onclick="alert('Novo projecto')">
+                        <span class="quick-action-icon">📁</span>
+                        <span class="quick-action-label">Novo Projecto</span>
+                    </div>
+                    <div class="quick-action" onclick="alert('Sub-agente')">
+                        <span class="quick-action-icon">🤖</span>
+                        <span class="quick-action-label">Sub-Agente</span>
+                    </div>
+                    <div class="quick-action" onclick="alert('Relatório')">
+                        <span class="quick-action-icon">📊</span>
+                        <span class="quick-action-label">Relatório</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tasks -->
+            <div class="card card-md">
+                <div class="card-header">
+                    <h2>Tarefas Urgentes</h2>
+                    <span class="count">3</span>
+                </div>
+                <div class="tasks-list">
+                    <div class="task-item">
+                        <div class="task-priority urgent"></div>
+                        <div class="task-content">
+                            <div class="task-title">Aprovar imagem LinkedIn IVAzen</div>
+                            <div class="task-meta">IVAzen • Marketing</div>
+                        </div>
+                        <span class="task-status pending">Pendente</span>
+                    </div>
+                    <div class="task-item">
+                        <div class="task-priority urgent"></div>
+                        <div class="task-content">
+                            <div class="task-title">Publicar post LinkedIn</div>
+                            <div class="task-meta">IVAzen • Marketing</div>
+                        </div>
+                        <span class="task-status pending">Pendente</span>
+                    </div>
+                    <div class="task-item">
+                        <div class="task-priority high"></div>
+                        <div class="task-content">
+                            <div class="task-title">Resposta Helder (Brand Brief)</div>
+                            <div class="task-meta">AiParaTi • Branding</div>
+                        </div>
+                        <span class="task-status pending">Draft Pronto</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Projects -->
+            <div class="card card-md">
+                <div class="card-header">
+                    <h2>Projectos Activos</h2>
+                    <span class="count">4</span>
+                </div>
+                <div class="projects-list">
+                    <div class="project-item">
+                        <div class="project-header">
+                            <div class="project-name">
+                                <div class="project-icon productized">🎯</div>
+                                <div>
+                                    <div class="project-title">Productized Sales</div>
+                                    <div class="project-client">André • PRD v3</div>
+                                </div>
+                            </div>
+                            <span style="color: var(--success); font-size: 13px; font-weight: 600;">100%</span>
+                        </div>
+                        <div class="project-progress">
+                            <div class="project-progress-bar done" style="width: 100%"></div>
+                        </div>
+                        <div class="project-footer">
+                            <span>✅ PRD Concluído</span>
+                            <span>Hoje</span>
+                        </div>
+                    </div>
+                    <div class="project-item">
+                        <div class="project-header">
+                            <div class="project-name">
+                                <div class="project-icon ivazen">💚</div>
+                                <div>
+                                    <div class="project-title">IVAzen</div>
+                                    <div class="project-client">Accounting Advantage</div>
+                                </div>
+                            </div>
+                            <span style="color: var(--warning); font-size: 13px; font-weight: 600;">85%</span>
+                        </div>
+                        <div class="project-progress">
+                            <div class="project-progress-bar high" style="width: 85%"></div>
+                        </div>
+                        <div class="project-footer">
+                            <span>⏳ Aguarda publicação LinkedIn</span>
+                            <span>MVP Feito</span>
+                        </div>
+                    </div>
+                    <div class="project-item">
+                        <div class="project-header">
+                            <div class="project-name">
+                                <div class="project-icon brand">🎨</div>
+                                <div>
+                                    <div class="project-title">Brand Brief</div>
+                                    <div class="project-client">Helder</div>
+                                </div>
+                            </div>
+                            <span style="color: var(--warning); font-size: 13px; font-weight: 600;">60%</span>
+                        </div>
+                        <div class="project-progress">
+                            <div class="project-progress-bar medium" style="width: 60%"></div>
+                        </div>
+                        <div class="project-footer">
+                            <span>📝 Draft pronto para enviar</span>
+                            <span>Aguarda</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Activity Timeline -->
+            <div class="card card-md">
+                <div class="card-header">
+                    <h2>Actividade Recente</h2>
+                </div>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-dot success"></div>
+                        <div class="timeline-content">
+                            <div class="timeline-title">✅ PRD v3 Clawdbot concluído</div>
+                            <div class="timeline-time">Há 15 minutos</div>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-dot success"></div>
+                        <div class="timeline-content">
+                            <div class="timeline-title">🎙️ Áudio para Paulo gerado</div>
+                            <div class="timeline-time">Há 25 minutos</div>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-dot info"></div>
+                        <div class="timeline-content">
+                            <div class="timeline-title">🤖 3 sub-agentes lançados (audit dashboard)</div>
+                            <div class="timeline-time">Há 10 minutos</div>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-dot success"></div>
+                        <div class="timeline-content">
+                            <div class="timeline-title">📊 Dashboard v1 publicado no Vercel</div>
+                            <div class="timeline-time">Há 30 minutos</div>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-dot warning"></div>
+                        <div class="timeline-content">
+                            <div class="timeline-title">⚠️ Imagem LinkedIn IVAzen aguarda aprovação</div>
+                            <div class="timeline-time">Há 2 horas</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sub-agents Status -->
+            <div class="card card-md">
+                <div class="card-header">
+                    <h2>Sub-Agentes</h2>
+                    <span class="count">3</span>
+                </div>
+                <div class="tasks-list">
+                    <div class="task-item">
+                        <div class="task-priority normal"></div>
+                        <div class="task-content">
+                            <div class="task-title">Research Dashboard Trends</div>
+                            <div class="task-meta">Tendências 2026 • Relatório completo</div>
+                        </div>
+                        <span class="task-status done">Concluído</span>
+                    </div>
+                    <div class="task-item">
+                        <div class="task-priority normal"></div>
+                        <div class="task-content">
+                            <div class="task-title">Audit Dashboard Current</div>
+                            <div class="task-meta">Auditoria visual • Nota 4.5/10</div>
+                        </div>
+                        <span class="task-status done">Concluído</span>
+                    </div>
+                    <div class="task-item">
+                        <div class="task-priority normal"></div>
+                        <div class="task-content">
+                            <div class="task-title">Research Command Centers</div>
+                            <div class="task-meta">Best practices • 5 exemplos</div>
+                        </div>
+                        <span class="task-status done">Concluído</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div>Última actualização: <span id="lastUpdate">Agora</span></div>
+            <div class="footer-shortcuts">
+                <span><kbd>⌘</kbd><kbd>K</kbd> Pesquisar</span>
+                <span><kbd>N</kbd> Nova tarefa</span>
+                <span><kbd>R</kbd> Refresh</span>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Command Palette -->
+    <div class="cmd-palette-overlay" id="cmdPalette">
+        <div class="cmd-palette">
+            <div class="cmd-input-wrapper">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+                </svg>
+                <input type="text" class="cmd-input" placeholder="Pesquisar comandos, tarefas, projectos..." id="cmdInput" autofocus>
+            </div>
+            <div class="cmd-results">
+                <div class="cmd-group">
+                    <div class="cmd-group-title">Acções</div>
+                    <div class="cmd-item selected">
+                        <div class="cmd-item-icon">➕</div>
+                        <div class="cmd-item-content">
+                            <div class="cmd-item-title">Nova tarefa</div>
+                            <div class="cmd-item-desc">Criar uma nova tarefa</div>
+                        </div>
+                        <div class="cmd-item-shortcut"><kbd>N</kbd></div>
+                    </div>
+                    <div class="cmd-item">
+                        <div class="cmd-item-icon">🤖</div>
+                        <div class="cmd-item-content">
+                            <div class="cmd-item-title">Lançar sub-agente</div>
+                            <div class="cmd-item-desc">Criar novo agente para tarefa</div>
+                        </div>
+                        <div class="cmd-item-shortcut"><kbd>A</kbd></div>
+                    </div>
+                    <div class="cmd-item">
+                        <div class="cmd-item-icon">📊</div>
+                        <div class="cmd-item-content">
+                            <div class="cmd-item-title">Gerar relatório</div>
+                            <div class="cmd-item-desc">Relatório de produtividade</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cmd-group">
+                    <div class="cmd-group-title">Tarefas Urgentes</div>
+                    <div class="cmd-item">
+                        <div class="cmd-item-icon">📸</div>
+                        <div class="cmd-item-content">
+                            <div class="cmd-item-title">Aprovar imagem LinkedIn</div>
+                            <div class="cmd-item-desc">IVAzen • Marketing</div>
+                        </div>
+                    </div>
+                    <div class="cmd-item">
+                        <div class="cmd-item-icon">📝</div>
+                        <div class="cmd-item-content">
+                            <div class="cmd-item-title">Resposta Helder</div>
+                            <div class="cmd-item-desc">Brand Brief • Draft pronto</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cmd-group">
+                    <div class="cmd-group-title">Projectos</div>
+                    <div class="cmd-item">
+                        <div class="cmd-item-icon">🎯</div>
+                        <div class="cmd-item-content">
+                            <div class="cmd-item-title">Productized Sales</div>
+                            <div class="cmd-item-desc">PRD v3 • André</div>
+                        </div>
+                    </div>
+                    <div class="cmd-item">
+                        <div class="cmd-item-icon">💚</div>
+                        <div class="cmd-item-content">
+                            <div class="cmd-item-title">IVAzen</div>
+                            <div class="cmd-item-desc">Accounting Advantage</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="cmd-footer">
+                <div class="cmd-footer-hint">
+                    <span>↑↓ Navegar</span>
+                    <span>↵ Seleccionar</span>
+                    <span>Esc Fechar</span>
+                </div>
+                <div>JARVIS v2.0</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Command Palette
+        function openCommandPalette() {
+            document.getElementById('cmdPalette').classList.add('active');
+            document.getElementById('cmdInput').focus();
+        }
+
+        function closeCommandPalette() {
+            document.getElementById('cmdPalette').classList.remove('active');
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            // ⌘K or Ctrl+K - Open command palette
+            if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+                e.preventDefault();
+                openCommandPalette();
+            }
+            
+            // Escape - Close command palette
+            if (e.key === 'Escape') {
+                closeCommandPalette();
+            }
+            
+            // N - New task (when not in input)
+            if (e.key === 'n' && document.activeElement.tagName !== 'INPUT') {
+                e.preventDefault();
+                alert('Nova tarefa');
+            }
+            
+            // R - Refresh
+            if (e.key === 'r' && document.activeElement.tagName !== 'INPUT') {
+                e.preventDefault();
+                location.reload();
+            }
+        });
+
+        // Click outside to close
+        document.getElementById('cmdPalette').addEventListener('click', (e) => {
+            if (e.target.id === 'cmdPalette') {
+                closeCommandPalette();
+            }
+        });
+
+        // Update timestamp
+        function updateTimestamp() {
+            const now = new Date();
+            const time = now.toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' });
+            document.getElementById('lastUpdate').textContent = time;
+        }
+        
+        updateTimestamp();
+        setInterval(updateTimestamp, 60000);
+
+        // Animate counters on load
+        document.querySelectorAll('.stat-value').forEach(el => {
+            const target = parseInt(el.dataset.count);
+            let current = 0;
+            const increment = target / 20;
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    el.textContent = target;
+                    clearInterval(timer);
+                } else {
+                    el.textContent = Math.floor(current);
+                }
+            }, 40);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,36 @@
+{
+  "lastUpdate": "2026-01-30T19:50:00Z",
+  "stats": {
+    "urgent": 2,
+    "inProgress": 3,
+    "completed": 8,
+    "subAgents": 0
+  },
+  "tasks": {
+    "urgent": [
+      {"title": "Aprovar imagem LinkedIn IVAzen", "project": "IVAzen", "status": "pending"},
+      {"title": "Publicar post LinkedIn", "project": "IVAzen", "status": "pending"}
+    ],
+    "inProgress": [
+      {"title": "MIDAS - Testar com recibo real", "project": "MIDAS", "status": "active"},
+      {"title": "PRD v3 - Aguarda aprovação Paulo/André", "project": "Productized", "status": "active"},
+      {"title": "Resposta Helder (Brand Brief)", "project": "AiParaTi", "status": "draft"}
+    ],
+    "completed": [
+      {"title": "Schema MIDAS criado no Neon", "project": "MIDAS"},
+      {"title": "107 categorias optimizadas", "project": "MIDAS"},
+      {"title": "PRD v3 Clawdbot concluído", "project": "Productized"},
+      {"title": "Apresentação André criada", "project": "Productized"},
+      {"title": "Áudio Paulo gerado", "project": "Productized"},
+      {"title": "Dashboard v2 implementado", "project": "Dashboard"},
+      {"title": "Pesquisa Financial Coach", "project": "MIDAS"},
+      {"title": "Persona MIDAS definida", "project": "MIDAS"}
+    ]
+  },
+  "projects": [
+    {"name": "MIDAS", "client": "Bilal", "progress": 60, "status": "Setup completo, aguarda teste"},
+    {"name": "Productized Sales", "client": "André", "progress": 100, "status": "PRD v3 pronto"},
+    {"name": "IVAzen", "client": "Accounting Advantage", "progress": 85, "status": "Aguarda LinkedIn"},
+    {"name": "Brand Brief", "client": "Helder", "progress": 60, "status": "Draft pronto"}
+  ]
+}

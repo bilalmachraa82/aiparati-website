@@ -1,0 +1,202 @@
+{
+  "name": "Workflow 1: Jira ↔ CRM Sync (Bidirecional)",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "webhook-jira-trigger",
+      "name": "Jira Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [100, 300],
+      "webhookId": "jira-sync-webhook",
+      "credentials": {}
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://crm.aiparati.pt/api/rest/opportunities",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "bearerToken",
+        "sendBody": true,
+        "bodyParametersUi": "json",
+        "bodyJson": {
+          "name": "={{ $json.issue.key }} - {{ $json.issue.fields.summary }}",
+          "description": "={{ $json.issue.fields.description }}",
+          "stage": "{{ $json.issue.fields.status.name | replace: 'To Do', 'Pipeline_Initial' | replace: 'In Progress', 'Pipeline_Active' | replace: 'Done', 'Pipeline_Closed' }}",
+          "customFields": {
+            "jiraKey": "={{ $json.issue.key }}",
+            "jiraEpic": "={{ $json.issue.fields.customfield_10019 }}",
+            "jiraAssignee": "={{ $json.issue.fields.assignee.displayName }}",
+            "createdAt": "={{ $json.issue.fields.created }}"
+          }
+        }
+      },
+      "id": "create-crm-opportunity",
+      "name": "Create/Update CRM Opportunity",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [400, 300],
+      "credentials": {
+        "httpBasicAuth": "crm_api_key"
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true
+          },
+          "conditions": [
+            {
+              "id": "1",
+              "operator": {
+                "name": "filter.operator.equals",
+                "value": "equals"
+              },
+              "type": "string",
+              "value": "issue_created",
+              "property": "{{ $json.webhookEvent }}"
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "id": "check-event-type",
+      "name": "Check Event Type",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "https://crm.aiparati.pt/api/rest/opportunities",
+        "queryParametersUi": "json",
+        "queryJson": {
+          "filter": "jiraKey={{ $json.issue.key }}"
+        }
+      },
+      "id": "find-existing-opportunity",
+      "name": "Find Existing Opportunity",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [400, 450],
+      "credentials": {
+        "httpBasicAuth": "crm_api_key"
+      }
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "https://crm.aiparati.pt/api/rest/opportunities/{{ $json.opportunities[0].id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "bearerToken",
+        "sendBody": true,
+        "bodyParametersUi": "json",
+        "bodyJson": {
+          "name": "={{ $json.issue.key }} - {{ $json.issue.fields.summary }}",
+          "stage": "{{ $json.issue.fields.status.name | replace: 'To Do', 'Pipeline_Initial' | replace: 'In Progress', 'Pipeline_Active' | replace: 'Done', 'Pipeline_Closed' }}"
+        }
+      },
+      "id": "update-crm-opportunity",
+      "name": "Update CRM Opportunity",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [550, 450],
+      "credentials": {
+        "httpBasicAuth": "crm_api_key"
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "{{ $json.telegramUserId }}",
+        "text": "Jira sync completed: {{ $json.issue.key }} → CRM Opportunity"
+      },
+      "id": "send-telegram-notification",
+      "name": "Send Telegram Notification",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [700, 300],
+      "credentials": {
+        "telegramApi": "telegram_bot_token"
+      }
+    }
+  ],
+  "connections": {
+    "Jira Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Check Event Type",
+            "type": "main",
+            "index": 0,
+            "port": 0
+          }
+        ]
+      ]
+    },
+    "Check Event Type": {
+      "main": [
+        [
+          {
+            "node": "Create/Update CRM Opportunity",
+            "type": "main",
+            "index": 0,
+            "port": 0
+          }
+        ],
+        [
+          {
+            "node": "Find Existing Opportunity",
+            "type": "main",
+            "index": 0,
+            "port": 0
+          }
+        ]
+      ]
+    },
+    "Find Existing Opportunity": {
+      "main": [
+        [
+          {
+            "node": "Update CRM Opportunity",
+            "type": "main",
+            "index": 0,
+            "port": 0
+          }
+        ]
+      ]
+    },
+    "Update CRM Opportunity": {
+      "main": [
+        [
+          {
+            "node": "Send Telegram Notification",
+            "type": "main",
+            "index": 0,
+            "port": 0
+          }
+        ]
+      ]
+    },
+    "Create/Update CRM Opportunity": {
+      "main": [
+        [
+          {
+            "node": "Send Telegram Notification",
+            "type": "main",
+            "index": 0,
+            "port": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "pinned": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "tags": ["jira", "crm", "sync", "bidirectional"],
+  "versionId": "87c2c9cf-d6d1-4f1e-a123-b4c5d6e7f8g9"
+}

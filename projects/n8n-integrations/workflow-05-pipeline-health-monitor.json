@@ -1,0 +1,277 @@
+{
+  "name": "Workflow 5: Pipeline Health Monitor (Alerts + Auto-Actions)",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "recurrence": "every",
+              "type": "days",
+              "value": 1
+            }
+          ],
+          "trigger": {
+            "mode": "hours",
+            "hour": 9,
+            "minute": 0
+          }
+        }
+      },
+      "id": "schedule-daily-monitor",
+      "name": "Schedule: Daily 09:00 UTC",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [100, 300]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "https://crm.aiparati.pt/api/rest/opportunities?fields=id,name,stage,updatedAt,customFields",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "bearerToken"
+      },
+      "id": "fetch-all-opportunities",
+      "name": "Fetch All Opportunities",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [250, 300],
+      "credentials": {
+        "httpBasicAuth": "crm_api_key"
+      }
+    },
+    {
+      "parameters": {
+        "dataPropertyName": "opportunities",
+        "loopOver": "opportunities"
+      },
+      "id": "loop-opportunities",
+      "name": "Loop Over Opportunities",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [400, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true
+          },
+          "conditions": [
+            {
+              "id": "1",
+              "operator": {
+                "name": "filter.operator.gt",
+                "value": "gt"
+              },
+              "type": "number",
+              "value": "3",
+              "property": "={{ $json.daysWithoutUpdate }}"
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "id": "check-stale-opportunity",
+      "name": "Check if Stale (>3 days)",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [550, 300]
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "https://crm.aiparati.pt/api/rest/opportunities/{{ $json.id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "bearerToken",
+        "sendBody": true,
+        "bodyParametersUi": "json",
+        "bodyJson": {
+          "stage": "Pipeline_NeedsAttention",
+          "customFields": {
+            "alertFlag": "true",
+            "alertReason": "No update in 3+ days"
+          }
+        }
+      },
+      "id": "move-to-needs-attention",
+      "name": "Move to 'Needs Attention'",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [700, 200],
+      "credentials": {
+        "httpBasicAuth": "crm_api_key"
+      }
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "https://crm.aiparati.pt/api/rest/people?fields=id,firstName,email,customFields",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "bearerToken"
+      },
+      "id": "fetch-cold-leads",
+      "name": "Fetch Cold Leads (No Activity)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [250, 500],
+      "credentials": {
+        "httpBasicAuth": "crm_api_key"
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true
+          },
+          "conditions": [
+            {
+              "id": "1",
+              "operator": {
+                "name": "filter.operator.equals",
+                "value": "equals"
+              },
+              "type": "string",
+              "value": "cold",
+              "property": "={{ $json.customFields.leadQuality }}"
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "id": "check-cold-leads",
+      "name": "Check if Cold Lead",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [400, 500]
+    },
+    {
+      "parameters": {
+        "prompt": "Generate a summary of the health alerts:\n\nStale Opportunities:\n{{ $json.staleOpprtunities }}\n\nCold Leads:\n{{ $json.coldLeads }}\n\nOverdue Tasks:\n{{ $json.overdueTasks }}\n\nProvide a JSON response with:\n- totalAlerts: number\n- criticalIssues: array of critical items\n- actionItems: array of recommended actions",
+        "options": {}
+      },
+      "id": "claude-analyze-health",
+      "name": "Claude: Analyze Pipeline Health",
+      "type": "n8n-nodes-base.anthropic",
+      "typeVersion": 1,
+      "position": [550, 500],
+      "credentials": {
+        "anthropicApi": "claude_api_key"
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "{{ $json.telegramUserId }}",
+        "text": "🚨 Pipeline Health Alert\n\n🔴 Critical Issues: {{ $json.totalAlerts }}\n\nStale Deals:\n{{ $json.criticalIssues | join('\\n') }}\n\nRecommended Actions:\n{{ $json.actionItems | join('\\n') }}\n\nTime to Act! ⚡"
+      },
+      "id": "send-health-alert",
+      "name": "Send Health Alert (Telegram)",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [700, 500],
+      "credentials": {
+        "telegramApi": "telegram_bot_token"
+      }
+    }
+  ],
+  "connections": {
+    "Schedule: Daily 09:00 UTC": {
+      "main": [
+        [
+          {
+            "node": "Fetch All Opportunities",
+            "type": "main",
+            "index": 0,
+            "port": 0
+          },
+          {
+            "node": "Fetch Cold Leads (No Activity)",
+            "type": "main",
+            "index": 0,
+            "port": 0
+          }
+        ]
+      ]
+    },
+    "Fetch All Opportunities": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Opportunities",
+            "type": "main",
+            "index": 0,
+            "port": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Opportunities": {
+      "main": [
+        [
+          {
+            "node": "Check if Stale (>3 days)",
+            "type": "main",
+            "index": 0,
+            "port": 0
+          }
+        ]
+      ]
+    },
+    "Check if Stale (>3 days)": {
+      "main": [
+        [
+          {
+            "node": "Move to 'Needs Attention'",
+            "type": "main",
+            "index": 0,
+            "port": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Cold Leads (No Activity)": {
+      "main": [
+        [
+          {
+            "node": "Check if Cold Lead",
+            "type": "main",
+            "index": 0,
+            "port": 0
+          }
+        ]
+      ]
+    },
+    "Check if Cold Lead": {
+      "main": [
+        [
+          {
+            "node": "Claude: Analyze Pipeline Health",
+            "type": "main",
+            "index": 0,
+            "port": 0
+          }
+        ]
+      ]
+    },
+    "Claude: Analyze Pipeline Health": {
+      "main": [
+        [
+          {
+            "node": "Send Health Alert (Telegram)",
+            "type": "main",
+            "index": 0,
+            "port": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "pinned": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "tags": ["monitoring", "health", "alerts", "crm"],
+  "versionId": "87c2c9cf-d6d1-4f1e-a123-b4c5d6e7f8g9"
+}

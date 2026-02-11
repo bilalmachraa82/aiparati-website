@@ -23,7 +23,7 @@
 |----------|---------|--------|------------|-------|
 | **BooknGo** | Interno | 🔨 85/100 | 🥇 HIGH | Bilal pediu ir para produção. Falta i18n (8 componentes, ~8-10h) |
 | **IVA Inteligente** | Interno | 🔨 ~90% | 🥇 HIGH | Bilal pediu finalizar. Lovable auto-deploy, Supabase |
-| **Twenty CRM** | Interno | ✅ Deployed | 🥈 MED | crm.aiparati.pt - Pipelines e Google OAuth pendentes |
+| **Twenty CRM** | Interno | ✅ Configured | 🥈 MED | crm.aiparati.pt - 3 pipelines, 8 contacts, 11 opps, €34.3K pipeline |
 | **Aurora Oceano** | Paula | 🔄 Activo | 🥈 MED | Dashboard + bot Moloni. PRODUTO PARA VENDER (não interno!) |
 | **AITI Stack** | Fernando | 🔨 Demos | 🥈 MED | 3 repos (automation, assistant, insights) + landing |
 | **Leni Bot** | Hélène | ✅ Funcional | 🟢 LOW | @LeniAssistenteBot, modelo kimi-coding/k2p5 |
@@ -102,6 +102,22 @@
 
 ## 📅 Timeline Recente
 
+### 2026-02-11 (GRANDE SESSÃO - Audit + Evolução)
+- **Audit completo** pedido por Bilal (crítica dura mas justa: "38% das capacidades")
+- **Disco:** 62% → 56% (limpeza ~6GB: clawdbot, opencode-ai, claude-cortex, old Claude versions)
+- **Bird CLI X.com:** Instalado v0.8.0 (Oceanswave/bird), auth_token+ct0 operacional
+- **X.com account:** @bilalmachraa (ID:74445730), credenciais em 1Password
+- **2 crons research criados:** Community Intel (09:00) + Security Watch (15:00)
+- **SOUL.md v5:** Self-reflection protocol, capabilities section, output formats, goal drift detection
+- **AGENTS.md:** 5 regras novas (#11-15): retrieval-led, proactividade, iteration, coherence, prova
+- **REFLECTION.md:** Criado (scoring + metas 90 dias: 38%→85%)
+- **CRM Twenty:** Configurado via GraphQL (3 pipelines, 8 people, 11 opps, €34.3K total pipeline)
+- **OpenClaw:** Já na 2026.2.9 (mais recente)
+- **133 sessões órfãs** limpas (script ~/clawd/scripts/cleanup-sessions.sh)
+- **Primeiro X.com research report ao vivo** com bird CLI
+- **Git:** 2 commits (501268c evolve + 09f0106 v5 upgrade)
+- **Sub-agentes paralelos (3):** todos completaram com sucesso (soul-agents, crm-plan, cleanup)
+
 ### 2026-02-10
 - Twenty CRM: Google OAuth configurado (API interception trick)
 - Bilal pediu: BooknGo produção, IVA finalizar, auto-research, análise leads
@@ -175,7 +191,7 @@
 
 ---
 
-## 📊 Crons Activos (16 jobs)
+## 📊 Crons Activos (18 jobs)
 
 ### Diários
 | Hora (Lisbon) | Job | Modelo |
@@ -186,8 +202,10 @@
 | 07:30 | AI Intel Scan | Haiku |
 | 08:00 | Bom Dia Briefing | Haiku |
 | 08:30 | Email Digest | Haiku |
+| 09:00 | 🐦 OpenClaw Community Intel (bird CLI) | GLM Flash |
 | 09:00 | Helena Orders | Haiku |
 | 09:30 | Relatório Matinal | Haiku |
+| 15:00 | 🛡️ Security & Best Practices Watch (bird CLI) | GLM Flash |
 | 18:00 | Daily Wrap + CTO | Haiku |
 | 23:00 | Memory Brain Sync | Haiku |
 
@@ -199,6 +217,27 @@
 
 ### One-shot
 - 28 Fev: ElevenLabs Reset Check
+
+## 🐦 X.com Integration
+- **Bird CLI:** v0.8.0 (Oceanswave/bird rescue fork)
+- **Account:** @bilalmachraa (ID:74445730)
+- **Auth:** AUTH_TOKEN + CT0 env vars in ~/.bashrc + .env.secrets
+- **1Password:** "X.com (Twitter) - Bilal" in "Jarvis Secrets"
+- **Contas a monitorar:** @steipete, @alexfinnx, @RayFerna, @badlogicgames, @BenjaminBadejo
+- **Status:** Read/search operacional, posting futuro
+
+## 📈 Auto-Avaliação (11 Fev 2026)
+| Capacidade | Score | Meta (90 dias) |
+|-----------|-------|----------------|
+| Cognitiva | 75% | 90% |
+| Autonomia | 35% | 80% |
+| Proactividade | 25% | 75% |
+| Fiabilidade | 40% | 85% |
+| Crescimento Bilal | 20% | 75% |
+| Parceria real | 30% | 75% |
+| **MÉDIA** | **38%** | **85%** |
+
+**Ficheiros de evolução:** REFLECTION.md, research/agent-improvement-2026.md (32KB)
 
 ---
 

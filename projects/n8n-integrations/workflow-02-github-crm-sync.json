@@ -1,0 +1,211 @@
+{
+  "name": "Workflow 2: GitHub ↔ CRM Sync (Daily Scan)",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "recurrence": "every",
+              "type": "days",
+              "value": 1
+            }
+          ]
+        }
+      },
+      "id": "schedule-daily-sync",
+      "name": "Schedule: Daily (09:00 UTC)",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [100, 300]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "https://api.github.com/user/repos?per_page=30&sort=updated",
+        "authentication": "oauth2",
+        "nodeCredentialType": "githubApi"
+      },
+      "id": "fetch-github-repos",
+      "name": "Fetch GitHub Repos",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [300, 300],
+      "credentials": {
+        "oAuth2Api": "github_oauth"
+      }
+    },
+    {
+      "parameters": {
+        "loopOver": "=response.body",
+        "dataPropertyName": "item"
+      },
+      "id": "loop-repos",
+      "name": "Loop Over Repos",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://api.github.com/repos/{{ $json.item.owner.login }}/{{ $json.item.name }}/commits?per_page=1",
+        "authentication": "oauth2"
+      },
+      "id": "fetch-latest-commit",
+      "name": "Fetch Latest Commit",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [600, 300],
+      "credentials": {
+        "oAuth2Api": "github_oauth"
+      }
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://api.github.com/repos/{{ $json.item.owner.login }}/{{ $json.item.name }}/pulls?state=open&per_page=100",
+        "authentication": "oauth2"
+      },
+      "id": "fetch-open-prs",
+      "name": "Fetch Open PRs",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [600, 450],
+      "credentials": {
+        "oAuth2Api": "github_oauth"
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://crm.aiparati.pt/api/rest/companies",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "bearerToken",
+        "sendBody": true,
+        "bodyParametersUi": "json",
+        "bodyJson": {
+          "name": "={{ $json.item.name }}",
+          "customFields": {
+            "githubRepo": "={{ $json.item.html_url }}",
+            "githubStars": "={{ $json.item.stargazers_count }}",
+            "lastCommit": "={{ $json[0].commit.author.date }}",
+            "lastCommitMessage": "={{ $json[0].commit.message }}",
+            "openPRs": "={{ $json.length }}",
+            "language": "={{ $json.item.language }}",
+            "lastUpdated": "={{ $json.item.updated_at }}"
+          }
+        }
+      },
+      "id": "update-crm-company",
+      "name": "Update CRM Company with GitHub Data",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [750, 375],
+      "credentials": {
+        "httpBasicAuth": "crm_api_key"
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "{{ $json.telegramUserId }}",
+        "text": "✅ GitHub sync completed\nProcessed: {{ $json.item.name }}\nCommits: Latest on {{ $json[0].commit.author.date }}\nOpen PRs: {{ $json.length }}"
+      },
+      "id": "send-completion-notification",
+      "name": "Send Completion Notification",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [900, 375],
+      "credentials": {
+        "telegramApi": "telegram_bot_token"
+      }
+    }
+  ],
+  "connections": {
+    "Schedule: Daily (09:00 UTC)": {
+      "main": [
+        [
+          {
+            "node": "Fetch GitHub Repos",
+            "type": "main",
+            "index": 0,
+            "port": 0
+          }
+        ]
+      ]
+    },
+    "Fetch GitHub Repos": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Repos",
+            "type": "main",
+            "index": 0,
+            "port": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Repos": {
+      "main": [
+        [
+          {
+            "node": "Fetch Latest Commit",
+            "type": "main",
+            "index": 0,
+            "port": 0
+          },
+          {
+            "node": "Fetch Open PRs",
+            "type": "main",
+            "index": 0,
+            "port": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Latest Commit": {
+      "main": [
+        [
+          {
+            "node": "Update CRM Company with GitHub Data",
+            "type": "main",
+            "index": 0,
+            "port": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Open PRs": {
+      "main": [
+        [
+          {
+            "node": "Update CRM Company with GitHub Data",
+            "type": "main",
+            "index": 0,
+            "port": 0
+          }
+        ]
+      ]
+    },
+    "Update CRM Company with GitHub Data": {
+      "main": [
+        [
+          {
+            "node": "Send Completion Notification",
+            "type": "main",
+            "index": 0,
+            "port": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "pinned": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "tags": ["github", "crm", "daily", "sync"],
+  "versionId": "87c2c9cf-d6d1-4f1e-a123-b4c5d6e7f8g9"
+}
