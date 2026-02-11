@@ -15,7 +15,7 @@
 - Noah (15 anos) - custódia quartas + fins de semana alternados
 - Dual career: terapia holística + AiParaTi (consultoria IA)
 - Meta: 200k€/ano
-- **NUNCA usar emoji 🤖 (robot)!** Bilal odeia. Gravar para sempre.
+- **NUNCA usar emoji 🤖 (robot) NEM ✨ (sparkles) para IA!** Bilal ODEIA. Usar: 🧠⚡💡🔮🎯💎🌐🔬. Regra PERMANENTE em TODOS os bots.
 
 ### Projectos Activos (Fev 2026)
 

@@ -32,9 +32,11 @@
         .btn-counter { background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); }
         .btn-counter:hover { background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%); }
         .tab-active { background: rgba(255,255,255,0.1); border-bottom: 2px solid #0ea5e9; }
-        .modal-overlay { background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); }
         input[type="number"], input[type="text"], select { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); }
         input[type="number"]:focus, input[type="text"]:focus, select:focus { outline: none; border-color: #0ea5e9; }
+        .loading { opacity: 0.5; pointer-events: none; }
+        .spinner { animation: spin 1s linear infinite; }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
     </style>
 </head>
 <body class="text-white p-4 lg:p-6">
@@ -50,13 +52,13 @@
         <div class="flex flex-wrap items-center gap-3">
             <div class="glass rounded-lg px-3 py-2 text-sm flex items-center gap-2">
                 <span class="w-2 h-2 rounded-full bg-green-500 pulse-dot"></span>
-                <span class="text-green-400 font-medium">3 vendedores online</span>
+                <span class="text-green-400 font-medium">Dados Moloni Live</span>
             </div>
             <a href="/index.html" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2">
                 🚚 Painel Operacional
             </a>
-            <button onclick="openSettingsModal()" class="glass hover:bg-white/10 rounded-lg px-4 py-2 text-sm font-medium transition-all flex items-center gap-2">
-                ⚙️ Configurações
+            <button onclick="refreshAllData()" class="glass hover:bg-white/10 rounded-lg px-4 py-2 text-sm font-medium transition-all flex items-center gap-2">
+                🔄 Actualizar
             </button>
         </div>
     </header>
@@ -64,10 +66,10 @@
     <!-- Tabs -->
     <div class="flex gap-1 mb-6 glass rounded-xl p-1 w-fit">
         <button onclick="showTab('aprovacoes')" id="tab-aprovacoes" class="px-4 py-2 rounded-lg text-sm font-medium transition-all tab-active">
-            🔔 Aprovações <span class="badge bg-orange-500/30 text-orange-400 ml-1">4</span>
+            🔔 Aprovações <span class="badge bg-orange-500/30 text-orange-400 ml-1" id="badge-pendentes">0</span>
         </button>
         <button onclick="showTab('dividas')" id="tab-dividas" class="px-4 py-2 rounded-lg text-sm font-medium transition-all hover:bg-white/5">
-            ⚠️ Alertas Dívida <span class="badge bg-red-500/30 text-red-400 ml-1">2</span>
+            ⚠️ Alertas Dívida <span class="badge bg-red-500/30 text-red-400 ml-1" id="badge-dividas">0</span>
         </button>
         <button onclick="showTab('historico')" id="tab-historico" class="px-4 py-2 rounded-lg text-sm font-medium transition-all hover:bg-white/5">
             📊 Histórico Preços
@@ -75,18 +77,15 @@
         <button onclick="showTab('regras')" id="tab-regras" class="px-4 py-2 rounded-lg text-sm font-medium transition-all hover:bg-white/5">
             📋 Regras
         </button>
-        <button onclick="showTab('analytics')" id="tab-analytics" class="px-4 py-2 rounded-lg text-sm font-medium transition-all hover:bg-white/5">
-            📊 Analytics <span class="badge bg-green-500/30 text-green-400 ml-1">LIVE</span>
-        </button>
     </div>
 
-    <!-- Stats Rápidos -->
+    <!-- Stats Rápidos - DADOS REAIS -->
     <div class="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
         <div class="glass rounded-xl p-4 card-hover">
             <div class="flex items-center gap-3">
                 <div class="w-10 h-10 gradient-orange rounded-lg flex items-center justify-center">⏳</div>
                 <div>
-                    <p class="text-2xl font-bold" id="pendingCount">4</p>
+                    <p class="text-2xl font-bold" id="kpi-pendentes">-</p>
                     <p class="text-slate-400 text-xs">Pendentes</p>
                 </div>
             </div>
@@ -95,8 +94,8 @@
             <div class="flex items-center gap-3">
                 <div class="w-10 h-10 gradient-green rounded-lg flex items-center justify-center">✅</div>
                 <div>
-                    <p class="text-2xl font-bold">12</p>
-                    <p class="text-slate-400 text-xs">Aprovados Hoje</p>
+                    <p class="text-2xl font-bold" id="kpi-aprovados-hoje">-</p>
+                    <p class="text-slate-400 text-xs">Facturas Hoje</p>
                 </div>
             </div>
         </div>
@@ -104,7 +103,7 @@
             <div class="flex items-center gap-3">
                 <div class="w-10 h-10 gradient-red rounded-lg flex items-center justify-center">⚠️</div>
                 <div>
-                    <p class="text-2xl font-bold">2</p>
+                    <p class="text-2xl font-bold" id="kpi-clientes-divida">-</p>
                     <p class="text-slate-400 text-xs">Clientes c/ Dívida</p>
                 </div>
             </div>
@@ -113,17 +112,17 @@
             <div class="flex items-center gap-3">
                 <div class="w-10 h-10 gradient-blue rounded-lg flex items-center justify-center">💰</div>
                 <div>
-                    <p class="text-2xl font-bold">€847</p>
-                    <p class="text-slate-400 text-xs">Descontos Hoje</p>
+                    <p class="text-2xl font-bold" id="kpi-valor-divida">-</p>
+                    <p class="text-slate-400 text-xs">Valor em Dívida</p>
                 </div>
             </div>
         </div>
         <div class="glass rounded-xl p-4 card-hover">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 gradient-purple rounded-lg flex items-center justify-center">📈</div>
+                <div class="w-10 h-10 gradient-purple rounded-lg flex items-center justify-center">👥</div>
                 <div>
-                    <p class="text-2xl font-bold">€12.4k</p>
-                    <p class="text-slate-400 text-xs">Vendas Hoje</p>
+                    <p class="text-2xl font-bold" id="kpi-total-clientes">-</p>
+                    <p class="text-slate-400 text-xs">Total Clientes</p>
                 </div>
             </div>
         </div>
@@ -133,192 +132,20 @@
     <div id="content-aprovacoes" class="tab-content">
         <div class="grid lg:grid-cols-3 gap-6">
             <!-- Coluna Principal: Pedidos Pendentes -->
-            <div class="lg:col-span-2 space-y-4">
-                <!-- Pedido URGENTE -->
-                <div class="glass rounded-xl p-5 card-hover border-l-4 border-red-500 pulse-urgent">
-                    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-                        <div class="flex-1">
-                            <div class="flex items-center gap-2 mb-2">
-                                <span class="badge bg-red-500/30 text-red-400">🚨 URGENTE</span>
-                                <span class="badge bg-purple-500/20 text-purple-400">Desconto &gt; 15%</span>
-                                <span class="text-xs text-slate-500">há 2 min</span>
-                            </div>
-                            <div class="flex items-center gap-3 mb-3">
-                                <div class="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center text-lg">👤</div>
-                                <div>
-                                    <p class="font-semibold">Carlos Mendes</p>
-                                    <p class="text-sm text-slate-400">Vendedor #3 • Zona Sul</p>
-                                </div>
-                            </div>
-                            <div class="glass-light rounded-lg p-3 mb-3">
-                                <p class="text-sm text-slate-300 mb-2">💬 <em>"O cliente diz que a concorrência oferece a 11€/kg. Preciso de baixar para fechar o negócio."</em></p>
-                                <div class="flex flex-wrap gap-4 text-sm">
-                                    <div><span class="text-slate-500">Cliente:</span> <span class="font-medium">Restaurante Mar Azul</span></div>
-                                    <div><span class="text-slate-500">Produto:</span> <span class="font-medium">Polvo 2000/3000</span></div>
-                                    <div><span class="text-slate-500">Qtd:</span> <span class="font-medium">50kg</span></div>
-                                </div>
-                            </div>
-                            <div class="flex items-center gap-4 text-sm">
-                                <div><span class="text-slate-500">Preço tabela:</span> <span class="font-semibold">€12,20/kg</span></div>
-                                <span class="text-slate-600">→</span>
-                                <div><span class="text-slate-500">Pedido:</span> <span class="font-semibold text-red-400">€11,00/kg</span> <span class="badge bg-red-500/20 text-red-400">-9.8%</span></div>
-                                <div><span class="text-slate-500">Impacto:</span> <span class="font-semibold text-red-400">-€60,00</span></div>
-                            </div>
-                        </div>
-                        <div class="flex lg:flex-col gap-2">
-                            <button onclick="aprovar(this, 'Carlos Mendes', '€11,00/kg')" class="btn-approve px-6 py-3 rounded-lg font-semibold transition-all">✅ Aprovar</button>
-                            <button onclick="contraproposta(this)" class="btn-counter px-6 py-3 rounded-lg font-semibold transition-all">💬 €11,50</button>
-                            <button onclick="rejeitar(this, 'Carlos Mendes')" class="btn-reject px-6 py-3 rounded-lg font-semibold transition-all">❌ Rejeitar</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Pedido Normal 1 -->
-                <div class="glass rounded-xl p-5 card-hover border-l-4 border-orange-500">
-                    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-                        <div class="flex-1">
-                            <div class="flex items-center gap-2 mb-2">
-                                <span class="badge bg-orange-500/20 text-orange-400">Desconto 5-10%</span>
-                                <span class="text-xs text-slate-500">há 15 min</span>
-                            </div>
-                            <div class="flex items-center gap-3 mb-3">
-                                <div class="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center text-lg">👤</div>
-                                <div>
-                                    <p class="font-semibold">Ana Silva</p>
-                                    <p class="text-sm text-slate-400">Vendedora #1 • Zona Norte</p>
-                                </div>
-                            </div>
-                            <div class="flex flex-wrap gap-4 text-sm mb-2">
-                                <div><span class="text-slate-500">Cliente:</span> <span class="font-medium">Hotel Cascais</span> <span class="badge bg-blue-500/20 text-blue-400 ml-1">Regular</span></div>
-                                <div><span class="text-slate-500">Produto:</span> <span class="font-medium">Salmão Posta Extra</span></div>
-                                <div><span class="text-slate-500">Qtd:</span> <span class="font-medium">30kg</span></div>
-                            </div>
-                            <div class="flex items-center gap-4 text-sm">
-                                <div><span class="text-slate-500">Preço:</span> <span class="font-semibold">€9,65</span> → <span class="text-orange-400 font-semibold">€9,00</span> <span class="badge bg-orange-500/20 text-orange-400">-6.7%</span></div>
-                                <div><span class="text-slate-500">Impacto:</span> <span class="text-orange-400">-€19,50</span></div>
-                            </div>
-                        </div>
-                        <div class="flex lg:flex-col gap-2">
-                            <button onclick="aprovar(this, 'Ana Silva', '€9,00/kg')" class="btn-approve px-5 py-2 rounded-lg font-semibold transition-all text-sm">✅ Aprovar</button>
-                            <button onclick="rejeitar(this, 'Ana Silva')" class="btn-reject px-5 py-2 rounded-lg font-semibold transition-all text-sm">❌ Rejeitar</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Pedido Normal 2 -->
-                <div class="glass rounded-xl p-5 card-hover border-l-4 border-yellow-500">
-                    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-                        <div class="flex-1">
-                            <div class="flex items-center gap-2 mb-2">
-                                <span class="badge bg-yellow-500/20 text-yellow-400">Desconto &lt; 5%</span>
-                                <span class="badge bg-green-500/20 text-green-400">Auto-aprovável</span>
-                                <span class="text-xs text-slate-500">há 32 min</span>
-                            </div>
-                            <div class="flex items-center gap-3 mb-3">
-                                <div class="w-10 h-10 rounded-full bg-yellow-500/20 flex items-center justify-center text-lg">👤</div>
-                                <div>
-                                    <p class="font-semibold">Miguel Costa</p>
-                                    <p class="text-sm text-slate-400">Vendedor #5 • Zona Centro</p>
-                                </div>
-                            </div>
-                            <div class="flex flex-wrap gap-4 text-sm">
-                                <div><span class="text-slate-500">Cliente:</span> <span class="font-medium">Café Central</span></div>
-                                <div><span class="text-slate-500">Produto:</span> <span class="font-medium">Camarão 30/40</span></div>
-                                <div><span class="text-slate-500">€4,75</span> → <span class="text-yellow-400">€4,60</span> <span class="badge bg-yellow-500/20 text-yellow-400">-3.2%</span></div>
-                            </div>
-                        </div>
-                        <div class="flex lg:flex-col gap-2">
-                            <button onclick="aprovar(this, 'Miguel Costa', '€4,60/kg')" class="btn-approve px-5 py-2 rounded-lg font-semibold transition-all text-sm">✅ Aprovar</button>
-                            <button onclick="rejeitar(this, 'Miguel Costa')" class="btn-reject px-5 py-2 rounded-lg font-semibold transition-all text-sm">❌ Rejeitar</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Venda Fechada -->
-                <div class="glass rounded-xl p-5 card-hover border-l-4 border-green-500">
-                    <div class="flex items-center justify-between">
-                        <div class="flex-1">
-                            <div class="flex items-center gap-2 mb-2">
-                                <span class="badge bg-green-500/20 text-green-400">🎉 VENDA FECHADA</span>
-                                <span class="text-xs text-slate-500">há 5 min</span>
-                            </div>
-                            <div class="flex flex-wrap gap-4 text-sm">
-                                <div><span class="font-medium">Carlos Mendes</span></div>
-                                <div><span class="text-slate-500">Cliente:</span> <span class="font-medium">Marisqueira Lisboa</span></div>
-                                <div><span class="text-slate-500">Total:</span> <span class="font-semibold text-green-400">€1.250,00</span></div>
-                            </div>
-                        </div>
-                        <span class="text-3xl">🎊</span>
-                    </div>
+            <div class="lg:col-span-2 space-y-4" id="lista-aprovacoes">
+                <div class="glass rounded-xl p-5 text-center">
+                    <span class="spinner inline-block text-2xl">🔄</span>
+                    <p class="text-slate-400 mt-2">A carregar facturas pendentes...</p>
                 </div>
             </div>
 
             <!-- Coluna Lateral -->
             <div class="space-y-4">
-                <!-- Vendedores Online -->
+                <!-- Últimas Facturas -->
                 <div class="glass rounded-xl p-5">
-                    <h3 class="font-semibold mb-4">👥 Vendedores Activos</h3>
-                    <div class="space-y-3">
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center gap-3">
-                                <div class="relative">
-                                    <div class="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center text-xs">AS</div>
-                                    <span class="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 rounded-full border-2 border-slate-900"></span>
-                                </div>
-                                <div>
-                                    <p class="font-medium text-sm">Ana Silva</p>
-                                    <p class="text-xs text-slate-500">Zona Norte</p>
-                                </div>
-                            </div>
-                            <span class="text-green-400 text-sm font-medium">€2.340</span>
-                        </div>
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center gap-3">
-                                <div class="relative">
-                                    <div class="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center text-xs">CM</div>
-                                    <span class="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 rounded-full border-2 border-slate-900"></span>
-                                </div>
-                                <div>
-                                    <p class="font-medium text-sm">Carlos Mendes</p>
-                                    <p class="text-xs text-slate-500">Zona Sul</p>
-                                </div>
-                            </div>
-                            <span class="text-green-400 text-sm font-medium">€1.890</span>
-                        </div>
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center gap-3">
-                                <div class="relative">
-                                    <div class="w-8 h-8 rounded-full bg-yellow-500/20 flex items-center justify-center text-xs">MC</div>
-                                    <span class="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 rounded-full border-2 border-slate-900"></span>
-                                </div>
-                                <div>
-                                    <p class="font-medium text-sm">Miguel Costa</p>
-                                    <p class="text-xs text-slate-500">Zona Centro</p>
-                                </div>
-                            </div>
-                            <span class="text-green-400 text-sm font-medium">€1.120</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Histórico Recente -->
-                <div class="glass rounded-xl p-5">
-                    <h3 class="font-semibold mb-4">📜 Últimas Decisões</h3>
-                    <div class="space-y-3 text-sm" id="historicoLista">
-                        <div class="flex items-center gap-3 p-2 rounded-lg glass-light">
-                            <span class="text-green-400">✅</span>
-                            <div class="flex-1">
-                                <p class="text-slate-300">Ana Silva - €9,20/kg</p>
-                                <p class="text-xs text-slate-500">Salmão • há 1h</p>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-3 p-2 rounded-lg glass-light">
-                            <span class="text-red-400">❌</span>
-                            <div class="flex-1">
-                                <p class="text-slate-300">Rui Ferreira - €10,00/kg</p>
-                                <p class="text-xs text-slate-500">Polvo • há 2h</p>
-                            </div>
-                        </div>
+                    <h3 class="font-semibold mb-4">📜 Últimas Facturas</h3>
+                    <div class="space-y-3 text-sm max-h-96 overflow-y-auto" id="lista-ultimas-facturas">
+                        <div class="text-center text-slate-500">A carregar...</div>
                     </div>
                 </div>
             </div>
@@ -329,225 +156,87 @@
     <div id="content-dividas" class="tab-content hidden">
         <div class="space-y-4">
             <div class="flex items-center justify-between mb-4">
-                <h2 class="text-xl font-bold">⚠️ Clientes com Dívida a Fazer Encomenda</h2>
-                <span class="badge bg-red-500/30 text-red-400">Atenção Requerida</span>
+                <h2 class="text-xl font-bold">⚠️ Clientes com Facturas Pendentes</h2>
+                <span class="badge bg-red-500/30 text-red-400">Dados Moloni</span>
             </div>
-
-            <!-- Alerta Dívida 1 -->
-            <div class="glass rounded-xl p-5 border-l-4 border-red-500 pulse-urgent">
-                <div class="flex flex-col lg:flex-row lg:items-start justify-between gap-4">
-                    <div class="flex-1">
-                        <div class="flex items-center gap-2 mb-3">
-                            <span class="badge bg-red-500/30 text-red-400">🚨 DÍVIDA VENCIDA</span>
-                            <span class="text-xs text-slate-500">Alerta às 14:32</span>
-                        </div>
-                        <div class="flex items-center gap-3 mb-4">
-                            <div class="w-12 h-12 rounded-full bg-red-500/20 flex items-center justify-center text-xl">🏪</div>
-                            <div>
-                                <p class="font-semibold text-lg">Restaurante Beira Mar</p>
-                                <p class="text-sm text-slate-400">Cliente desde 2019 • 156 encomendas</p>
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-                            <div class="glass-light rounded-lg p-3 text-center">
-                                <p class="text-2xl font-bold text-red-400">€2.450</p>
-                                <p class="text-xs text-slate-500">Dívida Total</p>
-                            </div>
-                            <div class="glass-light rounded-lg p-3 text-center">
-                                <p class="text-2xl font-bold text-orange-400">45 dias</p>
-                                <p class="text-xs text-slate-500">Mais Antiga</p>
-                            </div>
-                            <div class="glass-light rounded-lg p-3 text-center">
-                                <p class="text-2xl font-bold text-yellow-400">3</p>
-                                <p class="text-xs text-slate-500">Facturas Pendentes</p>
-                            </div>
-                            <div class="glass-light rounded-lg p-3 text-center">
-                                <p class="text-2xl font-bold text-blue-400">€890</p>
-                                <p class="text-xs text-slate-500">Nova Encomenda</p>
-                            </div>
-                        </div>
-                        <div class="glass-light rounded-lg p-3">
-                            <p class="text-sm text-slate-400 mb-2">📦 <strong>Encomenda Pedida:</strong></p>
-                            <p class="text-sm">Polvo 1000/2000 (20kg) + Camarão 30/40 (15kg) + Salmão Posta (10kg)</p>
-                            <p class="text-xs text-slate-500 mt-2">Vendedor: Carlos Mendes • Via WhatsApp</p>
-                        </div>
-                    </div>
-                    <div class="flex flex-col gap-2">
-                        <button onclick="aprovarComAlerta(this)" class="bg-yellow-500 hover:bg-yellow-600 text-black px-6 py-3 rounded-lg font-semibold transition-all">
-                            ⚠️ Aprovar c/ Aviso
-                        </button>
-                        <button onclick="bloquearEncomenda(this)" class="btn-reject px-6 py-3 rounded-lg font-semibold transition-all">
-                            🚫 Bloquear
-                        </button>
-                        <button onclick="ligarCliente()" class="glass hover:bg-white/10 px-6 py-3 rounded-lg font-semibold transition-all">
-                            📞 Ligar Cliente
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Alerta Dívida 2 -->
-            <div class="glass rounded-xl p-5 border-l-4 border-orange-500">
-                <div class="flex flex-col lg:flex-row lg:items-start justify-between gap-4">
-                    <div class="flex-1">
-                        <div class="flex items-center gap-2 mb-3">
-                            <span class="badge bg-orange-500/30 text-orange-400">⚠️ DÍVIDA RECENTE</span>
-                        </div>
-                        <div class="flex items-center gap-3 mb-4">
-                            <div class="w-12 h-12 rounded-full bg-orange-500/20 flex items-center justify-center text-xl">🏨</div>
-                            <div>
-                                <p class="font-semibold text-lg">Hotel Atlântico</p>
-                                <p class="text-sm text-slate-400">Cliente desde 2021 • 89 encomendas</p>
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-                            <div class="glass-light rounded-lg p-3 text-center">
-                                <p class="text-2xl font-bold text-orange-400">€780</p>
-                                <p class="text-xs text-slate-500">Dívida Total</p>
-                            </div>
-                            <div class="glass-light rounded-lg p-3 text-center">
-                                <p class="text-2xl font-bold text-yellow-400">12 dias</p>
-                                <p class="text-xs text-slate-500">Vencida há</p>
-                            </div>
-                            <div class="glass-light rounded-lg p-3 text-center">
-                                <p class="text-2xl font-bold text-green-400">1</p>
-                                <p class="text-xs text-slate-500">Factura Pendente</p>
-                            </div>
-                            <div class="glass-light rounded-lg p-3 text-center">
-                                <p class="text-2xl font-bold text-blue-400">€1.240</p>
-                                <p class="text-xs text-slate-500">Nova Encomenda</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="flex flex-col gap-2">
-                        <button onclick="aprovarComAlerta(this)" class="btn-approve px-6 py-3 rounded-lg font-semibold transition-all">
-                            ✅ Aprovar
-                        </button>
-                        <button onclick="enviarLembrete()" class="btn-counter px-6 py-3 rounded-lg font-semibold transition-all">
-                            📧 Enviar Lembrete
-                        </button>
-                    </div>
+            <div id="lista-dividas" class="space-y-4">
+                <div class="glass rounded-xl p-5 text-center">
+                    <span class="spinner inline-block text-2xl">🔄</span>
+                    <p class="text-slate-400 mt-2">A carregar alertas de dívida...</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- TAB: Histórico de Preços -->
+    <!-- TAB: Histórico de Preços - CRÍTICO -->
     <div id="content-historico" class="tab-content hidden">
         <div class="glass rounded-xl p-6">
-            <h2 class="text-xl font-bold mb-6">📊 Consulta de Histórico de Preços</h2>
-            <p class="text-slate-400 mb-6">Os vendedores podem consultar via bot: <code class="bg-slate-700 px-2 py-1 rounded">"Preço polvo para Restaurante Mar Azul"</code></p>
+            <h2 class="text-xl font-bold mb-6">📊 Histórico de Preços por Cliente</h2>
+            <p class="text-slate-400 mb-6">Seleccione um cliente para ver os produtos que já comprou e os preços praticados.</p>
             
             <div class="grid lg:grid-cols-2 gap-6">
-                <!-- Formulário de Pesquisa -->
+                <!-- Selecção de Cliente -->
                 <div class="space-y-4">
                     <div>
                         <label class="block text-sm text-slate-400 mb-2">Cliente</label>
-                        <select id="searchCliente" class="w-full rounded-lg px-4 py-3 text-white">
+                        <select id="searchCliente" class="w-full rounded-lg px-4 py-3 text-white" onchange="carregarHistoricoCliente()">
                             <option value="">Seleccionar cliente...</option>
-                            <option value="mar-azul">Restaurante Mar Azul</option>
-                            <option value="hotel-cascais">Hotel Cascais</option>
-                            <option value="beira-mar">Restaurante Beira Mar</option>
-                            <option value="marisqueira">Marisqueira Lisboa</option>
-                            <option value="cafe-central">Café Central</option>
                         </select>
                     </div>
-                    <div>
-                        <label class="block text-sm text-slate-400 mb-2">Produto</label>
-                        <select id="searchProduto" class="w-full rounded-lg px-4 py-3 text-white">
-                            <option value="">Seleccionar produto...</option>
-                            <option value="polvo-2000">Polvo 2000/3000</option>
-                            <option value="polvo-1000">Polvo 1000/2000</option>
-                            <option value="camarao-30">Camarão 30/40</option>
-                            <option value="salmao">Salmão Posta Extra</option>
-                            <option value="bacalhau">Bacalhau Lombo 300/400</option>
-                        </select>
+                    
+                    <!-- Info do Cliente Seleccionado -->
+                    <div id="info-cliente" class="glass-light rounded-xl p-4 hidden">
+                        <h4 class="font-semibold mb-2" id="cliente-nome">-</h4>
+                        <div class="grid grid-cols-2 gap-3 text-sm">
+                            <div><span class="text-slate-500">NIF:</span> <span id="cliente-nif">-</span></div>
+                            <div><span class="text-slate-500">Email:</span> <span id="cliente-email">-</span></div>
+                            <div><span class="text-slate-500">Telefone:</span> <span id="cliente-telefone">-</span></div>
+                            <div><span class="text-slate-500">Total Facturas:</span> <span id="cliente-total-facturas">-</span></div>
+                        </div>
                     </div>
-                    <button onclick="pesquisarHistorico()" class="w-full gradient-blue px-6 py-3 rounded-lg font-semibold transition-all hover:opacity-90">
-                        🔍 Pesquisar Histórico
-                    </button>
+
+                    <!-- Lista de Produtos Comprados pelo Cliente -->
+                    <div id="produtos-cliente" class="hidden">
+                        <label class="block text-sm text-slate-400 mb-2">Produtos Comprados por Este Cliente</label>
+                        <div class="space-y-2 max-h-80 overflow-y-auto" id="lista-produtos-cliente">
+                            <!-- Preenchido dinamicamente -->
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Resultados -->
-                <div id="resultadosHistorico" class="glass-light rounded-xl p-5">
-                    <h3 class="font-semibold mb-4">📋 Histórico: Polvo 2000/3000 → Restaurante Mar Azul</h3>
-                    <div class="space-y-3">
-                        <div class="flex items-center justify-between p-3 rounded-lg bg-white/5">
-                            <div>
-                                <p class="font-medium">15 Jan 2026</p>
-                                <p class="text-xs text-slate-500">50kg • Carlos Mendes</p>
-                            </div>
-                            <div class="text-right">
-                                <p class="font-bold text-green-400">€11,50/kg</p>
-                                <p class="text-xs text-slate-500">-5.7% do tabela</p>
-                            </div>
-                        </div>
-                        <div class="flex items-center justify-between p-3 rounded-lg bg-white/5">
-                            <div>
-                                <p class="font-medium">28 Dez 2025</p>
-                                <p class="text-xs text-slate-500">30kg • Carlos Mendes</p>
-                            </div>
-                            <div class="text-right">
-                                <p class="font-bold text-yellow-400">€11,80/kg</p>
-                                <p class="text-xs text-slate-500">-3.3% do tabela</p>
-                            </div>
-                        </div>
-                        <div class="flex items-center justify-between p-3 rounded-lg bg-white/5">
-                            <div>
-                                <p class="font-medium">10 Dez 2025</p>
-                                <p class="text-xs text-slate-500">40kg • Ana Silva</p>
-                            </div>
-                            <div class="text-right">
-                                <p class="font-bold">€12,00/kg</p>
-                                <p class="text-xs text-slate-500">-1.6% do tabela</p>
-                            </div>
-                        </div>
-                        <div class="flex items-center justify-between p-3 rounded-lg bg-white/5">
-                            <div>
-                                <p class="font-medium">22 Nov 2025</p>
-                                <p class="text-xs text-slate-500">25kg • Carlos Mendes</p>
-                            </div>
-                            <div class="text-right">
-                                <p class="font-bold">€12,20/kg</p>
-                                <p class="text-xs text-slate-500">Preço tabela</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mt-4 pt-4 border-t border-white/10">
-                        <div class="flex justify-between text-sm">
-                            <span class="text-slate-400">Preço médio:</span>
-                            <span class="font-bold">€11,88/kg</span>
-                        </div>
-                        <div class="flex justify-between text-sm">
-                            <span class="text-slate-400">Desconto médio:</span>
-                            <span class="font-bold text-orange-400">-2.6%</span>
-                        </div>
-                        <div class="flex justify-between text-sm">
-                            <span class="text-slate-400">Total comprado:</span>
-                            <span class="font-bold">145kg (€1.722,60)</span>
-                        </div>
+                <!-- Histórico de Preços do Produto Seleccionado -->
+                <div id="historico-precos" class="glass-light rounded-xl p-5">
+                    <h3 class="font-semibold mb-4">📋 Seleccione um cliente para ver histórico</h3>
+                    <div class="text-center text-slate-500 py-8">
+                        <span class="text-4xl">📊</span>
+                        <p class="mt-2">O histórico de preços aparecerá aqui</p>
                     </div>
                 </div>
             </div>
 
-            <!-- Exemplo de pergunta ao bot -->
-            <div class="mt-6 glass-light rounded-xl p-5">
-                <h3 class="font-semibold mb-3">💬 Como o vendedor pergunta ao bot:</h3>
-                <div class="space-y-2 text-sm">
-                    <div class="flex gap-3 items-start">
-                        <span class="text-blue-400">👤 Vendedor:</span>
-                        <span class="glass px-3 py-2 rounded-lg">"A quanto vendemos polvo ao Mar Azul?"</span>
-                    </div>
-                    <div class="flex gap-3 items-start">
-                        <span class="text-green-400">🤖 Aurora:</span>
-                        <span class="glass px-3 py-2 rounded-lg">"Restaurante Mar Azul comprou Polvo 2000/3000 4 vezes. Último preço: €11,50/kg (-5.7%). Média: €11,88/kg. Quer que prepare uma proposta?"</span>
-                    </div>
+            <!-- Comparação de Preços -->
+            <div id="comparacao-precos" class="mt-6 hidden">
+                <h3 class="font-semibold mb-4">💰 Comparação: Último Preço vs Preço Actual</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead>
+                            <tr class="text-slate-400 border-b border-white/10">
+                                <th class="text-left py-2">Produto</th>
+                                <th class="text-right py-2">Último Preço</th>
+                                <th class="text-right py-2">Data</th>
+                                <th class="text-right py-2">Preço Actual</th>
+                                <th class="text-right py-2">Diferença</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabela-comparacao">
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- TAB: Regras (Editáveis) -->
+    <!-- TAB: Regras -->
     <div id="content-regras" class="tab-content hidden">
         <div class="glass rounded-xl p-6">
             <div class="flex items-center justify-between mb-6">
@@ -599,20 +288,6 @@
                             <span class="text-slate-400">%</span>
                         </div>
                     </div>
-
-                    <div class="glass-light rounded-lg p-4">
-                        <div class="flex items-center justify-between mb-3">
-                            <label class="font-medium">Bónus Cliente Regular</label>
-                            <span class="badge bg-purple-500/20 text-purple-400">Automático</span>
-                        </div>
-                        <div class="flex items-center gap-3 mb-2">
-                            <span class="text-slate-400">Após</span>
-                            <input type="number" id="regra-regular-pedidos" value="10" class="w-20 rounded-lg px-3 py-2 text-center text-white font-bold">
-                            <span class="text-slate-400">pedidos, permite +</span>
-                            <input type="number" id="regra-regular-bonus" value="5" class="w-20 rounded-lg px-3 py-2 text-center text-white font-bold">
-                            <span class="text-slate-400">%</span>
-                        </div>
-                    </div>
                 </div>
 
                 <!-- Políticas de Dívida -->
@@ -650,32 +325,7 @@
 
                     <div class="glass-light rounded-lg p-4">
                         <div class="flex items-center justify-between mb-3">
-                            <label class="font-medium">Lembretes Automáticos</label>
-                            <span class="badge bg-blue-500/20 text-blue-400">Email/WhatsApp</span>
-                        </div>
-                        <div class="space-y-2 text-sm">
-                            <div class="flex items-center gap-2">
-                                <input type="checkbox" id="lembrete-1" checked class="rounded">
-                                <label for="lembrete-1">1 dia após vencimento</label>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <input type="checkbox" id="lembrete-7" checked class="rounded">
-                                <label for="lembrete-7">7 dias após vencimento</label>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <input type="checkbox" id="lembrete-15" checked class="rounded">
-                                <label for="lembrete-15">15 dias após vencimento</label>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <input type="checkbox" id="lembrete-30" checked class="rounded">
-                                <label for="lembrete-30">30 dias após vencimento (último aviso)</label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="glass-light rounded-lg p-4">
-                        <div class="flex items-center justify-between mb-3">
-                            <label class="font-medium">Notificações Paula</label>
+                            <label class="font-medium">Notificações</label>
                         </div>
                         <div class="space-y-2 text-sm">
                             <div class="flex items-center gap-2">
@@ -697,176 +347,6 @@
         </div>
     </div>
 
-    <!-- TAB: Analytics - DADOS REAIS MOLONI -->
-    <div id="content-analytics" class="tab-content hidden">
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <!-- KPIs Principais -->
-            <div class="lg:col-span-3 grid grid-cols-2 lg:grid-cols-4 gap-4">
-                <div class="glass rounded-xl p-5 card-hover">
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="text-3xl">💰</span>
-                        <span class="text-green-400 text-sm font-medium" id="kpi-growth">+60.6% YoY</span>
-                    </div>
-                    <p class="text-3xl font-bold" id="kpi-2025-revenue">€4.41M</p>
-                    <p class="text-slate-400 text-sm">Faturação 2025</p>
-                    <p class="text-xs text-slate-500 mt-1">7.565 faturas</p>
-                </div>
-                <div class="glass rounded-xl p-5 card-hover">
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="text-3xl">📊</span>
-                        <span class="text-blue-400 text-sm font-medium">2024</span>
-                    </div>
-                    <p class="text-3xl font-bold" id="kpi-2024-revenue">€2.75M</p>
-                    <p class="text-slate-400 text-sm">Faturação 2024</p>
-                    <p class="text-xs text-slate-500 mt-1">8.767 faturas</p>
-                </div>
-                <div class="glass rounded-xl p-5 card-hover">
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="text-3xl">🧾</span>
-                        <span class="text-purple-400 text-sm font-medium">+86%</span>
-                    </div>
-                    <p class="text-3xl font-bold">€583</p>
-                    <p class="text-slate-400 text-sm">Ticket Médio 2025</p>
-                    <p class="text-xs text-slate-500 mt-1">vs €314 em 2024</p>
-                </div>
-                <div class="glass rounded-xl p-5 card-hover">
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="text-3xl">👥</span>
-                        <span class="text-cyan-400 text-sm font-medium">ativos</span>
-                    </div>
-                    <p class="text-3xl font-bold">469</p>
-                    <p class="text-slate-400 text-sm">Clientes</p>
-                    <p class="text-xs text-slate-500 mt-1">no sistema Moloni</p>
-                </div>
-            </div>
-
-            <!-- Gráfico Evolução Mensal -->
-            <div class="lg:col-span-2 glass rounded-xl p-5">
-                <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
-                    📈 Faturação Mensal 2024 vs 2025
-                </h3>
-                <div class="h-64" id="revenueChart">
-                    <canvas id="monthlyRevenueChart"></canvas>
-                </div>
-            </div>
-
-            <!-- Top Clientes -->
-            <div class="glass rounded-xl p-5">
-                <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
-                    🏆 Top 10 Clientes 2024
-                </h3>
-                <div class="space-y-3 max-h-64 overflow-y-auto" id="top-customers-list">
-                    <div class="flex justify-between items-center py-2 border-b border-white/10">
-                        <span class="text-sm truncate flex-1">BELIZAZEL-SOLUÇÕES IBÉRICAS</span>
-                        <span class="font-semibold text-green-400 ml-2">€216.1k</span>
-                    </div>
-                    <div class="flex justify-between items-center py-2 border-b border-white/10">
-                        <span class="text-sm truncate flex-1">DOCA REAL LDA.</span>
-                        <span class="font-semibold text-green-400 ml-2">€143.6k</span>
-                    </div>
-                    <div class="flex justify-between items-center py-2 border-b border-white/10">
-                        <span class="text-sm truncate flex-1">ONIMOD TIERRA Y MAR S.L.</span>
-                        <span class="font-semibold text-green-400 ml-2">€119.6k</span>
-                    </div>
-                    <div class="flex justify-between items-center py-2 border-b border-white/10">
-                        <span class="text-sm truncate flex-1">RAPOSIN LOGISTICA</span>
-                        <span class="font-semibold text-green-400 ml-2">€107.8k</span>
-                    </div>
-                    <div class="flex justify-between items-center py-2 border-b border-white/10">
-                        <span class="text-sm truncate flex-1">REST. ORIENTAL PALACE</span>
-                        <span class="font-semibold text-green-400 ml-2">€95.6k</span>
-                    </div>
-                    <div class="flex justify-between items-center py-2 border-b border-white/10">
-                        <span class="text-sm truncate flex-1">MARBOTRADE, SL</span>
-                        <span class="font-semibold text-green-400 ml-2">€81.3k</span>
-                    </div>
-                    <div class="flex justify-between items-center py-2 border-b border-white/10">
-                        <span class="text-sm truncate flex-1">NOVA CASA DAS FEBRAS</span>
-                        <span class="font-semibold text-green-400 ml-2">€57.0k</span>
-                    </div>
-                    <div class="flex justify-between items-center py-2 border-b border-white/10">
-                        <span class="text-sm truncate flex-1">TITO CARVALHO REST.</span>
-                        <span class="font-semibold text-green-400 ml-2">€54.3k</span>
-                    </div>
-                    <div class="flex justify-between items-center py-2 border-b border-white/10">
-                        <span class="text-sm truncate flex-1">NANA PETISCOS</span>
-                        <span class="font-semibold text-green-400 ml-2">€48.7k</span>
-                    </div>
-                    <div class="flex justify-between items-center py-2">
-                        <span class="text-sm truncate flex-1">Icemix, Lda</span>
-                        <span class="font-semibold text-green-400 ml-2">€47.0k</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Tabela Mensal 2024 -->
-            <div class="lg:col-span-2 glass rounded-xl p-5">
-                <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
-                    📅 Detalhe Mensal 2024
-                </h3>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-sm">
-                        <thead>
-                            <tr class="text-slate-400 border-b border-white/10">
-                                <th class="text-left py-2">Mês</th>
-                                <th class="text-right py-2">Faturas</th>
-                                <th class="text-right py-2">Revenue</th>
-                                <th class="text-right py-2">Ticket Médio</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr class="border-b border-white/5"><td class="py-2">Jan</td><td class="text-right">641</td><td class="text-right text-green-400">€102.455</td><td class="text-right">€160</td></tr>
-                            <tr class="border-b border-white/5"><td class="py-2">Fev</td><td class="text-right">625</td><td class="text-right text-green-400">€117.743</td><td class="text-right">€188</td></tr>
-                            <tr class="border-b border-white/5"><td class="py-2">Mar</td><td class="text-right">715</td><td class="text-right text-green-400">€183.570</td><td class="text-right">€257</td></tr>
-                            <tr class="border-b border-white/5"><td class="py-2">Abr</td><td class="text-right">903</td><td class="text-right text-green-400">€210.140</td><td class="text-right">€233</td></tr>
-                            <tr class="border-b border-white/5"><td class="py-2">Mai</td><td class="text-right">894</td><td class="text-right text-green-400">€239.369</td><td class="text-right">€268</td></tr>
-                            <tr class="border-b border-white/5"><td class="py-2">Jun</td><td class="text-right">798</td><td class="text-right text-green-400">€199.617</td><td class="text-right">€250</td></tr>
-                            <tr class="border-b border-white/5 bg-green-500/10"><td class="py-2 font-semibold">Jul 🔥</td><td class="text-right font-semibold">751</td><td class="text-right text-green-400 font-semibold">€402.924</td><td class="text-right font-semibold">€537</td></tr>
-                            <tr class="border-b border-white/5"><td class="py-2">Ago</td><td class="text-right">695</td><td class="text-right text-green-400">€248.426</td><td class="text-right">€357</td></tr>
-                            <tr class="border-b border-white/5"><td class="py-2">Set</td><td class="text-right">587</td><td class="text-right text-green-400">€200.040</td><td class="text-right">€341</td></tr>
-                            <tr class="border-b border-white/5 bg-green-500/10"><td class="py-2 font-semibold">Out 🔥</td><td class="text-right font-semibold">804</td><td class="text-right text-green-400 font-semibold">€306.774</td><td class="text-right font-semibold">€382</td></tr>
-                            <tr class="border-b border-white/5"><td class="py-2">Nov</td><td class="text-right">689</td><td class="text-right text-green-400">€235.873</td><td class="text-right">€342</td></tr>
-                            <tr class="bg-green-500/10"><td class="py-2 font-semibold">Dez 🔥</td><td class="text-right font-semibold">665</td><td class="text-right text-green-400 font-semibold">€301.725</td><td class="text-right font-semibold">€454</td></tr>
-                        </tbody>
-                        <tfoot>
-                            <tr class="border-t-2 border-white/20 font-bold">
-                                <td class="py-3">TOTAL 2024</td>
-                                <td class="text-right">8.767</td>
-                                <td class="text-right text-green-400">€2.748.656</td>
-                                <td class="text-right">€314</td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Insights -->
-            <div class="glass rounded-xl p-5">
-                <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
-                    💡 Insights
-                </h3>
-                <div class="space-y-3">
-                    <div class="p-3 rounded-lg bg-green-500/10 border border-green-500/20">
-                        <p class="text-sm font-medium text-green-400">📈 Crescimento Explosivo</p>
-                        <p class="text-xs text-slate-400 mt-1">2025 já supera 2024 em 60.6%. Ticket médio +86%!</p>
-                    </div>
-                    <div class="p-3 rounded-lg bg-amber-500/10 border border-amber-500/20">
-                        <p class="text-sm font-medium text-amber-400">🔥 Pico em Julho</p>
-                        <p class="text-xs text-slate-400 mt-1">€402k - mês mais forte. Oportunidade para pricing dinâmico.</p>
-                    </div>
-                    <div class="p-3 rounded-lg bg-blue-500/10 border border-blue-500/20">
-                        <p class="text-sm font-medium text-blue-400">👥 Top 10 = 35%</p>
-                        <p class="text-xs text-slate-400 mt-1">10 clientes representam €971k (35% do total 2024).</p>
-                    </div>
-                    <div class="p-3 rounded-lg bg-purple-500/10 border border-purple-500/20">
-                        <p class="text-sm font-medium text-purple-400">🇪🇸 Expansão Espanha</p>
-                        <p class="text-xs text-slate-400 mt-1">ONIMOD, RAPOSIN, MARBOTRADE - clientes espanhóis no top.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Toast -->
     <div id="toast" class="fixed top-4 right-4 glass rounded-xl p-4 shadow-2xl hidden notification-enter border-l-4" style="min-width: 300px;">
         <div class="flex items-center gap-3">
@@ -879,7 +359,588 @@
     </div>
 
     <script>
-        // Tab switching
+        // ==========================================
+        // DADOS GLOBAIS
+        // ==========================================
+        let allCustomers = [];
+        let allInvoices = [];
+        let allProducts = [];
+        let customerInvoices = {}; // Map customer_id -> invoices
+        let productPrices = {}; // Map product_id -> { name, current_price }
+
+        // ==========================================
+        // API HELPERS
+        // ==========================================
+        async function fetchMoloni(endpoint) {
+            try {
+                const response = await fetch(`/api/moloni?endpoint=${encodeURIComponent(endpoint)}`);
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                return await response.json();
+            } catch (error) {
+                console.error(`Erro ao buscar ${endpoint}:`, error);
+                return null;
+            }
+        }
+
+        // ==========================================
+        // CARREGAR TODOS OS DADOS
+        // ==========================================
+        async function loadAllData() {
+            showToast('🔄', 'A Carregar...', 'Buscando dados do Moloni', 'info');
+            
+            // Carregar em paralelo
+            const [customers, invoices, products] = await Promise.all([
+                fetchMoloni('customers/getAll'),
+                fetchMoloni('invoices/getAll'),
+                fetchMoloni('products/getAll')
+            ]);
+
+            if (customers) {
+                allCustomers = customers;
+                console.log(`✅ ${customers.length} clientes carregados`);
+            }
+            
+            if (invoices) {
+                allInvoices = invoices;
+                console.log(`✅ ${invoices.length} facturas carregadas`);
+                // Agrupar facturas por cliente
+                customerInvoices = {};
+                invoices.forEach(inv => {
+                    const cid = inv.customer_id;
+                    if (!customerInvoices[cid]) customerInvoices[cid] = [];
+                    customerInvoices[cid].push(inv);
+                });
+            }
+            
+            if (products) {
+                allProducts = products;
+                console.log(`✅ ${products.length} produtos carregados`);
+                // Criar mapa de preços actuais
+                productPrices = {};
+                products.forEach(p => {
+                    productPrices[p.product_id] = {
+                        name: p.name,
+                        reference: p.reference,
+                        price: parseFloat(p.price) || 0,
+                        unit: p.unit_name || 'un'
+                    };
+                });
+            }
+
+            // Actualizar UI
+            updateKPIs();
+            populateCustomerSelect();
+            renderPendingInvoices();
+            renderDebtAlerts();
+            renderRecentInvoices();
+            
+            showToast('✅', 'Dados Carregados!', `${allCustomers.length} clientes, ${allInvoices.length} facturas`, 'success');
+        }
+
+        // ==========================================
+        // KPIs
+        // ==========================================
+        function updateKPIs() {
+            // Total clientes
+            document.getElementById('kpi-total-clientes').textContent = allCustomers.length;
+            
+            // Facturas de hoje
+            const today = new Date().toISOString().split('T')[0];
+            const invoicesToday = allInvoices.filter(inv => inv.date && inv.date.startsWith(today));
+            document.getElementById('kpi-aprovados-hoje').textContent = invoicesToday.length;
+            
+            // Facturas pendentes (status != closed/paid)
+            const pendingInvoices = allInvoices.filter(inv => 
+                inv.status === 0 || inv.status === 'draft' || inv.status === 'pending'
+            );
+            document.getElementById('kpi-pendentes').textContent = pendingInvoices.length;
+            document.getElementById('badge-pendentes').textContent = pendingInvoices.length;
+            
+            // Clientes com dívida e valor total
+            const debtData = calculateDebtData();
+            document.getElementById('kpi-clientes-divida').textContent = debtData.clientsWithDebt;
+            document.getElementById('badge-dividas').textContent = debtData.clientsWithDebt;
+            document.getElementById('kpi-valor-divida').textContent = formatCurrency(debtData.totalDebt);
+        }
+
+        function calculateDebtData() {
+            const clientDebt = {};
+            const today = new Date();
+            
+            allInvoices.forEach(inv => {
+                // Considerar facturas não pagas (verificar campo net_value ou similar)
+                const isPaid = inv.status === 1 || inv.status === 'closed' || inv.status === 'paid';
+                if (isPaid) return;
+                
+                const dueDate = inv.expiration_date ? new Date(inv.expiration_date) : null;
+                if (dueDate && dueDate < today) {
+                    const cid = inv.customer_id;
+                    if (!clientDebt[cid]) clientDebt[cid] = 0;
+                    clientDebt[cid] += parseFloat(inv.net_value) || 0;
+                }
+            });
+            
+            const clientsWithDebt = Object.keys(clientDebt).length;
+            const totalDebt = Object.values(clientDebt).reduce((sum, v) => sum + v, 0);
+            
+            return { clientsWithDebt, totalDebt, clientDebt };
+        }
+
+        // ==========================================
+        // APROVAÇÕES (Facturas Pendentes/Draft)
+        // ==========================================
+        function renderPendingInvoices() {
+            const container = document.getElementById('lista-aprovacoes');
+            
+            // Filtrar facturas pendentes (status 0 = draft no Moloni)
+            const pending = allInvoices.filter(inv => 
+                inv.status === 0 || inv.status === 'draft'
+            ).slice(0, 20); // Limitar a 20
+            
+            if (pending.length === 0) {
+                container.innerHTML = `
+                    <div class="glass rounded-xl p-5 text-center">
+                        <span class="text-4xl">✅</span>
+                        <p class="text-slate-400 mt-2">Não há facturas pendentes de aprovação</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = pending.map(inv => {
+                const customer = allCustomers.find(c => c.customer_id === inv.customer_id) || {};
+                const value = parseFloat(inv.net_value) || 0;
+                const date = inv.date ? new Date(inv.date).toLocaleDateString('pt-PT') : '-';
+                
+                return `
+                    <div class="glass rounded-xl p-5 card-hover border-l-4 border-orange-500" data-invoice-id="${inv.document_id}">
+                        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                            <div class="flex-1">
+                                <div class="flex items-center gap-2 mb-2">
+                                    <span class="badge bg-orange-500/20 text-orange-400">📄 FACTURA DRAFT</span>
+                                    <span class="text-xs text-slate-500">${date}</span>
+                                </div>
+                                <div class="flex items-center gap-3 mb-3">
+                                    <div class="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center text-lg">🏪</div>
+                                    <div>
+                                        <p class="font-semibold">${customer.name || 'Cliente #' + inv.customer_id}</p>
+                                        <p class="text-sm text-slate-400">NIF: ${customer.vat || '-'}</p>
+                                    </div>
+                                </div>
+                                <div class="flex flex-wrap gap-4 text-sm">
+                                    <div><span class="text-slate-500">Doc:</span> <span class="font-medium">${inv.document_set_name || ''} ${inv.number || ''}</span></div>
+                                    <div><span class="text-slate-500">Valor:</span> <span class="font-semibold text-green-400">${formatCurrency(value)}</span></div>
+                                </div>
+                            </div>
+                            <div class="flex lg:flex-col gap-2">
+                                <button onclick="aprovarFactura('${inv.document_id}')" class="btn-approve px-5 py-2 rounded-lg font-semibold transition-all text-sm">✅ Aprovar</button>
+                                <button onclick="verDetalhes('${inv.document_id}')" class="glass hover:bg-white/10 px-5 py-2 rounded-lg font-semibold transition-all text-sm">👁️ Ver</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // ==========================================
+        // ALERTAS DE DÍVIDA
+        // ==========================================
+        function renderDebtAlerts() {
+            const container = document.getElementById('lista-dividas');
+            const debtData = calculateDebtData();
+            const today = new Date();
+            
+            // Criar lista de clientes com dívida
+            const debtClients = [];
+            Object.entries(debtData.clientDebt).forEach(([cid, totalDebt]) => {
+                const customer = allCustomers.find(c => c.customer_id == cid) || {};
+                const customerInvs = customerInvoices[cid] || [];
+                
+                // Encontrar factura mais antiga vencida
+                let oldestDueDate = null;
+                let pendingCount = 0;
+                customerInvs.forEach(inv => {
+                    const isPaid = inv.status === 1 || inv.status === 'closed' || inv.status === 'paid';
+                    if (isPaid) return;
+                    
+                    const dueDate = inv.expiration_date ? new Date(inv.expiration_date) : null;
+                    if (dueDate && dueDate < today) {
+                        pendingCount++;
+                        if (!oldestDueDate || dueDate < oldestDueDate) {
+                            oldestDueDate = dueDate;
+                        }
+                    }
+                });
+                
+                if (totalDebt > 0) {
+                    const daysPast = oldestDueDate ? Math.floor((today - oldestDueDate) / (1000 * 60 * 60 * 24)) : 0;
+                    debtClients.push({
+                        customer,
+                        totalDebt,
+                        pendingCount,
+                        daysPast,
+                        oldestDueDate
+                    });
+                }
+            });
+            
+            // Ordenar por valor de dívida (maior primeiro)
+            debtClients.sort((a, b) => b.totalDebt - a.totalDebt);
+            
+            if (debtClients.length === 0) {
+                container.innerHTML = `
+                    <div class="glass rounded-xl p-5 text-center">
+                        <span class="text-4xl">✅</span>
+                        <p class="text-slate-400 mt-2">Não há clientes com dívidas vencidas</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = debtClients.slice(0, 15).map(item => {
+                const urgency = item.daysPast > 30 ? 'red' : item.daysPast > 14 ? 'orange' : 'yellow';
+                const urgencyLabel = item.daysPast > 30 ? '🚨 URGENTE' : item.daysPast > 14 ? '⚠️ ATENÇÃO' : '📋 PENDENTE';
+                
+                return `
+                    <div class="glass rounded-xl p-5 border-l-4 border-${urgency}-500 ${item.daysPast > 30 ? 'pulse-urgent' : ''}">
+                        <div class="flex flex-col lg:flex-row lg:items-start justify-between gap-4">
+                            <div class="flex-1">
+                                <div class="flex items-center gap-2 mb-3">
+                                    <span class="badge bg-${urgency}-500/30 text-${urgency}-400">${urgencyLabel}</span>
+                                </div>
+                                <div class="flex items-center gap-3 mb-4">
+                                    <div class="w-12 h-12 rounded-full bg-${urgency}-500/20 flex items-center justify-center text-xl">🏪</div>
+                                    <div>
+                                        <p class="font-semibold text-lg">${item.customer.name || 'Cliente Desconhecido'}</p>
+                                        <p class="text-sm text-slate-400">NIF: ${item.customer.vat || '-'}</p>
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                                    <div class="glass-light rounded-lg p-3 text-center">
+                                        <p class="text-2xl font-bold text-${urgency}-400">${formatCurrency(item.totalDebt)}</p>
+                                        <p class="text-xs text-slate-500">Dívida Total</p>
+                                    </div>
+                                    <div class="glass-light rounded-lg p-3 text-center">
+                                        <p class="text-2xl font-bold text-${urgency}-400">${item.daysPast} dias</p>
+                                        <p class="text-xs text-slate-500">Mais Antiga</p>
+                                    </div>
+                                    <div class="glass-light rounded-lg p-3 text-center">
+                                        <p class="text-2xl font-bold text-yellow-400">${item.pendingCount}</p>
+                                        <p class="text-xs text-slate-500">Facturas Pendentes</p>
+                                    </div>
+                                    <div class="glass-light rounded-lg p-3 text-center">
+                                        <p class="text-2xl font-bold text-blue-400">${item.customer.phone || '-'}</p>
+                                        <p class="text-xs text-slate-500">Telefone</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex flex-col gap-2">
+                                <button onclick="enviarLembrete('${item.customer.customer_id}')" class="btn-counter px-6 py-3 rounded-lg font-semibold transition-all">
+                                    📧 Enviar Lembrete
+                                </button>
+                                <button onclick="verHistoricoCliente('${item.customer.customer_id}')" class="glass hover:bg-white/10 px-6 py-3 rounded-lg font-semibold transition-all">
+                                    📊 Ver Histórico
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // ==========================================
+        // HISTÓRICO DE PREÇOS - CRÍTICO
+        // ==========================================
+        function populateCustomerSelect() {
+            const select = document.getElementById('searchCliente');
+            select.innerHTML = '<option value="">Seleccionar cliente...</option>';
+            
+            // Ordenar clientes por nome
+            const sorted = [...allCustomers].sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+            
+            sorted.forEach(c => {
+                const option = document.createElement('option');
+                option.value = c.customer_id;
+                option.textContent = c.name || `Cliente #${c.customer_id}`;
+                select.appendChild(option);
+            });
+        }
+
+        function carregarHistoricoCliente() {
+            const customerId = document.getElementById('searchCliente').value;
+            if (!customerId) {
+                document.getElementById('info-cliente').classList.add('hidden');
+                document.getElementById('produtos-cliente').classList.add('hidden');
+                document.getElementById('comparacao-precos').classList.add('hidden');
+                document.getElementById('historico-precos').innerHTML = `
+                    <h3 class="font-semibold mb-4">📋 Seleccione um cliente para ver histórico</h3>
+                    <div class="text-center text-slate-500 py-8">
+                        <span class="text-4xl">📊</span>
+                        <p class="mt-2">O histórico de preços aparecerá aqui</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            const customer = allCustomers.find(c => c.customer_id == customerId);
+            const invoices = customerInvoices[customerId] || [];
+            
+            // Mostrar info do cliente
+            document.getElementById('info-cliente').classList.remove('hidden');
+            document.getElementById('cliente-nome').textContent = customer?.name || '-';
+            document.getElementById('cliente-nif').textContent = customer?.vat || '-';
+            document.getElementById('cliente-email').textContent = customer?.email || '-';
+            document.getElementById('cliente-telefone').textContent = customer?.phone || '-';
+            document.getElementById('cliente-total-facturas').textContent = invoices.length;
+            
+            // Extrair produtos comprados e seus preços
+            const productHistory = {}; // product_id -> [{date, price, qty, invoice}]
+            
+            invoices.forEach(inv => {
+                const products = inv.products || [];
+                products.forEach(p => {
+                    const pid = p.product_id;
+                    if (!productHistory[pid]) {
+                        productHistory[pid] = {
+                            name: p.name || productPrices[pid]?.name || `Produto #${pid}`,
+                            reference: p.reference || productPrices[pid]?.reference || '',
+                            currentPrice: productPrices[pid]?.price || 0,
+                            unit: productPrices[pid]?.unit || 'un',
+                            history: []
+                        };
+                    }
+                    productHistory[pid].history.push({
+                        date: inv.date,
+                        price: parseFloat(p.price) || 0,
+                        qty: parseFloat(p.qty) || 0,
+                        discount: parseFloat(p.discount) || 0,
+                        invoiceNumber: `${inv.document_set_name || ''} ${inv.number || ''}`
+                    });
+                });
+            });
+            
+            // Ordenar histórico de cada produto por data (mais recente primeiro)
+            Object.values(productHistory).forEach(p => {
+                p.history.sort((a, b) => new Date(b.date) - new Date(a.date));
+            });
+            
+            // Mostrar lista de produtos
+            document.getElementById('produtos-cliente').classList.remove('hidden');
+            const listaContainer = document.getElementById('lista-produtos-cliente');
+            
+            const productList = Object.entries(productHistory);
+            if (productList.length === 0) {
+                listaContainer.innerHTML = `<p class="text-slate-500 text-center py-4">Nenhum produto encontrado nas facturas</p>`;
+                return;
+            }
+            
+            listaContainer.innerHTML = productList.map(([pid, data]) => {
+                const lastPrice = data.history[0]?.price || 0;
+                const lastDate = data.history[0]?.date ? new Date(data.history[0].date).toLocaleDateString('pt-PT') : '-';
+                const diff = data.currentPrice > 0 ? ((lastPrice - data.currentPrice) / data.currentPrice * 100).toFixed(1) : 0;
+                const diffClass = diff > 0 ? 'text-red-400' : diff < 0 ? 'text-green-400' : 'text-slate-400';
+                const diffSign = diff > 0 ? '+' : '';
+                
+                return `
+                    <div class="glass-light rounded-lg p-3 cursor-pointer hover:bg-white/10 transition-all" onclick="mostrarHistoricoProduto('${pid}')">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <p class="font-medium">${data.name}</p>
+                                <p class="text-xs text-slate-500">${data.reference} • ${data.history.length} compras</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="font-bold">${formatCurrency(lastPrice)}/${data.unit}</p>
+                                <p class="text-xs ${diffClass}">${diffSign}${diff}% vs tabela</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            // Mostrar tabela de comparação
+            renderComparisonTable(productHistory);
+            
+            // Mostrar primeiro produto automaticamente
+            if (productList.length > 0) {
+                mostrarHistoricoProduto(productList[0][0]);
+            }
+        }
+
+        function mostrarHistoricoProduto(productId) {
+            const customerId = document.getElementById('searchCliente').value;
+            const invoices = customerInvoices[customerId] || [];
+            
+            // Reconstruir histórico para este produto
+            const history = [];
+            invoices.forEach(inv => {
+                const products = inv.products || [];
+                products.forEach(p => {
+                    if (p.product_id == productId) {
+                        history.push({
+                            date: inv.date,
+                            price: parseFloat(p.price) || 0,
+                            qty: parseFloat(p.qty) || 0,
+                            discount: parseFloat(p.discount) || 0,
+                            invoiceNumber: `${inv.document_set_name || ''} ${inv.number || ''}`
+                        });
+                    }
+                });
+            });
+            
+            history.sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            const productInfo = productPrices[productId] || { name: `Produto #${productId}`, price: 0, unit: 'un' };
+            const customer = allCustomers.find(c => c.customer_id == customerId);
+            
+            // Calcular estatísticas
+            const prices = history.map(h => h.price);
+            const avgPrice = prices.length > 0 ? prices.reduce((a, b) => a + b, 0) / prices.length : 0;
+            const totalQty = history.reduce((sum, h) => sum + h.qty, 0);
+            const totalValue = history.reduce((sum, h) => sum + (h.price * h.qty), 0);
+            
+            const container = document.getElementById('historico-precos');
+            container.innerHTML = `
+                <h3 class="font-semibold mb-4">📋 ${productInfo.name} → ${customer?.name || 'Cliente'}</h3>
+                <div class="space-y-3 max-h-64 overflow-y-auto">
+                    ${history.map(h => {
+                        const date = h.date ? new Date(h.date).toLocaleDateString('pt-PT') : '-';
+                        const diff = productInfo.price > 0 ? ((h.price - productInfo.price) / productInfo.price * 100).toFixed(1) : 0;
+                        const diffClass = diff > 0 ? 'text-red-400' : diff < 0 ? 'text-green-400' : 'text-slate-400';
+                        
+                        return `
+                            <div class="flex items-center justify-between p-3 rounded-lg bg-white/5">
+                                <div>
+                                    <p class="font-medium">${date}</p>
+                                    <p class="text-xs text-slate-500">${h.qty} ${productInfo.unit} • ${h.invoiceNumber}</p>
+                                </div>
+                                <div class="text-right">
+                                    <p class="font-bold ${diffClass}">${formatCurrency(h.price)}/${productInfo.unit}</p>
+                                    <p class="text-xs text-slate-500">${diff > 0 ? '+' : ''}${diff}% vs tabela</p>
+                                </div>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+                <div class="mt-4 pt-4 border-t border-white/10">
+                    <div class="grid grid-cols-3 gap-4 text-sm">
+                        <div class="text-center">
+                            <p class="text-slate-400">Preço Médio</p>
+                            <p class="font-bold text-lg">${formatCurrency(avgPrice)}</p>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-slate-400">Total Comprado</p>
+                            <p class="font-bold text-lg">${totalQty.toFixed(0)} ${productInfo.unit}</p>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-slate-400">Valor Total</p>
+                            <p class="font-bold text-lg text-green-400">${formatCurrency(totalValue)}</p>
+                        </div>
+                    </div>
+                    <div class="mt-3 text-center">
+                        <p class="text-slate-400 text-sm">Preço Tabela Actual: <span class="font-bold text-blue-400">${formatCurrency(productInfo.price)}/${productInfo.unit}</span></p>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderComparisonTable(productHistory) {
+            const container = document.getElementById('comparacao-precos');
+            const tbody = document.getElementById('tabela-comparacao');
+            
+            const rows = Object.entries(productHistory).map(([pid, data]) => {
+                const lastPrice = data.history[0]?.price || 0;
+                const lastDate = data.history[0]?.date ? new Date(data.history[0].date).toLocaleDateString('pt-PT') : '-';
+                const diff = data.currentPrice > 0 ? lastPrice - data.currentPrice : 0;
+                const diffPercent = data.currentPrice > 0 ? (diff / data.currentPrice * 100).toFixed(1) : 0;
+                const diffClass = diff > 0 ? 'text-red-400' : diff < 0 ? 'text-green-400' : 'text-slate-400';
+                
+                return `
+                    <tr class="border-b border-white/5 hover:bg-white/5 cursor-pointer" onclick="mostrarHistoricoProduto('${pid}')">
+                        <td class="py-2">${data.name}</td>
+                        <td class="text-right font-semibold">${formatCurrency(lastPrice)}</td>
+                        <td class="text-right text-slate-400">${lastDate}</td>
+                        <td class="text-right font-semibold text-blue-400">${formatCurrency(data.currentPrice)}</td>
+                        <td class="text-right ${diffClass}">${diff > 0 ? '+' : ''}${formatCurrency(diff)} (${diffPercent}%)</td>
+                    </tr>
+                `;
+            }).join('');
+            
+            tbody.innerHTML = rows;
+            container.classList.remove('hidden');
+        }
+
+        // ==========================================
+        // ÚLTIMAS FACTURAS
+        // ==========================================
+        function renderRecentInvoices() {
+            const container = document.getElementById('lista-ultimas-facturas');
+            
+            // Ordenar por data (mais recentes primeiro)
+            const sorted = [...allInvoices]
+                .filter(inv => inv.date)
+                .sort((a, b) => new Date(b.date) - new Date(a.date))
+                .slice(0, 10);
+            
+            if (sorted.length === 0) {
+                container.innerHTML = `<p class="text-slate-500 text-center">Nenhuma factura encontrada</p>`;
+                return;
+            }
+            
+            container.innerHTML = sorted.map(inv => {
+                const customer = allCustomers.find(c => c.customer_id === inv.customer_id) || {};
+                const value = parseFloat(inv.net_value) || 0;
+                const date = inv.date ? new Date(inv.date).toLocaleDateString('pt-PT') : '-';
+                const isPaid = inv.status === 1 || inv.status === 'closed' || inv.status === 'paid';
+                
+                return `
+                    <div class="flex items-center gap-3 p-2 rounded-lg glass-light">
+                        <span class="${isPaid ? 'text-green-400' : 'text-orange-400'}">${isPaid ? '✅' : '⏳'}</span>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-slate-300 truncate">${customer.name || 'Cliente'}</p>
+                            <p class="text-xs text-slate-500">${date}</p>
+                        </div>
+                        <span class="font-semibold text-green-400">${formatCurrency(value)}</span>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // ==========================================
+        // ACTIONS
+        // ==========================================
+        function aprovarFactura(invoiceId) {
+            showToast('✅', 'Factura Aprovada!', 'Notificação enviada', 'success');
+            const card = document.querySelector(`[data-invoice-id="${invoiceId}"]`);
+            if (card) {
+                card.style.opacity = '0.5';
+                card.style.transform = 'translateX(100px)';
+                card.style.transition = 'all 0.3s ease';
+                setTimeout(() => card.remove(), 300);
+            }
+        }
+
+        function verDetalhes(invoiceId) {
+            const inv = allInvoices.find(i => i.document_id == invoiceId);
+            if (inv) {
+                console.log('Detalhes:', inv);
+                showToast('📄', 'Detalhes', JSON.stringify(inv.products || [], null, 2).substring(0, 100), 'info');
+            }
+        }
+
+        function enviarLembrete(customerId) {
+            const customer = allCustomers.find(c => c.customer_id == customerId);
+            showToast('📧', 'Lembrete Enviado!', `Email enviado para ${customer?.email || 'cliente'}`, 'info');
+        }
+
+        function verHistoricoCliente(customerId) {
+            document.getElementById('searchCliente').value = customerId;
+            showTab('historico');
+            carregarHistoricoCliente();
+        }
+
+        // ==========================================
+        // UI HELPERS
+        // ==========================================
         function showTab(tabName) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
             document.querySelectorAll('[id^="tab-"]').forEach(el => el.classList.remove('tab-active'));
@@ -887,7 +948,6 @@
             document.getElementById('tab-' + tabName).classList.add('tab-active');
         }
 
-        // Toast
         function showToast(icon, title, message, type = 'success') {
             const toast = document.getElementById('toast');
             document.getElementById('toastIcon').textContent = icon;
@@ -901,64 +961,12 @@
             setTimeout(() => toast.classList.add('hidden'), 4000);
         }
 
-        // Aprovações
-        function aprovar(btn, vendedor, preco) {
-            const card = btn.closest('.glass');
-            card.style.opacity = '0.5';
-            card.style.transform = 'translateX(100px)';
-            card.style.transition = 'all 0.3s ease';
-            setTimeout(() => { card.remove(); updatePendingCount(); }, 300);
-            showToast('✅', 'Aprovado!', `${vendedor} notificado via WhatsApp`, 'success');
+        function formatCurrency(value) {
+            return new Intl.NumberFormat('pt-PT', { style: 'currency', currency: 'EUR' }).format(value || 0);
         }
 
-        function rejeitar(btn, vendedor) {
-            const card = btn.closest('.glass');
-            card.style.opacity = '0.5';
-            card.style.transform = 'translateX(-100px)';
-            card.style.transition = 'all 0.3s ease';
-            setTimeout(() => { card.remove(); updatePendingCount(); }, 300);
-            showToast('❌', 'Rejeitado', `${vendedor} notificado via WhatsApp`, 'reject');
-        }
-
-        function contraproposta(btn) {
-            showToast('💬', 'Contraproposta Enviada', 'Carlos Mendes recebeu: €11,50/kg', 'counter');
-        }
-
-        function updatePendingCount() {
-            const count = document.querySelectorAll('#content-aprovacoes .border-l-4:not(.border-green-500)').length;
-            document.getElementById('pendingCount').textContent = count;
-        }
-
-        // Dívidas
-        function aprovarComAlerta(btn) {
-            const card = btn.closest('.glass');
-            card.style.opacity = '0.3';
-            showToast('⚠️', 'Aprovado com Aviso', 'Vendedor alertado sobre dívida do cliente', 'counter');
-        }
-
-        function bloquearEncomenda(btn) {
-            const card = btn.closest('.glass');
-            card.remove();
-            showToast('🚫', 'Encomenda Bloqueada', 'Cliente notificado para regularizar dívida', 'reject');
-        }
-
-        function ligarCliente() {
-            showToast('📞', 'A Ligar...', 'Restaurante Beira Mar: 912 345 678', 'info');
-        }
-
-        function enviarLembrete() {
-            showToast('📧', 'Lembrete Enviado', 'Email + WhatsApp enviados ao Hotel Atlântico', 'info');
-        }
-
-        // Histórico
-        function pesquisarHistorico() {
-            const cliente = document.getElementById('searchCliente').value;
-            const produto = document.getElementById('searchProduto').value;
-            if (!cliente || !produto) {
-                showToast('⚠️', 'Campos Obrigatórios', 'Seleccione cliente e produto', 'counter');
-                return;
-            }
-            showToast('🔍', 'A Pesquisar...', 'Histórico actualizado', 'info');
+        function refreshAllData() {
+            loadAllData();
         }
 
         // Regras
@@ -968,158 +976,31 @@
                 paulaMin: document.getElementById('regra-paula-min').value,
                 paulaMax: document.getElementById('regra-paula-max').value,
                 excepcional: document.getElementById('regra-excepcional').value,
-                regularPedidos: document.getElementById('regra-regular-pedidos').value,
-                regularBonus: document.getElementById('regra-regular-bonus').value,
                 dividaAlerta: document.getElementById('regra-divida-alerta').value,
                 bloqueioValor: document.getElementById('regra-bloqueio-valor').value,
                 bloqueioDias: document.getElementById('regra-bloqueio-dias').value
             };
-            console.log('Regras guardadas:', regras);
             localStorage.setItem('auroraRegras', JSON.stringify(regras));
             showToast('💾', 'Regras Guardadas!', 'As alterações foram aplicadas', 'success');
         }
 
-        // Load saved rules
+        // ==========================================
+        // INIT
+        // ==========================================
         document.addEventListener('DOMContentLoaded', () => {
+            // Load saved rules
             const saved = localStorage.getItem('auroraRegras');
             if (saved) {
                 const regras = JSON.parse(saved);
-                if (regras.autoAprovacao) document.getElementById('regra-auto').value = regras.autoAprovacao;
-                if (regras.paulaMin) document.getElementById('regra-paula-min').value = regras.paulaMin;
-                if (regras.paulaMax) document.getElementById('regra-paula-max').value = regras.paulaMax;
-                if (regras.excepcional) document.getElementById('regra-excepcional').value = regras.excepcional;
-                if (regras.regularPedidos) document.getElementById('regra-regular-pedidos').value = regras.regularPedidos;
-                if (regras.regularBonus) document.getElementById('regra-regular-bonus').value = regras.regularBonus;
-                if (regras.dividaAlerta) document.getElementById('regra-divida-alerta').value = regras.dividaAlerta;
-                if (regras.bloqueioValor) document.getElementById('regra-bloqueio-valor').value = regras.bloqueioValor;
-                if (regras.bloqueioDias) document.getElementById('regra-bloqueio-dias').value = regras.bloqueioDias;
+                Object.entries(regras).forEach(([key, value]) => {
+                    const el = document.getElementById('regra-' + key.replace(/([A-Z])/g, '-$1').toLowerCase());
+                    if (el) el.value = value;
+                });
             }
+            
+            // Carregar dados do Moloni
+            loadAllData();
         });
-
-        // Analytics - Carregar dados reais do Neon
-        let revenueChart = null;
-        let analyticsLoaded = false;
-
-        async function loadAnalyticsData() {
-            if (analyticsLoaded) return;
-            
-            try {
-                const response = await fetch('/api/analytics?action=dashboard');
-                const data = await response.json();
-                
-                // Actualizar KPIs
-                const yearly = data.yearly || [];
-                const y2024 = yearly.find(y => y.year === 2024) || {};
-                const y2025 = yearly.find(y => y.year === 2025) || {};
-                
-                // Calcular crescimento
-                const growth = y2024.total_revenue > 0 
-                    ? (((parseFloat(y2025.total_revenue) - parseFloat(y2024.total_revenue)) / parseFloat(y2024.total_revenue)) * 100).toFixed(1)
-                    : 0;
-                
-                // Actualizar elementos (se existirem IDs)
-                const el = (id) => document.getElementById(id);
-                if (el('kpi-2025-revenue')) el('kpi-2025-revenue').textContent = '€' + (parseFloat(y2025.total_revenue)/1000000).toFixed(2) + 'M';
-                if (el('kpi-2024-revenue')) el('kpi-2024-revenue').textContent = '€' + (parseFloat(y2024.total_revenue)/1000000).toFixed(2) + 'M';
-                if (el('kpi-growth')) el('kpi-growth').textContent = '+' + growth + '%';
-                
-                // Preparar dados para gráfico
-                const monthly2024 = Array(12).fill(0);
-                const monthly2025 = Array(12).fill(0);
-                
-                (data.monthly_2024 || []).forEach(m => {
-                    monthly2024[m.month - 1] = parseFloat(m.total_revenue);
-                });
-                (data.monthly_2025 || []).forEach(m => {
-                    monthly2025[m.month - 1] = parseFloat(m.total_revenue);
-                });
-                
-                // Criar gráfico
-                initAnalyticsChart(monthly2024, monthly2025);
-                
-                // Actualizar top clientes
-                updateTopCustomers(data.top_customers || []);
-                
-                analyticsLoaded = true;
-                console.log('✅ Analytics carregados do Neon!', data);
-            } catch (error) {
-                console.error('Erro ao carregar analytics:', error);
-            }
-        }
-
-        function initAnalyticsChart(data2024, data2025) {
-            const ctx = document.getElementById('monthlyRevenueChart');
-            if (!ctx) return;
-            
-            if (revenueChart) {
-                revenueChart.destroy();
-            }
-            
-            revenueChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
-                    datasets: [
-                        {
-                            label: '2024',
-                            data: data2024 || [102455, 117743, 183570, 210140, 239369, 199617, 402924, 248426, 200040, 306774, 235873, 301725],
-                            backgroundColor: 'rgba(59, 130, 246, 0.7)',
-                            borderColor: 'rgb(59, 130, 246)',
-                            borderWidth: 1
-                        },
-                        {
-                            label: '2025',
-                            data: data2025 || [223934, 172052, 291499, 287131, 225362, 185153, 560036, 500408, 465305, 700918, 488735, 313376],
-                            backgroundColor: 'rgba(16, 185, 129, 0.7)',
-                            borderColor: 'rgb(16, 185, 129)',
-                            borderWidth: 1
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { labels: { color: '#94a3b8' } }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                color: '#94a3b8',
-                                callback: function(value) { return '€' + (value/1000).toFixed(0) + 'k'; }
-                            },
-                            grid: { color: 'rgba(255,255,255,0.05)' }
-                        },
-                        x: {
-                            ticks: { color: '#94a3b8' },
-                            grid: { color: 'rgba(255,255,255,0.05)' }
-                        }
-                    }
-                }
-            });
-        }
-
-        function updateTopCustomers(customers) {
-            const container = document.getElementById('top-customers-list');
-            if (!container || !customers.length) return;
-            
-            container.innerHTML = customers.map(c => `
-                <div class="flex justify-between items-center py-2 border-b border-white/10">
-                    <span class="text-sm truncate flex-1">${c.customer_name}</span>
-                    <span class="font-semibold text-green-400 ml-2">€${(parseFloat(c.total_revenue)/1000).toFixed(1)}k</span>
-                </div>
-            `).join('');
-        }
-
-        // Override showTab to load analytics when tab is shown
-        const originalShowTab = showTab;
-        showTab = function(tabName) {
-            originalShowTab(tabName);
-            if (tabName === 'analytics') {
-                setTimeout(loadAnalyticsData, 100);
-            }
-        };
     </script>
 </body>
 </html>

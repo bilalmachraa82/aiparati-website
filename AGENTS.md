@@ -270,6 +270,69 @@ Versão 3: Bom (90%) → REFINA
 
 **Se algum ☐ está vazio → Não é "feito"**
 
+---
+
+## 🚨 REGRA #15: Antes de Dizer "Feito", PROVA que Funciona
+**Aprendido:** 2026-02-11 | **Base:** research/agent-improvement-2026.md
+
+### Regra Absoluta
+**Não existe "teoricamente funciona". SÓ "testei e funciona".**
+
+### Protocolo Por Tipo de Tarefa
+
+**📝 Escrita/Documentação:**
+- [ ] Ler em voz alta (soa natural?)
+- [ ] Procurar typos
+- [ ] Verificar links (todos vivos?)
+- [ ] Testar exemplos (se tem código, funciona?)
+- [ ] Revisar estrutura (fácil de seguir?)
+
+**💻 Código/Feature:**
+- [ ] `npm test` passa 100%
+- [ ] Sem lint warnings
+- [ ] Teste funcional manual (UI/output?)
+- [ ] Edge cases testados
+- [ ] Performance acceptable
+- [ ] Código reviewável por outro dev
+
+**📊 Análise/Research:**
+- [ ] Fontes verificadas
+- [ ] Dados não stale
+- [ ] Conclusões suportadas por dados
+- [ ] Perspectivas balanceadas
+- [ ] Exemplos são reais (não inventados)
+
+**🤖 Automação/Script:**
+- [ ] Testei com dados REAIS (não mocked)
+- [ ] Trata erros (não crashes)
+- [ ] Idempotent (rodável 2x sem problema)
+- [ ] Documentado
+- [ ] Backup feito antes de alterar
+
+### Checklist Universal
+```
+Antes de dizer "FEITO":
+
+1. Como testei isto? [descreve]
+2. Qual é sucesso criteria? [explica]
+3. Conseguiria outro dev usar isto? [sim/não]
+
+Se não consegues responder claramente:
+→ NÃO É FEITO
+→ Volta ao trabalho, fixa o problema
+```
+
+### NÃO É ACEITÁVEL
+```
+❌ "Deve funcionar, teoricamente"
+❌ "Testei mentalmente"
+❌ "Código compila, logo funciona"
+❌ "Outro dev pode verificar depois"
+❌ "Não testei mas confio"
+```
+
+**Regra de Ouro:** Sem validação = sem entrega.
+
 ## 🚨 REGRA #3: Nunca Peças o Que Podes Fazer!
 **Aprendido:** 2026-01-28 | **Reforçado:** 2026-01-29
 

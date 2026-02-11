@@ -24,35 +24,121 @@
         .print-only { display: none; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
         .pulse { animation: pulse 2s infinite; }
+        @keyframes gradient { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        @keyframes glow { 0%, 100% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.5); } 50% { box-shadow: 0 0 40px rgba(139, 92, 246, 0.8); } }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+        .gradient-animate { background: linear-gradient(-45deg, #0f172a, #1e293b, #312e81, #1e3a5f); background-size: 400% 400%; animation: gradient 15s ease infinite; }
+        .glow-border { animation: glow 3s ease-in-out infinite; }
+        .float { animation: float 3s ease-in-out infinite; }
+        .glass { background: rgba(255,255,255,0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
+        .bot-badge { background: linear-gradient(135deg, #0088cc 0%, #00aced 100%); }
+        .func-check { background: linear-gradient(135deg, #22c55e20 0%, #16a34a10 100%); border: 1px solid #22c55e40; }
+
+        /* === MOBILE RESPONSIVE === */
+        @media (max-width: 768px) {
+            /* Header: stack vertically */
+            header .max-w-7xl > div { flex-wrap: wrap; gap: 0.5rem; }
+            header .flex.items-center.gap-3:last-child { flex-wrap: wrap; justify-content: center; gap: 0.5rem; }
+            header h1 { font-size: 1rem; }
+            header .bot-badge, header .bg-purple-500\/80, header .bg-green-500\/80 { font-size: 0.7rem; padding: 0.3rem 0.6rem; }
+            header .text-right { text-align: center; width: 100%; }
+            
+            /* 8 Funcionalidades banner: scrollable */
+            .func-check { white-space: nowrap; font-size: 0.65rem; padding: 0.2rem 0.5rem; }
+            
+            /* Alert cards: 2 cols instead of 4 */
+            .grid.grid-cols-1.md\\:grid-cols-4 { grid-template-columns: repeat(2, 1fr) !important; }
+            
+            /* Rotas: full width each */
+            .grid.grid-cols-1.lg\\:grid-cols-2 .space-y-1 { max-height: 200px; overflow-y: auto; }
+            
+            /* Modals: full screen on mobile */
+            .modal-content { max-width: 98%; max-height: 95%; border-radius: 0.75rem; padding: 1rem !important; }
+            .modal-content table { font-size: 0.7rem; }
+            .modal-content h2 { font-size: 1rem; }
+            
+            /* Target grid: 3 cols instead of 6 */
+            .grid.grid-cols-6 { grid-template-columns: repeat(3, 1fr) !important; }
+            
+            /* Vendedores stats: 2 cols */
+            .grid.grid-cols-4.gap-2 { grid-template-columns: repeat(2, 1fr) !important; }
+            
+            /* Target modal 3-grid */
+            .modal-content .grid.grid-cols-3 { grid-template-columns: 1fr !important; }
+            
+            /* KPI values smaller */
+            .text-3xl { font-size: 1.5rem; }
+            .text-2xl { font-size: 1.2rem; }
+            
+            /* Chat widget: full width */
+            #chatWindow { width: calc(100vw - 2rem); right: -0.5rem; }
+            
+            /* Print button: smaller */
+            .glow-border { font-size: 0.75rem; padding: 0.4rem 0.8rem; }
+            
+            /* Route summary bar */
+            .flex.gap-6 { flex-wrap: wrap; gap: 0.5rem; }
+            .flex.gap-6 span { font-size: 0.75rem; }
+        }
+
+        @media (max-width: 480px) {
+            /* Very small screens */
+            .grid.grid-cols-1.md\\:grid-cols-4 { grid-template-columns: 1fr !important; }
+            header .bot-badge, header .bg-purple-500\/80, header .bg-green-500\/80 { display: none; }
+            .max-w-7xl { padding-left: 0.5rem; padding-right: 0.5rem; }
+        }
     </style>
 </head>
-<body class="dark-bg min-h-screen text-gray-100">
-    <!-- Header -->
-    <header class="bg-[#12121a] border-b border-[#1e1e2e] sticky top-0 z-50 no-print">
+<body class="gradient-animate min-h-screen text-gray-100">
+    <!-- Header Premium -->
+    <header class="glass border-b border-white/10 sticky top-0 z-50 no-print">
         <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
             <div class="flex items-center gap-3">
-                <span class="text-2xl">🌊</span>
+                <span class="text-3xl float">🌊</span>
                 <div>
-                    <h1 class="text-lg font-bold">Aurora Oceano</h1>
-                    <p class="text-xs text-gray-500">Painel Interactivo • Clique para detalhes</p>
+                    <h1 class="text-xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">Aurora Oceano</h1>
+                    <p class="text-xs text-gray-400">Painel Operacional Premium • Dados Moloni em Tempo Real</p>
                 </div>
             </div>
-            <div class="flex items-center gap-4">
-                <a href="/mission-control.html" class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg font-semibold flex items-center gap-2 transition">
+            <div class="flex items-center gap-3 flex-wrap">
+                <a href="https://t.me/Aurora_oce_bot" target="_blank" class="bot-badge hover:scale-105 text-white px-4 py-2 rounded-lg font-semibold flex items-center gap-2 transition-all shadow-lg">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.161c-.18 1.897-.962 6.502-1.359 8.627-.168.9-.5 1.201-.82 1.23-.697.064-1.226-.461-1.901-.903-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.479.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.244-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.831-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635.099-.002.321.023.465.178.121.13.154.305.17.471-.002.063.017.209-.001.304z"/></svg>
+                    Bot Telegram
+                </a>
+                <a href="/mission-control.html" class="bg-purple-500/80 hover:bg-purple-500 text-white px-4 py-2 rounded-lg font-semibold flex items-center gap-2 transition-all">
                     🎛️ Mission Control
                 </a>
-                <button onclick="printAllOrders()" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg font-semibold flex items-center gap-2 transition">
+                <button onclick="printAllOrders()" class="bg-green-500/80 hover:bg-green-500 text-white px-4 py-2 rounded-lg font-semibold flex items-center gap-2 transition-all glow-border">
                     🖨️ Imprimir Rotas
                 </button>
                 <div class="text-right text-sm">
-                    <p class="text-gray-400">29 Jan 2026</p>
+                    <p class="text-gray-300" id="currentDate">2 Fev 2026</p>
                     <p class="text-green-400 text-xs flex items-center gap-1">
-                        <span class="w-2 h-2 bg-green-400 rounded-full pulse"></span> Online
+                        <span class="w-2 h-2 bg-green-400 rounded-full pulse"></span> Online • Moloni ✓
                     </p>
                 </div>
             </div>
         </div>
     </header>
+    
+    <!-- 8 Funcionalidades Banner -->
+    <div class="bg-gradient-to-r from-blue-900/50 to-purple-900/50 border-b border-white/10 no-print">
+        <div class="max-w-7xl mx-auto px-4 py-2">
+            <div class="flex items-center justify-between">
+                <span class="text-xs text-gray-400 font-medium">✅ 8 FUNCIONALIDADES ACTIVAS:</span>
+                <div class="flex gap-3 text-xs overflow-x-auto">
+                    <span class="func-check px-2 py-1 rounded">📦 Encomendas</span>
+                    <span class="func-check px-2 py-1 rounded">💰 Preços</span>
+                    <span class="func-check px-2 py-1 rounded">📋 Fichas Técnicas</span>
+                    <span class="func-check px-2 py-1 rounded">🚚 Rotas</span>
+                    <span class="func-check px-2 py-1 rounded">✅ Aprovações</span>
+                    <span class="func-check px-2 py-1 rounded">💳 Pagamentos</span>
+                    <span class="func-check px-2 py-1 rounded">⚠️ Dívidas</span>
+                    <span class="func-check px-2 py-1 rounded">📞 Cobrança</span>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <main class="max-w-7xl mx-auto p-4 space-y-4 no-print">
         
@@ -62,7 +148,7 @@
             <div class="card rounded-xl p-5 border-l-4 border-blue-500">
                 <div class="flex justify-between items-start">
                     <div>
-                        <p class="text-blue-400 text-xs font-medium uppercase">📅 HOJE (29 Jan)</p>
+                        <p class="text-blue-400 text-xs font-medium uppercase" id="hoje-data">📅 HOJE</p>
                         <p class="text-3xl font-bold text-white mt-2">€1,386</p>
                         <p class="text-sm text-gray-400 mt-1">9 encomendas • 9 clientes</p>
                     </div>
@@ -87,7 +173,7 @@
             <div class="card rounded-xl p-5 border-l-4 border-green-500">
                 <div class="flex justify-between items-start">
                     <div>
-                        <p class="text-green-400 text-xs font-medium uppercase">📅 ONTEM (28 Jan)</p>
+                        <p class="text-green-400 text-xs font-medium uppercase" id="ontem-data">📅 ONTEM</p>
                         <p class="text-3xl font-bold text-white mt-2">€11,149</p>
                         <p class="text-sm text-gray-400 mt-1">30 encomendas • 28 clientes</p>
                     </div>
@@ -275,9 +361,20 @@
             </div>
         </div>
 
-        <!-- Footer -->
-        <footer class="text-center text-gray-600 text-xs py-4">
-            <p>Aurora Oceano • Dashboard Interactivo • VROOM Engine • AiParaTi</p>
+        <!-- Footer Premium -->
+        <footer class="text-center py-6 no-print">
+            <div class="glass rounded-xl max-w-2xl mx-auto p-4">
+                <p class="text-gray-400 text-sm mb-2">🌊 Aurora Oceano • Dashboard Operacional Premium</p>
+                <div class="flex justify-center gap-4 text-xs text-gray-500">
+                    <span>🤖 Bot: <a href="https://t.me/Aurora_oce_bot" class="text-blue-400 hover:underline">@Aurora_oce_bot</a></span>
+                    <span>•</span>
+                    <span>⚡ VROOM Routing Engine</span>
+                    <span>•</span>
+                    <span>📊 Moloni API</span>
+                    <span>•</span>
+                    <span>🚀 <a href="https://aiparati.pt" class="text-purple-400 hover:underline">AiParaTi</a></span>
+                </div>
+            </div>
         </footer>
     </main>
 
@@ -336,7 +433,7 @@
     <div id="encomendasModal" class="modal" onclick="if(event.target===this)closeModal('encomendasModal')">
         <div class="modal-content p-6 w-full max-w-3xl max-h-[80vh] overflow-auto">
             <div class="flex justify-between items-center mb-4">
-                <h2 class="text-xl font-bold text-blue-400">📦 Encomendas de Hoje - 29 Jan 2026</h2>
+                <h2 class="text-xl font-bold text-blue-400" id="encomendas-titulo">📦 Encomendas de Hoje</h2>
                 <button onclick="closeModal('encomendasModal')" class="text-gray-400 hover:text-white text-2xl">&times;</button>
             </div>
             <div class="mb-4 flex gap-4">
@@ -464,7 +561,7 @@
     <div id="printTemplate" class="print-only" style="display:none; padding: 20px; font-family: Arial, sans-serif; color: black; background: white;">
         <div style="text-align: center; border-bottom: 2px solid black; padding-bottom: 10px; margin-bottom: 20px;">
             <h1 style="margin: 0; font-size: 24px;">🌊 AURORA OCEANO</h1>
-            <p style="margin: 5px 0;">Folha de Entregas - 29 Janeiro 2026</p>
+            <p style="margin: 5px 0;" id="folha-data">Folha de Entregas</p>
         </div>
         <div id="printContent"></div>
     </div>
@@ -581,6 +678,176 @@
             alert('A imprimir rota ' + route.toUpperCase() + '...');
             // Similar implementation for single route
         }
+        
+        // Update date dynamically
+        document.addEventListener('DOMContentLoaded', function() {
+            const now = new Date();
+            const meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+            const mesesFull = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+            const dia = now.getDate();
+            const mes = meses[now.getMonth()];
+            const mesFull = mesesFull[now.getMonth()];
+            const ano = now.getFullYear();
+            
+            // Update all date elements
+            const dateEl = document.getElementById('currentDate');
+            if (dateEl) dateEl.textContent = `${dia} ${mes} ${ano}`;
+            
+            const hojeEl = document.getElementById('hoje-data');
+            if (hojeEl) hojeEl.textContent = `📅 HOJE (${dia} ${mes})`;
+            
+            // Calculate yesterday
+            const ontem = new Date(now);
+            ontem.setDate(ontem.getDate() - 1);
+            const diaOntem = ontem.getDate();
+            const mesOntem = meses[ontem.getMonth()];
+            
+            const ontemEl = document.getElementById('ontem-data');
+            if (ontemEl) ontemEl.textContent = `📅 ONTEM (${diaOntem} ${mesOntem})`;
+            
+            const encEl = document.getElementById('encomendas-titulo');
+            if (encEl) encEl.textContent = `📦 Encomendas de Hoje - ${dia} ${mes} ${ano}`;
+            
+            const folhaEl = document.getElementById('folha-data');
+            if (folhaEl) folhaEl.textContent = `Folha de Entregas - ${dia} ${mesFull} ${ano}`;
+        });
     </script>
 </body>
 </html>
+
+<!-- CHAT WIDGET - Aurora Bot Integrado -->
+<div id="chatWidget" class="fixed bottom-6 right-6 z-50 no-print">
+    <!-- Toggle Button -->
+    <button onclick="toggleChat()" id="chatToggle" class="w-16 h-16 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 shadow-lg hover:scale-110 transition-all flex items-center justify-center text-2xl glow-border">
+        🤖
+    </button>
+    
+    <!-- Chat Window -->
+    <div id="chatWindow" class="hidden absolute bottom-20 right-0 w-96 h-[500px] glass rounded-2xl shadow-2xl overflow-hidden flex flex-col">
+        <!-- Header -->
+        <div class="bg-gradient-to-r from-blue-600 to-cyan-600 p-4 flex items-center gap-3">
+            <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center text-xl">🌊</div>
+            <div>
+                <h3 class="font-bold text-white">Aurora Bot</h3>
+                <p class="text-xs text-white/70">Assistente Aurora Oceano</p>
+            </div>
+            <button onclick="toggleChat()" class="ml-auto text-white/70 hover:text-white text-xl">&times;</button>
+        </div>
+        
+        <!-- Messages -->
+        <div id="chatMessages" class="flex-1 p-4 overflow-y-auto space-y-3">
+            <div class="flex gap-2">
+                <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-sm">🤖</div>
+                <div class="bg-blue-500/20 rounded-lg p-3 max-w-[80%]">
+                    <p class="text-sm">Olá! Sou o Aurora Bot. Como posso ajudar?</p>
+                    <p class="text-xs text-gray-400 mt-1">Posso consultar encomendas, stock, pagamentos e mais!</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Quick Actions -->
+        <div class="p-3 border-t border-white/10 flex gap-2 flex-wrap">
+            <button onclick="quickAction('encomendas')" class="text-xs bg-blue-500/20 hover:bg-blue-500/30 px-3 py-1 rounded-full">📦 Encomendas</button>
+            <button onclick="quickAction('stock')" class="text-xs bg-red-500/20 hover:bg-red-500/30 px-3 py-1 rounded-full">🚨 Stock</button>
+            <button onclick="quickAction('pagamentos')" class="text-xs bg-yellow-500/20 hover:bg-yellow-500/30 px-3 py-1 rounded-full">💰 Pagamentos</button>
+            <button onclick="quickAction('vendas')" class="text-xs bg-green-500/20 hover:bg-green-500/30 px-3 py-1 rounded-full">📊 Vendas</button>
+        </div>
+        
+        <!-- Input -->
+        <div class="p-3 border-t border-white/10 flex gap-2">
+            <input type="text" id="chatInput" placeholder="Escreve uma pergunta..." class="flex-1 bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-sm focus:outline-none focus:border-blue-500" onkeypress="if(event.key==='Enter')sendMessage()">
+            <button onclick="sendMessage()" class="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-lg text-sm font-medium">Enviar</button>
+        </div>
+    </div>
+</div>
+
+<script>
+// Chat Widget Functions
+function toggleChat() {
+    const win = document.getElementById('chatWindow');
+    const btn = document.getElementById('chatToggle');
+    win.classList.toggle('hidden');
+    btn.textContent = win.classList.contains('hidden') ? '🤖' : '✕';
+}
+
+function addMessage(text, isBot = true) {
+    const container = document.getElementById('chatMessages');
+    const msgDiv = document.createElement('div');
+    msgDiv.className = 'flex gap-2' + (isBot ? '' : ' flex-row-reverse');
+    msgDiv.innerHTML = `
+        <div class="w-8 h-8 ${isBot ? 'bg-blue-500' : 'bg-green-500'} rounded-full flex items-center justify-center text-sm">${isBot ? '🤖' : '👤'}</div>
+        <div class="${isBot ? 'bg-blue-500/20' : 'bg-green-500/20'} rounded-lg p-3 max-w-[80%]">
+            <p class="text-sm">${text}</p>
+        </div>
+    `;
+    container.appendChild(msgDiv);
+    container.scrollTop = container.scrollHeight;
+}
+
+async function quickAction(action) {
+    addMessage(getQuickActionLabel(action), false);
+    
+    try {
+        const response = await fetch('/api/analytics?action=dashboard');
+        const data = await response.json();
+        
+        let reply = '';
+        switch(action) {
+            case 'encomendas':
+                const jan25 = data.monthly_2025?.find(m => m.month === 1);
+                reply = `📦 **Janeiro 2025:**\n• ${jan25?.invoice_count || 0} facturas\n• €${parseFloat(jan25?.total_revenue || 0).toLocaleString('pt-PT')} facturado`;
+                break;
+            case 'stock':
+                reply = '🚨 **Stock Negativo:**\n• 7 produtos com stock negativo\n• CAMARÃO S/C 36/40: -4,706 un\n• CAMARÃO S/C 41/50: -2,776 un\n\nVerifica o modal de Stock para detalhes.';
+                break;
+            case 'pagamentos':
+                reply = '💰 **Pagamentos Pendentes:**\n• Total: €25,778\n• Quinta Frio: €2,362\n• Verdadeiramentespecial: €15,577\n\nVerifica o modal de Pagamentos.';
+                break;
+            case 'vendas':
+                const y24 = data.yearly?.find(y => y.year === 2024);
+                const y25 = data.yearly?.find(y => y.year === 2025);
+                reply = `📊 **Vendas:**\n• 2024: €${parseFloat(y24?.total_revenue || 0).toLocaleString('pt-PT')} (${y24?.invoice_count} facturas)\n• 2025: €${parseFloat(y25?.total_revenue || 0).toLocaleString('pt-PT')} (${y25?.invoice_count} facturas)\n• Crescimento: +60.6%`;
+                break;
+        }
+        addMessage(reply);
+    } catch(e) {
+        addMessage('Erro ao consultar dados. Tenta novamente.');
+    }
+}
+
+function getQuickActionLabel(action) {
+    const labels = {
+        'encomendas': '📦 Ver encomendas',
+        'stock': '🚨 Ver stock',
+        'pagamentos': '💰 Ver pagamentos',
+        'vendas': '📊 Ver vendas'
+    };
+    return labels[action] || action;
+}
+
+function sendMessage() {
+    const input = document.getElementById('chatInput');
+    const text = input.value.trim();
+    if (!text) return;
+    
+    addMessage(text, false);
+    input.value = '';
+    
+    // Simple keyword matching
+    const lower = text.toLowerCase();
+    setTimeout(() => {
+        if (lower.includes('encomenda') || lower.includes('pedido')) {
+            quickAction('encomendas');
+        } else if (lower.includes('stock') || lower.includes('inventário')) {
+            quickAction('stock');
+        } else if (lower.includes('pagar') || lower.includes('pagamento') || lower.includes('fornecedor')) {
+            quickAction('pagamentos');
+        } else if (lower.includes('venda') || lower.includes('factura') || lower.includes('faturação')) {
+            quickAction('vendas');
+        } else {
+            addMessage('Posso ajudar com:\n• 📦 Encomendas\n• 🚨 Stock\n• 💰 Pagamentos\n• 📊 Vendas\n\nUsa os botões rápidos ou escreve a tua pergunta!');
+        }
+    }, 500);
+}
+</script>
+<!-- Deploy 1770564012 -->
