@@ -1,13 +1,26 @@
 {
-  "timestamp": "2026-02-11T22:44:22Z",
-  "vps": {
-    "mem_total_mb": 11675,
-    "mem_used_mb": 3897,
-    "mem_percent": 33.4,
-    "disk_percent": 56
+  "updated": "2026-02-11T22:47:00Z",
+  "crm": {
+    "opportunities": 11,
+    "people": 8,
+    "pipeline_eur": 34340,
+    "stages": {
+      "LEAD": 4,
+      "QUALIFICACAO": 1,
+      "DEMO": 1,
+      "PROPOSTA": 1,
+      "ACTIVO": 4
+    }
   },
-  "clawdbot": {
-    "processes": 0
-0
+  "jira": {
+    "total_issues": 47
+  },
+  "github": {
+    "total_repos": 73
+  },
+  "infra": {
+    "bots": 4,
+    "crons": 18,
+    "openclaw_version": "2026.2.9"
   }
 }
