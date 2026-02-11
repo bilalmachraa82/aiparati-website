@@ -88,6 +88,12 @@ Para trabalho visual (dashboards, sites) → SEMPRE tirar screenshot ou verifica
 **Regra:** Cada semana deve ter ≥2 entregas VISÍVEIS (deployadas, testadas, demonstráveis).
 **Check:** Sexta-feira → o que entreguei esta semana?
 
+### L013: Memory Hygiene Semanal
+**Data:** 2026-02-09
+**Erro:** MEMORY.md ficou 13 dias sem update (27 Jan → 9 Fev), perdendo contexto crítico.
+**Regra:** MEMORY.md deve ser actualizado pelo menos 1x/semana durante auto-evolução ou heartbeat.
+**Check:** Se `date(MEMORY.md last update) > 7 dias` → actualizar imediatamente.
+
 ## ✅ Boas Práticas Estabelecidas
 
 - PT-PT sempre, nunca BR
@@ -96,6 +102,30 @@ Para trabalho visual (dashboards, sites) → SEMPRE tirar screenshot ou verifica
 - Infográficos = Gemini sempre
 - NUNCA usar emoji 🤖
 
+### L014: Revenue Over Infrastructure
+**Data:** 2026-02-10
+**Erro:** 2 semanas de infra/automação sem nenhuma acção directa de revenue. IVAzen parado, zero outreach.
+**Regra:** A cada 3 dias de infra, OBRIGATÓRIO 1 dia de revenue actions. Antes de task técnica: "Isto move revenue?"
+**Check:** Weekly review — quantas horas em revenue vs infra?
+
+### L015: Anti-Builder-Syndrome
+**Data:** 2026-02-11
+**Erro:** 3 semanas consecutivas a construir infra (42 projectos, 17 agentes, 16 crons) com revenue = €0.
+**Regra:** Antes de QUALQUER tarefa técnica: "O Bilal pediu isto ou estou a construir por conforto?"
+**Check:** Se ninguém pediu E não gera revenue → NÃO FAZER.
+
+### L016: Consolidate Before Create
+**Data:** 2026-02-11
+**Erro:** 42 directórios de projectos, 5 versões de dashboard Aurora, 3 morning reports sobrepostos.
+**Regra:** Antes de criar algo novo → verificar se já existe. Antes de nova versão → arquivar as antigas.
+**Check:** `ls projects/ | wc -l` — Se >5 activos → PARAR e consolidar.
+
+### L017: MEMORY.md Never Stale
+**Data:** 2026-02-11
+**Erro:** MEMORY.md ficou 15 dias sem update (27 Jan → 11 Fev). Violação flagrante de L013.
+**Regra:** MEMORY.md actualizado TODAS as terças (mínimo semanal). Auto-evolução diária deve verificar.
+**Check:** Se `last update > 7 dias` → ACTUALIZAR IMEDIATAMENTE (não "na próxima sessão").
+
 ---
 
-*Última actualização: 2026-02-04 08:15 UTC*
+*Última actualização: 2026-02-11 03:00 UTC*
